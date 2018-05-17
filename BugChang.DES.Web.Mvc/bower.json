@@ -1,0 +1,9 @@
+{
+  "name": "bugchang.des",
+  "resolutions": {
+    "jquery": ">=1.7.1 <4.0.0"
+  },
+  "dependencies": {
+    "admin-lte": "adminlte#v2.4.3"
+  }
+}
