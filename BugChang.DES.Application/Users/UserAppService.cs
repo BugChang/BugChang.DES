@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using BugChang.DES.Core.Authorization.Users;
+﻿using BugChang.DES.Domain.IRepositories;
+using System.Threading.Tasks;
+using BugChang.DES.Domain.Entities;
 
 namespace BugChang.DES.Application.UserApp
 {
@@ -12,14 +13,9 @@ namespace BugChang.DES.Application.UserApp
             _userRepository = userRepository;
         }
 
-        public async Task<bool> CheckAsync(string userName, string password)
-        {
-            return await _userRepository.CheckAsync(userName, password);
-        }
-
         public async Task AddAsync(User user)
         {
-            await _userRepository.AddAsync(user);   
+            await _userRepository.AddAsync(user);
         }
     }
 }

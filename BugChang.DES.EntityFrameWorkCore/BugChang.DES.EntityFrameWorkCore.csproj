@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BugChang.DES.Core\BugChang.DES.Core.csproj" />
+    <ProjectReference Include="..\BugChang.DES.Domain\BugChang.DES.Domain.csproj" />
   </ItemGroup>
 
 </Project>

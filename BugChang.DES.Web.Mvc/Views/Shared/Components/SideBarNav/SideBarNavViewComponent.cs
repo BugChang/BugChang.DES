@@ -5,7 +5,7 @@ namespace BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav
 {
     public class SideBarNavViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
             return View();
         }

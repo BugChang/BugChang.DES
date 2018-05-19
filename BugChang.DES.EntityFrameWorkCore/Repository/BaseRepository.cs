@@ -1,40 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BugChang.DES.Core;
-using BugChang.DES.Core.Authorization.Users;
-using BugChang.DES.Core.IRepository;
+using BugChang.DES.Domain.Entities;
+using BugChang.DES.Domain.IRepositories;
 
 namespace BugChang.DES.EntityFrameWorkCore.Repository
 {
     public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
+        private readonly MainDbContext _dbContext;
 
-        public Task<TEntity> Get(int id)
+        protected BaseRepository(MainDbContext dbContext)
         {
-            var isInstance = typeof(TEntity).IsInstanceOfType(typeof(BaseEntity));
+            _dbContext = dbContext;
+        }
+
+        public Task<TEntity> GetAsync(int id)
+        {
+
             throw new NotImplementedException();
         }
 
-        public Task<IList<TEntity>> GetAll()
+        public Task<IList<TEntity>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
         public async Task AddAsync(TEntity entity)
         {
-            using (var dbContext = new BasicDdContext())
-            {
-                await dbContext.Users.AddAsync(entity as User);
-            }
+            await _dbContext.Set<TEntity>().AddAsync(entity);
         }
 
-        public Task Delete(int id)
+        public Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task Update(TEntity entity)
+        public Task UpdateAsync(TEntity entity)
         {
             throw new NotImplementedException();
         }

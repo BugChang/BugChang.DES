@@ -5,12 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="UserApp\Dto\" />
+    <Compile Remove="Users\Dto\**" />
+    <EmbeddedResource Remove="Users\Dto\**" />
+    <None Remove="Users\Dto\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BugChang.DES.Core\BugChang.DES.Core.csproj" />
+    <ProjectReference Include="..\BugChang.DES.Domain\BugChang.DES.Domain.csproj" />
     <ProjectReference Include="..\BugChang.DES.EntityFrameWorkCore\BugChang.DES.EntityFrameWorkCore.csproj" />
+    <ProjectReference Include="..\BugChang.DES.Infrastructure\BugChang.DES.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

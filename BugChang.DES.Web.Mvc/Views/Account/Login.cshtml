@@ -54,7 +54,7 @@
                 @if (ViewBag.ErrorMessage != null)
                 {
                     <div class="form-group">
-                        <span class="text-danger text-bold">用户名或密码输入错误</span>
+                        <span class="text-danger text-bold">@ViewBag.ErrorMessage</span>
                     </div>
                 }
                 <div class="row">

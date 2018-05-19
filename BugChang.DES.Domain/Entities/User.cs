@@ -1,4 +1,4 @@
-﻿namespace BugChang.DES.Core.Authorization.Users
+﻿namespace BugChang.DES.Domain.Entities
 {
     public class User : BaseEntity, IBasicEntity
     {
@@ -8,12 +8,13 @@
 
         public string Password { get; set; }
 
-        public bool Enable { get; set; }
+        public bool Enabled { get; set; }
 
         public int LoginErrorCount { get; set; }
 
         public string Phone { get; set; }
 
         public string Tel { get; set; }
+
     }
 }

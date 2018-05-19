@@ -1,12 +1,10 @@
 ﻿using System.Threading.Tasks;
-using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Domain.Entities;
 
 namespace BugChang.DES.Application.UserApp
 {
     public interface IUserAppService
     {
-        Task<bool> CheckAsync(string userName, string password);
-
         Task AddAsync(User user);
     }
 }

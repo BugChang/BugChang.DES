@@ -1,7 +1,6 @@
 ﻿using System;
-using BugChang.DES.Application.UserApp;
-using BugChang.DES.Core.Authorization.Users;
-using BugChang.DES.EntityFrameWorkCore.Repository;
+using System.Threading.Tasks;
+using BugChang.DES.EntityFrameWorkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -35,6 +34,11 @@ namespace BugChang.DES.Web.Mvc
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(20);//默认20分钟过期
                 });
 
+
+            //初始化依赖注入
+            DependencyInjectionConfig.Initialize(services, Configuration);
+
+
             //mvc
             services.AddMvc(config =>
             {
@@ -44,12 +48,6 @@ namespace BugChang.DES.Web.Mvc
                     .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
-
-
-            services.AddScoped<IUserAppService, UserAppService>();
-            services.AddScoped<IUserRepository, UserRepository>();
-
-
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -76,7 +74,8 @@ namespace BugChang.DES.Web.Mvc
             //默认路由的MVC
             app.UseMvcWithDefaultRoute();
 
-
+            //初始化数据库
+            SeedData.InitializeAsync(app.ApplicationServices);
 
         }
     }
