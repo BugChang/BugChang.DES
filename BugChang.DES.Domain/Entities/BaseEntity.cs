@@ -8,17 +8,4 @@
     {
         public int Id { get; set; }
     }
-
-    public interface IBasicEntity
-    {
-    }
-
-    public interface IBusinessEntity
-    {
-    }
-
-    public interface ILogEntity
-    {
-
-    }
 }

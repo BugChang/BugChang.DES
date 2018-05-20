@@ -12,4 +12,8 @@
     <ProjectReference Include="..\BugChang.DES.Domain\BugChang.DES.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

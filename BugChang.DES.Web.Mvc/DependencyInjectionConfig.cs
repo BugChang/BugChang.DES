@@ -26,6 +26,9 @@ namespace BugChang.DES.Web.Mvc
             //注入日志数据库上下文
             services.AddDbContext<LogDbContext>(option => option.UseMySql(logConnectionString));
 
+            services.AddScoped<UnitOfWork<MainDbContext>>();
+            services.AddScoped<UnitOfWork<LogDbContext>>();
+
             #endregion
 
 

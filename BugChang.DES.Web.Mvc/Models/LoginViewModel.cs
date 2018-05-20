@@ -4,12 +4,10 @@ namespace BugChang.DES.Web.Mvc.Models
 {
     public class LoginViewModel
     {
-        [Required]
-        [MaxLength(20)]
+        [Required(ErrorMessage = "用户名不允许为空")]
         public string UserName { get; set; }
 
-        [Required]
-        [MinLength(8)]
+        [Required(ErrorMessage = "密码不能为空")]
         public string Password { get; set; }
 
         [Required]

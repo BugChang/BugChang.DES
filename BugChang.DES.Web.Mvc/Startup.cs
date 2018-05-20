@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using BugChang.DES.EntityFrameWorkCore;
+using BugChang.DES.Infrastructure.AppSetting;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -17,10 +17,8 @@ namespace BugChang.DES.Web.Mvc
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
-             .SetBasePath(env.ContentRootPath)
-             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-             .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-             .AddEnvironmentVariables();
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             Configuration = builder.Build();
         }
 
@@ -30,14 +28,19 @@ namespace BugChang.DES.Web.Mvc
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.Cookie.Name = "BugChang.DES.Cookies";
+                    options.Cookie.Name = "BugChang.DES.AuthenticationCookies";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(20);//默认20分钟过期
                 });
 
 
-            //初始化依赖注入
+            //依赖注入
             DependencyInjectionConfig.Initialize(services, Configuration);
 
+            //防伪标识
+            services.AddAntiforgery(options =>
+            {
+                options.Cookie.Name = "BugChang.DES.Antiforgery";
+            });
 
             //mvc
             services.AddMvc(config =>
@@ -48,6 +51,9 @@ namespace BugChang.DES.Web.Mvc
                     .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
+
+            services.AddOptions();
+            services.Configure<AccountSettings>(Configuration.GetSection("AccountSettings"));
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {

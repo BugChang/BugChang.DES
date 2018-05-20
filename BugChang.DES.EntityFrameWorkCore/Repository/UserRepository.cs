@@ -25,5 +25,13 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
                 u.UserName.Equals(userName.Trim()) && u.Password.Equals(password.Trim()));
             return user;
         }
+
+        public async Task<User> GetAsync(string userName)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
+                u.UserName.Equals(userName.Trim()));
+            return user;
+        }
+
     }
 }

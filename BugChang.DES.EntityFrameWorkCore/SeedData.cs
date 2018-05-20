@@ -14,6 +14,9 @@ namespace BugChang.DES.EntityFrameWorkCore
             using (var serviceScope = serviceProvider.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetService<MainDbContext>();
+
+                //dbContext.Database.EnsureDeleted();
+
                 dbContext.Database.EnsureCreated();
 
                 if (!dbContext.Users.Any())
