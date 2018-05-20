@@ -1,5 +1,5 @@
 ﻿using BugChang.DES.Application.Accounts;
-using BugChang.DES.Application.UserApp;
+using BugChang.DES.Application.Users;
 using BugChang.DES.Domain.IRepositories;
 using BugChang.DES.Domain.Services.Accounts;
 using BugChang.DES.EntityFrameWorkCore;

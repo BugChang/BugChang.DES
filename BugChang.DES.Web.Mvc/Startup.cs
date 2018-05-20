@@ -1,4 +1,5 @@
 ﻿using System;
+using BugChang.DES.Application;
 using BugChang.DES.EntityFrameWorkCore;
 using BugChang.DES.Infrastructure.AppSetting;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,6 +21,9 @@ namespace BugChang.DES.Web.Mvc
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             Configuration = builder.Build();
+
+            //初始化AutoMapper
+            DesMapper.Initialize();
         }
 
         public void ConfigureServices(IServiceCollection services)

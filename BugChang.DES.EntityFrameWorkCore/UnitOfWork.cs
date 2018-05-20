@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.EntityFrameWorkCore
 {
+    /// <summary>
+    /// 工作单元，负责统一提交
+    /// </summary>
+    /// <typeparam name="TDbContext">EF上下文</typeparam>
     public class UnitOfWork<TDbContext> where TDbContext : DbContext
     {
         private readonly TDbContext _dbContext;

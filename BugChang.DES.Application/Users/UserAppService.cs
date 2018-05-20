@@ -1,21 +1,10 @@
-﻿using BugChang.DES.Domain.IRepositories;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BugChang.DES.Domain.Entities;
+using BugChang.DES.Domain.IRepositories;
 
-namespace BugChang.DES.Application.UserApp
+namespace BugChang.DES.Application.Users
 {
     public class UserAppService : IUserAppService
     {
-        private readonly IUserRepository _userRepository;
-
-        public UserAppService(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
-
-        public async Task AddAsync(User user)
-        {
-            await _userRepository.AddAsync(user);
-        }
     }
 }
