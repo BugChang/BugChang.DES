@@ -12,6 +12,7 @@
     <link href="~/lib/Ionicons/css/ionicons.min.css" rel="stylesheet" />
     <link href="~/lib/admin-lte/css/AdminLTE.min.css" rel="stylesheet" />
     <link href="~/lib/admin-lte/css/skins/_all-skins.min.css" rel="stylesheet" />
+    <link href="~/lib/pace/pace.min.css" rel="stylesheet" />
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -31,15 +32,15 @@
             <!-- Logo -->
             <a href="../../index2.html" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>A</b>LT</span>
+                <span class="logo-mini"><b>DES</b></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>Admin</b>LTE</span>
+                <span class="logo-lg"><b>公文交换系统</b>v1.0</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
                 <!-- Sidebar toggle button-->
                 <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                    <span class="sr-only">Toggle navigation</span>
+                    <span class="sr-only">导航切换</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -184,11 +185,9 @@
                 </div>
             </nav>
         </header>
-        <!-- =============================================== -->
-        <!-- Left side column. contains the sidebar -->
+        <!-- 左侧菜单 Begin-->
         @await Component.InvokeAsync(typeof(SideBarNavViewComponent))
-
-        <!-- =============================================== -->
+        <!-- 左侧菜单 End-->
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -219,9 +218,9 @@
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Version</b> 2.4.0
+                <b>Version</b> 1.0
             </div>
-            <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
+            <strong>Copyright &copy; 2018 <a href="http://www.bugchang.com">BugChang</a>.</strong> All rights
             reserved.
         </footer>
 
@@ -422,6 +421,7 @@
     <!-- ./wrapper -->
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="lib/pace/pace.min.js"></script>
     <script src="~/lib/jquery-slimscroll/jquery.slimscroll.min.js"></script>
     <script src="~/lib/fastclick/fastclick.js"></script>
     <script src="~/lib/admin-lte/js/adminlte.min.js"></script>

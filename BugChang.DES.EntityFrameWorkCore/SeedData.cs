@@ -18,7 +18,7 @@ namespace BugChang.DES.EntityFrameWorkCore
             {
                 var dbContext = serviceScope.ServiceProvider.GetService<MainDbContext>();
 
-                dbContext.Database.EnsureDeleted();
+                //dbContext.Database.EnsureDeleted();
 
                 dbContext.Database.EnsureCreated();
 
@@ -98,11 +98,13 @@ namespace BugChang.DES.EntityFrameWorkCore
                         {
                             new Menu
                             {
-                                Name = "用户管理"
+                                Name = "用户管理",
+                                Url = "/User/Index"
                             },
                             new Menu
                             {
-                                Name = "组织机构"
+                                Name = "组织机构",
+                                Url = "/Department/Index"
                             }
                         }
                     };

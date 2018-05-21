@@ -70,10 +70,10 @@ namespace BugChang.DES.Web.Mvc
             {
                 //报错指向路径
                 app.UseExceptionHandler("/Errors/500");
-
-                //其他错误代码指向路径
-                app.UseStatusCodePagesWithReExecute("/errors/{0}");
             }
+
+            //其他错误代码指向路径
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             //静态文件
             app.UseStaticFiles();

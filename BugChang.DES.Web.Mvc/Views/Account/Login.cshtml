@@ -32,16 +32,25 @@
         html, body {
             overflow-y: hidden;
         }
+
+        body {
+            background-image: url('../../images/bg1.jpg');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            -moz-background-size: 100% 100%;
+        }
     </style>
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition">
     <div class="login-box">
         <div class="login-logo">
             <a href="../../index2.html"><b>文件交换管理系统</b>v1.0</a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
-            <p class="login-box-msg">登陆后开始使用本系统</p>
+            <p class="login-box-msg text-info">
+                登录后开始使用本系统
+            </p>
             <form asp-action="Login" asp-route-returnUrl="@ViewBag.ReturnUrl" method="post">
                 <div class="form-group has-feedback">
                     <input asp-for="UserName" type="text" class="form-control" placeholder="用户名" value="@Model.UserName">
@@ -73,19 +82,16 @@
                 </div>
             </form>
             <div class="social-auth-links text-center">
-                <p>- OR -</p>
+                <p>- 或 -</p>
                 <a href="#" class="btn btn-block btn-social btn-facebook btn-flat">
-                    <i class="fa fa-facebook"></i> Sign in using
-                    Facebook
+                    <i class="fa fa-facebook"></i> 使用工作证卡登录
                 </a>
                 <a href="#" class="btn btn-block btn-social btn-google btn-flat">
-                    <i class="fa fa-google-plus"></i> Sign in using
-                    Google+
+                    <i class="fa fa-google-plus"></i>使用PIN码登录
                 </a>
             </div>
             <!-- /.social-auth-links -->
-            <a href="#">I forgot my password</a><br>
-            <a href="register.html" class="text-center">Register a new membership</a>
+            <a href="#">忘记密码？</a><br>
         </div>
         <!-- /.login-box-body -->
     </div>

@@ -45,6 +45,8 @@
     <None Include="wwwroot\lib\jquery\jquery.slim.js" />
     <None Include="wwwroot\lib\jquery\jquery.slim.min.js" />
     <None Include="wwwroot\lib\jquery\jquery.slim.min.map" />
+    <None Include="wwwroot\lib\pace\pace.js" />
+    <None Include="wwwroot\lib\pace\pace.min.js" />
   </ItemGroup>
 
 
