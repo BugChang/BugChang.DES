@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
-using BugChang.DES.Domain.Entities;
-using BugChang.DES.Domain.IRepositories;
+using BugChang.DES.Core.Authorization.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.EntityFrameWorkCore.Repository
@@ -21,7 +20,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         /// <returns>User Or Null</returns>
         public async Task<User> GetAsync(string userName, string password)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
+            var user = await _dbContext.Users.SingleOrDefaultAsync(u =>
                 u.UserName.Equals(userName.Trim()) && u.Password.Equals(password.Trim()));
             return user;
         }

@@ -1,18 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BugChang.DES.Domain.VaulesObject;
 
-namespace BugChang.DES.Domain.Entities
+namespace BugChang.DES.Core.Authorization.Powers
 {
     /// <summary>
     /// 权限
     /// </summary>
-    public class Privilege : BaseEntity
+    public class Power : BaseEntity
     {
         /// <summary>
         /// 权限类型
         /// </summary>
         [Required]
-        public EnumPrivilegeType Type { get; set; }
+        public PowerType Type { get; set; }
 
         /// <summary>
         /// 资源标识

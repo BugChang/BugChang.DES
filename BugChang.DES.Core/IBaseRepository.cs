@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BugChang.DES.Domain.Entities;
 
-namespace BugChang.DES.Domain.IRepositories
+namespace BugChang.DES.Core
 {
     public interface IBaseRepository<TEntity> where TEntity : BaseEntity
     {

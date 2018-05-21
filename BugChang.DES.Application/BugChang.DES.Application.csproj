@@ -11,9 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BugChang.DES.Domain\BugChang.DES.Domain.csproj" />
     <ProjectReference Include="..\BugChang.DES.EntityFrameWorkCore\BugChang.DES.EntityFrameWorkCore.csproj" />
-    <ProjectReference Include="..\BugChang.DES.Infrastructure\BugChang.DES.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

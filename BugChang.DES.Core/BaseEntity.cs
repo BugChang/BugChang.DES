@@ -1,4 +1,4 @@
-﻿namespace BugChang.DES.Domain.Entities
+﻿namespace BugChang.DES.Core
 {
 
     /// <summary>

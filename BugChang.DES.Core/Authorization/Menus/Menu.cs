@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BugChang.DES.Domain.Entities
+namespace BugChang.DES.Core.Authorization.Menus
 {
     /// <inheritdoc />
     /// <summary>
@@ -21,6 +23,11 @@ namespace BugChang.DES.Domain.Entities
         [MaxLength(50)]
         public string Icon { get; set; }
 
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
+
+        public virtual IList<Menu> Items { get; set; }
+
+        [ForeignKey("ParentId")]
+        public virtual Menu Parent { get; set; }
     }
 }

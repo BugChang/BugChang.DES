@@ -8,17 +8,13 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.0.2" />
+    <PackageReference Include="NETCore.Encrypt" Version="2.0.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BugChang.DES.Infrastructure\BugChang.DES.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Authorization">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.authorization\2.0.4\lib\netstandard2.0\Microsoft.AspNetCore.Authorization.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Options">
       <HintPath>C:\Users\BugChang\.nuget\packages\microsoft.extensions.options\2.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>

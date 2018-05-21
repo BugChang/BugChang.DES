@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BugChang.DES.Application.Menus.Dtos;
-using BugChang.DES.Domain.Entities;
+using BugChang.DES.Core.Authorization.Menus;
 
 namespace BugChang.DES.Application
 {

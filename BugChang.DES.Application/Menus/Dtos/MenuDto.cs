@@ -1,4 +1,6 @@
-﻿namespace BugChang.DES.Application.Menus.Dtos
+﻿using System.Collections.Generic;
+
+namespace BugChang.DES.Application.Menus.Dtos
 {
     /// <summary>
     /// 菜单
@@ -15,6 +17,8 @@
         public string Icon { get; set; }
 
         public int ParentId { get; set; }
+
+        public IList<MenuDto> Items { get; set; }
 
     }
 }

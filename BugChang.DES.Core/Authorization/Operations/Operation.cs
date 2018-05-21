@@ -1,4 +1,4 @@
-﻿namespace BugChang.DES.Domain.Entities
+﻿namespace BugChang.DES.Core.Authorization.Operations
 {
     /// <summary>
     /// 操作

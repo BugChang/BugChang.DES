@@ -1,9 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using BugChang.DES.Core.Authorization.Roles;
 
-namespace BugChang.DES.Domain.Entities
+namespace BugChang.DES.Core.Authorization.Users
 {
     public class User : BaseEntity
     {
+
+        public const string DefaultPassword = "123qwe";
+
         /// <summary>
         /// 用户名
         /// </summary>
@@ -22,7 +27,7 @@ namespace BugChang.DES.Domain.Entities
         /// 密码
         /// </summary>
         [Required]
-        [MinLength(8)]
+        [MinLength(6)]
         public string Password { get; set; }
 
         /// <summary>
@@ -51,6 +56,9 @@ namespace BugChang.DES.Domain.Entities
         /// </summary>
         [Phone]
         public string Tel { get; set; }
+
+
+        public IList<UserRole> UserRoles { get; set; }
 
     }
 }

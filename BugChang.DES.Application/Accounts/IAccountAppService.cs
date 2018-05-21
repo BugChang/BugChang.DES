@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using BugChang.DES.Infrastructure;
+using BugChang.DES.Core.Authentication;
 
 namespace BugChang.DES.Application.Accounts
 {

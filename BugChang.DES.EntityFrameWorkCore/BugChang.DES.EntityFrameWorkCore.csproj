@@ -9,11 +9,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BugChang.DES.Domain\BugChang.DES.Domain.csproj" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\BugChang.DES.Core\BugChang.DES.Core.csproj" />
   </ItemGroup>
 
 </Project>

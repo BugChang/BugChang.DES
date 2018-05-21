@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using BugChang.DES.Domain.Entities;
 
-namespace BugChang.DES.Domain.IRepositories
+namespace BugChang.DES.Core.Authorization.Users
 {
     public interface IUserRepository : IBaseRepository<User>
     {

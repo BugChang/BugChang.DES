@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using BugChang.DES.Domain.Entities;
-using BugChang.DES.Infrastructure.Encryption;
+using BugChang.DES.Core.Authorization.Menus;
+using BugChang.DES.Core.Authorization.Powers;
+using BugChang.DES.Core.Authorization.Roles;
+using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Security;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BugChang.DES.EntityFrameWorkCore
@@ -15,22 +18,99 @@ namespace BugChang.DES.EntityFrameWorkCore
             {
                 var dbContext = serviceScope.ServiceProvider.GetService<MainDbContext>();
 
-                //dbContext.Database.EnsureDeleted();
+                dbContext.Database.EnsureDeleted();
 
                 dbContext.Database.EnsureCreated();
 
                 if (!dbContext.Users.Any())
                 {
-                    var user = new User
+                    #region User
+
+                    var sysAdmin = new User
                     {
-                        UserName = "bugchang",
-                        DisplayName = "BugChang",
+                        UserName = "sysadmin",
+                        DisplayName = "系统管理员",
                         Enabled = true,
                         LoginErrorCount = 0,
-                        Password = HashHelper.Md5("000000..")
+                        Password = HashHelper.Md5(User.DefaultPassword),
+                        UserRoles = new List<UserRole>
+                        {
+                            new UserRole
+                            {
+                                Role = new Role
+                                {
+                                    Name = Role.SysAdmin
+                                }
+                            }
+                        }
+                    };
+                    dbContext.Users.Add(sysAdmin);
+
+                    var secAdmin = new User
+                    {
+                        UserName = "secadmin",
+                        DisplayName = "安全管理员",
+                        Enabled = true,
+                        LoginErrorCount = 0,
+                        Password = HashHelper.Md5(User.DefaultPassword),
+                        UserRoles = new List<UserRole>
+                        {
+                            new UserRole
+                            {
+                                Role = new Role
+                                {
+                                    Name = Role.SecAdmin
+                                }
+                            }
+                        }
+                    };
+                    dbContext.Users.Add(secAdmin);
+
+                    var audAdmin = new User
+                    {
+                        UserName = "audadmin",
+                        DisplayName = "审计管理员",
+                        Enabled = true,
+                        LoginErrorCount = 0,
+                        Password = HashHelper.Md5(User.DefaultPassword),
+                        UserRoles = new List<UserRole>
+                        {
+                            new UserRole
+                            {
+                                Role = new Role
+                                {
+                                    Name = Role.AudAdmin
+                                }
+                            }
+                        }
+                    };
+                    dbContext.Users.Add(audAdmin);
+
+                    #endregion
+
+
+                    #region Menu
+
+                    var sysMenu = new Menu
+                    {
+                        Name = "系统管理",
+                        Items = new List<Menu>
+                        {
+                            new Menu
+                            {
+                                Name = "用户管理"
+                            },
+                            new Menu
+                            {
+                                Name = "组织机构"
+                            }
+                        }
                     };
 
-                    dbContext.Users.Add(user);
+                    dbContext.Menus.Add(sysMenu);
+
+                    #endregion
+
                     dbContext.SaveChanges();
                 }
             }

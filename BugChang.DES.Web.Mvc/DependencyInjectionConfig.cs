@@ -1,7 +1,11 @@
 ﻿using BugChang.DES.Application.Accounts;
+using BugChang.DES.Application.Menus;
 using BugChang.DES.Application.Users;
-using BugChang.DES.Domain.IRepositories;
-using BugChang.DES.Domain.Services.Accounts;
+using BugChang.DES.Core.Authentication;
+using BugChang.DES.Core.Authorization.Menus;
+using BugChang.DES.Core.Authorization.Powers;
+using BugChang.DES.Core.Authorization.Roles;
+using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.EntityFrameWorkCore;
 using BugChang.DES.EntityFrameWorkCore.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -36,13 +40,15 @@ namespace BugChang.DES.Web.Mvc
 
             services.AddScoped<IUserAppService, UserAppService>();
             services.AddScoped<IAccountAppService, AccountAppService>();
+            services.AddScoped<IMenuAppService, MenuAppService>();
 
             #endregion
 
 
-            #region DomainServices
+            #region Logic Manager
 
-            services.AddScoped<IAccountServcice, AccountService>();
+            services.AddScoped<LoginManager>();
+            services.AddScoped<MenuManager>();
 
             #endregion
 
@@ -50,6 +56,9 @@ namespace BugChang.DES.Web.Mvc
             #region Repository
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IPowerRepository, PowerRepository>();
+            services.AddScoped<IMenuRepository, MenuRepository>();
 
             #endregion
 

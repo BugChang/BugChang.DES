@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 
-namespace BugChang.DES.Infrastructure
+namespace BugChang.DES.Core.Authentication
 {
     public class LoginResult
     {

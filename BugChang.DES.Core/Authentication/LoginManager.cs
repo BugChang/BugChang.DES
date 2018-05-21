@@ -1,20 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BugChang.DES.Domain.Entities;
-using BugChang.DES.Domain.IRepositories;
-using BugChang.DES.Infrastructure;
-using BugChang.DES.Infrastructure.AppSetting;
+using BugChang.DES.Core.Authorization.Users;
 using Microsoft.Extensions.Options;
 
-namespace BugChang.DES.Domain.Services.Accounts
+namespace BugChang.DES.Core.Authentication
 {
-    public class AccountService : IAccountServcice
+   public class LoginManager
     {
         private readonly IUserRepository _userRepository;
-        private readonly IOptions<AccountSettings> _accountSettings;
+        private readonly IOptions<LoginSettings> _accountSettings;
 
-        public AccountService(IUserRepository userRepository, IOptions<AccountSettings> accountSettings)
+        public LoginManager(IUserRepository userRepository, IOptions<LoginSettings> accountSettings)
         {
             _userRepository = userRepository;
             _accountSettings = accountSettings;

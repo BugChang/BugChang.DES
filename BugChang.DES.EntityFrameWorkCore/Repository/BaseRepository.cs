@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BugChang.DES.Domain.Entities;
-using BugChang.DES.Domain.IRepositories;
+using BugChang.DES.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.EntityFrameWorkCore.Repository
 {
@@ -21,9 +21,9 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             throw new NotImplementedException();
         }
 
-        public Task<IList<TEntity>> GetAllAsync()
+        public async Task<IList<TEntity>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Set<TEntity>().ToListAsync();
         }
 
         public async Task AddAsync(TEntity entity)
