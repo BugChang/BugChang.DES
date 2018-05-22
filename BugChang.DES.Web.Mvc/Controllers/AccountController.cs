@@ -52,6 +52,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
                             IsPersistent = model.RememberMe,
                             ExpiresUtc = DateTimeOffset.Now.AddMinutes(20)
                         });
+                        CurrentUserModel.Initialize(loginResult.ClaimsPrincipal.Claims.ToList());
                         returnUrl = string.IsNullOrEmpty(returnUrl) ? "/Home/Index" : returnUrl;
                         return Redirect(returnUrl);
                     default:

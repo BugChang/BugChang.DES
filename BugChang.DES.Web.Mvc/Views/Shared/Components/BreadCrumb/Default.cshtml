@@ -1,11 +1,15 @@
-﻿            <section class="content-header">
+﻿@using System.Collections.Generic
+@using System.Linq
+<section class="content-header">
     <h1>
-        Fixed Layout
-        <small>Blank example to the fixed layout</small>
+        @((Model as List<string>).LastOrDefault())
+        <small>菜单功能描述</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Layout</a></li>
-        <li class="active">Fixed</li>
+        <li><a href="#"> 首页</a></li>
+        @for (int i = 0; i < (Model as List<string>).Count; i++)
+        {
+            <li> @((Model as List<string>)[i])</li>
+        }
     </ol>
 </section>

@@ -1,4 +1,5 @@
-﻿@model IList<BugChang.DES.Application.Menus.Dtos.MenuDto>
+﻿@using BugChang.DES.Web.Mvc.Models
+@model BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav.SideBarNavViewModel
 
 
 
@@ -11,7 +12,7 @@
                 <img src="~/images/user2-160x160.jpg" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p>Alexander Pierce</p>
+                <p>@CurrentUserModel.DisplayName</p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>
@@ -30,11 +31,11 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             @*不影响排版，最多支持三级菜单*@
-            @foreach (var menu in Model)
+            @foreach (var menu in Model.Menus)
             {
                 if (menu.Items.Count > 0)
                 {
-                    <li class="treeview">
+                    <li class="treeview @(Model.ActiveMenuName.Contains(menu.Name)?"active":"")">
                         <a href="#">
                             <i class="fa fa-dashboard"></i> <span>@menu.Name</span>
                             <span class="pull-right-container">
@@ -46,7 +47,7 @@
                             {
                                 if (item.Items.Count > 0)
                                 {
-                                    <li class="treeview">
+                                    <li class="treeview @(Model.ActiveMenuName.Contains(item.Name)?"active":"")">
                                         <a href="#">
                                             <i class="fa fa-dashboard"></i> <span>@item.Name</span>
                                             <span class="pull-right-container">
@@ -56,16 +57,15 @@
                                         <ul class="treeview-menu">
                                             @foreach (var subItem in item.Items)
                                             {
-                                                <li><a href="@subItem.Url"><i class="fa fa-circle-o"></i> @subItem.Name</a></li>
+                                                <li class="@(Model.ActiveMenuName.Contains(subItem.Name) ? "active" : "")"><a href="@subItem.Url"><i class="fa fa-circle-o"></i> @subItem.Name</a></li>
                                             }
-
                                         </ul>
 
                                     </li>
                                 }
                                 else
                                 {
-                                    <li><a href="@item.Url"><i class="fa fa-circle-o"></i> @item.Name</a></li>
+                                    <li class="@(Model.ActiveMenuName.Contains(item.Name) ? "active" : "")"><a href="@item.Url"><i class="fa fa-circle-o"></i> @item.Name</a></li>
                                 }
                             }
                         </ul>
@@ -74,7 +74,7 @@
                 }
                 else
                 {
-                    <li><a href="@menu.Url"><i class="fa fa-circle-o"></i> @menu.Name</a></li>
+                    <li class="@(Model.ActiveMenuName.Contains(menu.Name) ? "active" : ""))"><a href="@menu.Url"><i class="fa fa-circle-o"></i> @menu.Name</a></li>
                 }
             }
         </ul>

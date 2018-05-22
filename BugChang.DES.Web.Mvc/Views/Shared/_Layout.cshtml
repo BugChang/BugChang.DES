@@ -35,7 +35,7 @@
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b>DES</b></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>公文交换系统</b>v1.0</span>
+                <span class="logo-lg"><b>文件交换系统</b>v1.0</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -187,12 +187,12 @@
             </nav>
         </header>
         <!-- 左侧菜单 Begin-->
-        @await Component.InvokeAsync(typeof(SideBarNavViewComponent))
+        @await Component.InvokeAsync(typeof(SideBarNavViewComponent), new { activeMenuName = ViewBag.MenuName })
         <!-- 左侧菜单 End-->
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            @await Component.InvokeAsync(typeof(BreadCrumbViewComponent))
+            @await Component.InvokeAsync(typeof(BreadCrumbViewComponent), new { activeMenuName = ViewBag.MenuName })
             <!-- Main content -->
             <section class="content">
                 <section class="content">
