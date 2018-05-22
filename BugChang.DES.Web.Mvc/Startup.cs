@@ -85,7 +85,7 @@ namespace BugChang.DES.Web.Mvc
             app.UseMvcWithDefaultRoute();
 
             //初始化数据库
-            SeedData.InitializeAsync(app.ApplicationServices);
+            SeedData.Initialize(app.ApplicationServices);
 
         }
     }

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using BugChang.DES.Core.Authorization.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +27,11 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             return user;
         }
 
+        /// <summary>
+        /// 获取一个用户
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <returns></returns>
         public async Task<User> GetAsync(string userName)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
@@ -32,5 +39,23 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             return user;
         }
 
+        /// <summary>
+        /// 获取所有用户
+        /// </summary>
+        /// <param name="limit">查询数量</param>
+        /// <param name="offset">跳过数量</param>
+        /// <param name="keywords">关键字</param>
+        /// <returns></returns>
+        public async Task<IList<User>> GetAllAsync(int limit, int offset, string keywords)
+        {
+            var query = _dbContext.Users.Where(a => a.Enabled);
+            if (!string.IsNullOrEmpty(keywords))
+            {
+                query = query.Where(a => a.DisplayName.Contains(keywords) || a.UserName.Contains(keywords));
+            }
+
+            var users = await query.ToListAsync();
+            return users;
+        }
     }
 }

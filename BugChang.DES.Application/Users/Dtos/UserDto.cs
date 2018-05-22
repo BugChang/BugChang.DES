@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace BugChang.DES.Core.Authorization.Users
+namespace BugChang.DES.Application.Users.Dtos
 {
-    public class User : BaseEntity, ISoftDelete
+    public class UserDto
     {
 
-        public const string DefaultPassword = "123qwe";
+        public int Id { get; set; }
 
         /// <summary>
         /// 用户名
@@ -23,21 +23,9 @@ namespace BugChang.DES.Core.Authorization.Users
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// 密码
-        /// </summary>
-        [Required]
-        [MinLength(6)]
-        public string Password { get; set; }
-
-        /// <summary>
         /// 是否启用
         /// </summary>
         public bool Enabled { get; set; }
-
-        /// <summary>
-        /// 登录错误次数
-        /// </summary>
-        public int LoginErrorCount { get; set; }
 
         /// <summary>
         /// 是否锁定
@@ -56,9 +44,12 @@ namespace BugChang.DES.Core.Authorization.Users
         [Phone]
         public string Tel { get; set; }
 
+        public int CreateBy { get; set; }
 
-        public IList<UserRole> UserRoles { get; set; }
+        public DateTime CreateTime { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public int UpdateBy { get; set; }
+
+        public DateTime UpdateTime { get; set; }
     }
 }

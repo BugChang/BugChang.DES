@@ -1,5 +1,89 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">查询条件</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="exampleInputName2">用户名</label>
+                <input type="text" class="form-control" id="exampleInputName2" placeholder="用户名">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail2">显示名</label>
+                <input type="email" class="form-control" id="exampleInputEmail2" placeholder="显示名">
+            </div>
+            <button type="submit" class="btn btn-default">查询</button>
+        </form>
+    </div>
+    <!-- /.box-footer-->
+</div>
+<div class="box box-info">
+    <div class="box-header">
+        <h3 class="box-title">用户列表</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body table-responsive no-padding">
+
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>用户名</th>
+                    <th>显示名称</th>
+                    <th>启用</th>
+                    <th>锁定</th>
+                    <th>移动电话</th>
+                    <th>固定电话</th>
+                    <th>创建时间</th>
+                    <th>创建人</th>
+                    <th>最后更改人</th>
+                    <th>最后更时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < 20; i++)
+                {
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>sysadmin</td>
+                        <td>系统管理员</td>
+                        <td><span class="label label-danger">已禁用</span></td>
+                        <td><span class="label label-success">正常</span></td>
+                        <td>18518769210</td>
+                        <td></td>
+                        <td>2018-5-22</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="dropdown text-center">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-gear"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="#" class="waves-effect waves-block edit-user" data-user-id="" data-toggle="modal" data-target="#UserEditModal"><i class="fa fa-edit">编辑</i></a></li>
+                                <li><a href="#" class="waves-effect waves-block delete-user" data-user-id="" data-user-name=""><i class="fa fa-trash">删除</i></a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer clearfix">
+        <ul class="pagination pagination-sm no-margin pull-right">
+            <li><a href="#">&laquo;</a></li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">&raquo;</a></li>
+        </ul>
+    </div>
+</div>

@@ -12,7 +12,7 @@ namespace BugChang.DES.EntityFrameWorkCore
 {
     public static class SeedData
     {
-        public static void InitializeAsync(IServiceProvider serviceProvider)
+        public static void Initialize(IServiceProvider serviceProvider)
         {
             using (var serviceScope = serviceProvider.CreateScope())
             {

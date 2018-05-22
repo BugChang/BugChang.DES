@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BugChang.DES.Core.Authorization.Users
 {
@@ -7,5 +8,7 @@ namespace BugChang.DES.Core.Authorization.Users
         Task<User> GetAsync(string userName, string password);
 
         Task<User> GetAsync(string userName);
+
+        Task<IList<User>> GetAllAsync(int limit, int offset, string keywords);
     }
 }

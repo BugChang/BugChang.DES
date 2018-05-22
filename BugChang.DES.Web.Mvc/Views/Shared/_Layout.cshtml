@@ -1,4 +1,5 @@
-﻿@using BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav
+﻿@using BugChang.DES.Web.Mvc.Views.Shared.Components.BreadCrumb
+@using BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -20,7 +21,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    @*<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">*@
 </head>
 <!-- ADD THE CLASS fixed TO GET A FIXED HEADER AND SIDEBAR LAYOUT -->
 <!-- the fixed layout is not compatible with sidebar-mini -->
@@ -191,18 +192,7 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    Fixed Layout
-                    <small>Blank example to the fixed layout</small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li><a href="#">Layout</a></li>
-                    <li class="active">Fixed</li>
-                </ol>
-            </section>
-
+            @await Component.InvokeAsync(typeof(BreadCrumbViewComponent))
             <!-- Main content -->
             <section class="content">
                 <section class="content">
