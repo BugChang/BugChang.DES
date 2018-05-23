@@ -15,11 +15,15 @@ namespace BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav
             _menuAppService = menuAppService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(string activeMenuName = "")
         {
             var userId = HttpContext.User.Claims.Single(a => a.Type == "Id").Value;
-            var menus = await _menuAppService.GetUserMenusAsync(Convert.ToInt32(userId));
-            return View(menus);
+            var model = new SideBarNavViewModel
+            {
+                Menus = await _menuAppService.GetUserMenusAsync(Convert.ToInt32(userId)),
+                ActiveMenuName = activeMenuName ?? ""
+            };
+            return View(model);
         }
     }
 }
