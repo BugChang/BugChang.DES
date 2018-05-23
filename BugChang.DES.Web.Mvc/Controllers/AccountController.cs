@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Linq;
-using BugChang.DES.Web.Mvc.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Accounts;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Security;
+using BugChang.DES.Web.Mvc.Models.Account;
+using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Options;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
@@ -17,9 +19,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
     {
 
         private readonly IAccountAppService _accountAppService;
-        public AccountController(IAccountAppService accountAppService)
+        private readonly IOptions<LoginSettings> _loginSettings;
+        public AccountController(IAccountAppService accountAppService, IOptions<LoginSettings> loginSettings)
         {
             _accountAppService = accountAppService;
+            _loginSettings = loginSettings;
         }
 
         [AllowAnonymous]
@@ -50,9 +54,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, loginResult.ClaimsPrincipal, new AuthenticationProperties
                         {
                             IsPersistent = model.RememberMe,
-                            ExpiresUtc = DateTimeOffset.Now.AddMinutes(20)
+                            ExpiresUtc = DateTimeOffset.Now.AddMinutes(_loginSettings.Value.ExpiryTime)
                         });
-                        CurrentUserModel.Initialize(loginResult.ClaimsPrincipal.Claims.ToList());
                         returnUrl = string.IsNullOrEmpty(returnUrl) ? "/Home/Index" : returnUrl;
                         return Redirect(returnUrl);
                     default:

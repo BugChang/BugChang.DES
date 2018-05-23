@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using BugChang.DES.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BugChang.DES.EntityFrameWorkCore
 {

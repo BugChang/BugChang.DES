@@ -13,5 +13,10 @@
         /// </summary>
         public int PasswordMinLength { get; set; }
 
+        /// <summary>
+        /// 登录过期时间（分钟）
+        /// </summary>
+        public int ExpiryTime { get; set; }
+
     }
 }

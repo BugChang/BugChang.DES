@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using BugChang.DES.Core.Authorization.Users;
 
 namespace BugChang.DES.Core
 {
@@ -33,7 +35,12 @@ namespace BugChang.DES.Core
         /// </summary>
         public DateTime? UpdateTime { get; set; }
 
+        [ForeignKey("CreateBy")]
+        public virtual User CreateUser { get; set; }
 
+
+        [ForeignKey("UpdateBy")]
+        public virtual User UpdateUser { get; set; }
     }
 
     /// <summary>
@@ -41,6 +48,9 @@ namespace BugChang.DES.Core
     /// </summary>
     public interface ISoftDelete
     {
+        /// <summary>
+        /// 删除标识
+        /// </summary>
         bool IsDeleted { get; set; }
     }
 }

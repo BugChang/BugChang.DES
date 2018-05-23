@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IList<BugChang.DES.Application.Users.Dtos.UserDto>
+@{
     ViewBag.MenuName = "系统管理-用户管理";
 }
 
@@ -54,27 +55,27 @@
                 </tr>
             </thead>
             <tbody>
-                @for (int i = 0; i < 20; i++)
+                @foreach (var user in Model)
                 {
                     <tr>
-                        <td>@(i + 1)</td>
-                        <td>sysadmin</td>
-                        <td>系统管理员</td>
-                        <td><span class="label label-danger">已禁用</span></td>
-                        <td><span class="label label-success">正常</span></td>
-                        <td>18518769210</td>
-                        <td></td>
-                        <td>2018-5-22</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>@user.Id</td>
+                        <td>@user.UserName</td>
+                        <td>@user.DisplayName</td>
+                        <td><span class="label @(user.Enabled?"label-success":"label-danger")">@(user.Enabled ? "已启用" : "已禁用")</span></td>
+                        <td><span class="label @(user.Locked?"label-danger":"label-success")">@(user.Locked ? "已锁定" : "正常")</span></td>
+                        <td>@user.Phone</td>
+                        <td>@user.Tel</td>
+                        <td>@user.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@user.CreateBy</td>
+                        <td>@user.UpdateBy</td>
+                        <td>@user.UpdateTime</td>
                         <td class="dropdown text-center">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-gear"></i>
                             </a>
                             <ul class="dropdown-menu pull-right">
-                                <li><a href="#" class="waves-effect waves-block edit-user" data-user-id="" data-toggle="modal" data-target="#UserEditModal"><i class="fa fa-edit">编辑</i></a></li>
-                                <li><a href="#" class="waves-effect waves-block delete-user" data-user-id="" data-user-name=""><i class="fa fa-trash">删除</i></a></li>
+                                <li><a href="#" data-user-id="" data-toggle="modal" data-target="#UserEditModal"><i class="fa fa-edit">编辑</i></a></li>
+                                <li><a href="#" data-user-id="" data-user-name=""><i class="fa fa-trash">删除</i></a></li>
                             </ul>
                         </td>
                     </tr>

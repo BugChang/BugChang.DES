@@ -1,19 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using BugChang.DES.Application.Users;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
     public class UserController : BaseController
     {
-        // GET: /<controller>/
-        public IActionResult Index()
+        private readonly IUserAppService _userAppService;
+
+        public UserController(IUserAppService userAppService)
         {
-            return View();
+            _userAppService = userAppService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var model = await _userAppService.GetUsersAsync();
+            return View(model);
         }
     }
 }

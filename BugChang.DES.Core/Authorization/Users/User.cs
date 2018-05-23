@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using BugChang.DES.Core.Departments;
 
 namespace BugChang.DES.Core.Authorization.Users
 {
@@ -56,9 +58,25 @@ namespace BugChang.DES.Core.Authorization.Users
         [Phone]
         public string Tel { get; set; }
 
+        /// <summary>
+        /// 所属部门Id
+        /// </summary>
+        public int DepartmentId { get; set; }
 
-        public IList<UserRole> UserRoles { get; set; }
+        /// <summary>
+        /// 所属部门
+        /// </summary>
+        [ForeignKey("DepartmentId")]
+        public virtual Department Department { get; set; }
 
+        /// <summary>
+        /// 用户角色关联列表
+        /// </summary>
+        public virtual IList<UserRole> UserRoles { get; set; }
+
+        /// <summary>
+        /// 删除标识
+        /// </summary>
         public bool IsDeleted { get; set; }
     }
 }

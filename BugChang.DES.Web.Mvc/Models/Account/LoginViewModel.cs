@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BugChang.DES.Web.Mvc.Models
+namespace BugChang.DES.Web.Mvc.Models.Account
 {
     public class LoginViewModel
     {

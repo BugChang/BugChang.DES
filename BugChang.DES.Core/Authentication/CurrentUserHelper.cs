@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 
-namespace BugChang.DES.Web.Mvc.Models
+namespace BugChang.DES.Core.Authentication
 {
-    public static class CurrentUserModel
+    public static class CurrentUserHelper
     {
         public static int Id { get; private set; }
         public static string UserName { get; private set; }

@@ -1,9 +1,11 @@
 {
   "name": "bugchang.des",
   "resolutions": {
-    "jquery": ">=1.7.1 <4.0.0"
+    "jquery": ">=1.7.1 <4.0.0",
+    "jquery-loading": "v1.3.0"
   },
   "dependencies": {
-    "admin-lte": "adminlte#v2.4.3"
+    "admin-lte": "adminlte#v2.4.3",
+    "jquery-loading": "v1.3.0"
   }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using BugChang.DES.Core.Authorization.Menus;
-using BugChang.DES.Core.Authorization.Powers;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Security;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,13 +17,27 @@ namespace BugChang.DES.EntityFrameWorkCore
             using (var serviceScope = serviceProvider.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetService<MainDbContext>();
+                
 
-                //dbContext.Database.EnsureDeleted();
+                dbContext.Database.EnsureDeleted();
 
                 dbContext.Database.EnsureCreated();
 
                 if (!dbContext.Users.Any())
                 {
+                    #region Department
+
+                    var department = new Department
+                    {
+                        Code = "001",
+                        FullName = "初始单位",
+                        Name = "初始单位"
+                    };
+
+                    dbContext.Departments.Add(department);
+
+                    #endregion
+
                     #region User
 
                     var sysAdmin = new User
@@ -33,6 +47,7 @@ namespace BugChang.DES.EntityFrameWorkCore
                         Enabled = true,
                         LoginErrorCount = 0,
                         Password = HashHelper.Md5(User.DefaultPassword),
+                        Department = department,
                         UserRoles = new List<UserRole>
                         {
                             new UserRole
@@ -53,6 +68,7 @@ namespace BugChang.DES.EntityFrameWorkCore
                         Enabled = true,
                         LoginErrorCount = 0,
                         Password = HashHelper.Md5(User.DefaultPassword),
+                        Department = department,
                         UserRoles = new List<UserRole>
                         {
                             new UserRole
@@ -73,6 +89,7 @@ namespace BugChang.DES.EntityFrameWorkCore
                         Enabled = true,
                         LoginErrorCount = 0,
                         Password = HashHelper.Md5(User.DefaultPassword),
+                        Department = department,
                         UserRoles = new List<UserRole>
                         {
                             new UserRole

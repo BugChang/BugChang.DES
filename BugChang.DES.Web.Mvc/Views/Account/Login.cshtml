@@ -1,4 +1,5 @@
-﻿@model BugChang.DES.Web.Mvc.Models.LoginViewModel
+﻿@using BugChang.DES.Web.Mvc.Models.Account
+@model BugChang.DES.Web.Mvc.Models.Account.LoginViewModel
 @{
     Layout = null;
 }
@@ -20,6 +21,8 @@
     <link href="~/lib/admin-lte/css/AdminLTE.min.css" rel="stylesheet" />
     <!-- iCheck -->
     <link href="~/lib/iCheck/square/blue.css" rel="stylesheet" />
+    <!-- jquery-loading -->
+    <link href="~/lib/jquery-loading/jquery.loading.min.css" rel="stylesheet" />
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -37,7 +40,6 @@
             background-image: url('../../images/bg1.jpg');
             background-repeat: no-repeat;
             background-size: 100% 100%;
-            -moz-background-size: 100% 100%;
         }
     </style>
 </head>
@@ -104,7 +106,9 @@
 
     <!-- iCheck -->
     <script src="~/lib/iCheck/icheck.min.js"></script>
+    <!-- jquery-loading -->
+    <script src="~/lib/jquery-loading/jquery.loading.min.js"></script>
 
-    <script src="~/views-resource/account/login.js"></script>
+    <script src="~/views-resource/account/login.js" asp-append-version="true"></script>
 </body>
 </html>

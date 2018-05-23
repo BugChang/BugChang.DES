@@ -25,6 +25,8 @@
 
 
   <ItemGroup>
+    <None Include="Views\Shared\Modals\_ModalFooterWithSaveAndCancel.cshtml" />
+    <None Include="Views\Shared\Modals\_ModalHeader.cshtml" />
     <None Include="wwwroot\lib\admin-lte\css\adminlte.css.map" />
     <None Include="wwwroot\lib\admin-lte\css\adminlte.min.css.map" />
     <None Include="wwwroot\lib\admin-lte\js\adminlte.js" />

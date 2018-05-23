@@ -5,5 +5,8 @@
             radioClass: 'iradio_square-blue',
             increaseArea: '20%' /* optional */
         });
+        $('form').submit(function () {
+            $('body').loading();
+        });
     });
 })();
