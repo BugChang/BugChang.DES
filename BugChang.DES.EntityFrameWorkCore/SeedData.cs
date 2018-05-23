@@ -105,7 +105,6 @@ namespace BugChang.DES.EntityFrameWorkCore
 
                     #endregion
 
-
                     #region Menu
 
                     var sysMenu = new Menu

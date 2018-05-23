@@ -25,7 +25,7 @@
         </form>
     </div>
     <div class="box-footer">
-        <button type="button" class="btn btn-success">新增</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UserCreateModal">新增</button>
         <button type="submit" class="btn btn-primary">查询</button>
     </div>
     <!-- /.box-footer-->
@@ -69,18 +69,13 @@
                         <td>@user.CreateBy</td>
                         <td>@user.UpdateBy</td>
                         <td>@user.UpdateTime</td>
-                        <td class="dropdown text-center">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-gear"></i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a href="#" data-user-id="" data-toggle="modal" data-target="#UserEditModal"><i class="fa fa-edit">编辑</i></a></li>
-                                <li><a href="#" data-user-id="" data-user-name=""><i class="fa fa-trash">删除</i></a></li>
-                            </ul>
+                        <td>
+                           <button class="btn btn-info btn-xs">修改</button>
+                           <button class="btn btn-primary btn-xs">角色</button>
+                           <button class="btn btn-danger btn-xs">删除</button>
                         </td>
                     </tr>
                 }
-
             </tbody>
         </table>
     </div>
@@ -95,3 +90,4 @@
         </ul>
     </div>
 </div>
+@Html.Partial("_UserCreateModel")
