@@ -15,10 +15,19 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<IList<Menu>> GetAllAsync(IList<Power> powers)
+        /// <summary>
+        /// 根据用户标识获取菜单列表
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<IList<Menu>> GetAllByUserIdAsync(int userId)
         {
-            var menus = await _dbContext.Menus.Where(a => powers.Any(b => b.Type == PowerType.菜单 && b.ResourceId == a.Id)).ToListAsync();
-            return menus;
+            var query = from menu in _dbContext.Menus
+                        join rolePower in _dbContext.RolePowers on menu.Id equals rolePower.Power.ResourceId
+                        join userRole in _dbContext.UserRoles on rolePower.Role.Id equals userRole.Role.Id
+                        where rolePower.Power.Type == PowerType.菜单 && userRole.User.Id == userId
+                        select menu;
+            return await query.ToListAsync();
         }
 
         public new async Task<IList<Menu>> GetAllAsync()

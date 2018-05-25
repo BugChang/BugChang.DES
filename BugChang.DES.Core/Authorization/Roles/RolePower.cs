@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BugChang.DES.Core.Authorization.Powers;
+﻿using BugChang.DES.Core.Authorization.Powers;
+using BugChang.DES.Core.Common;
 
 namespace BugChang.DES.Core.Authorization.Roles
 {

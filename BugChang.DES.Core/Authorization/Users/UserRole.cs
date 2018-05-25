@@ -1,4 +1,5 @@
 ﻿using BugChang.DES.Core.Authorization.Roles;
+using BugChang.DES.Core.Common;
 
 namespace BugChang.DES.Core.Authorization.Users
 {

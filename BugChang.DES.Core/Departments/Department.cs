@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Common;
 
 namespace BugChang.DES.Core.Departments
 {
@@ -17,5 +18,7 @@ namespace BugChang.DES.Core.Departments
         public bool IsDeleted { get; set; }
 
         public virtual IList<User> Users { get; set; }
+
+        public virtual IList<Department> Children { get; set; }
     }
 }

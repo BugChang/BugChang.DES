@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BugChang.DES.Core.Common;
 
 namespace BugChang.DES.Core.Authorization.Powers
 {

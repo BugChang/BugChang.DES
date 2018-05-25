@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Application.Menus.Dtos;
 using BugChang.DES.Core.Authorization.Menus;
+using BugChang.DES.Core.Departments;
 
 namespace BugChang.DES.Application
 {
@@ -12,6 +14,9 @@ namespace BugChang.DES.Application
             {
                 cfg.CreateMap<Menu, MenuDto>();
                 cfg.CreateMap<MenuDto, Menu>();
+
+                cfg.CreateMap<Department, DepartmentDto>();
+                cfg.CreateMap<DepartmentDto, Department>();
             });
         }
     }

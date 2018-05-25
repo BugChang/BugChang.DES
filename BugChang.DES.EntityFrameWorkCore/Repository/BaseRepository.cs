@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BugChang.DES.Core;
+using BugChang.DES.Core.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.EntityFrameWorkCore.Repository

@@ -1,4 +1,6 @@
-﻿namespace BugChang.DES.Core.Authorization.Operations
+﻿using BugChang.DES.Core.Common;
+
+namespace BugChang.DES.Core.Authorization.Operations
 {
     /// <summary>
     /// 操作
