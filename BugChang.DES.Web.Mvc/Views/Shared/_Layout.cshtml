@@ -11,11 +11,12 @@
     <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/lib/Ionicons/css/ionicons.min.css" rel="stylesheet" />
+    @await RenderSectionAsync("css", false)
     <link href="~/lib/admin-lte/css/AdminLTE.min.css" rel="stylesheet" />
     <link href="~/lib/admin-lte/css/skins/_all-skins.min.css" rel="stylesheet" />
     <link href="~/lib/pace/pace.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
-    @await RenderSectionAsync("css", false)
+    <link href="~/lib/datatables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -417,7 +418,9 @@
     <script src="~/lib/jquery-slimscroll/jquery.slimscroll.min.js"></script>
     <script src="~/lib/fastclick/fastclick.js"></script>
     <script src="~/lib/admin-lte/js/adminlte.min.js"></script>
-    <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="lib/datatables/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/lib/jquery/jquery.form.js"></script>
     @await RenderSectionAsync("scripts", false)
 </body>
 </html>

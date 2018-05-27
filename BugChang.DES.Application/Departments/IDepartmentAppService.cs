@@ -7,6 +7,8 @@ namespace BugChang.DES.Application.Departments
 {
     public interface IDepartmentAppService
     {
+        Task AddOrUpdateAsync(DepartmentDto department);
+        
         Task<IList<DepartmentDto>> GetAllAsync(int? parentId);
 
         Task<PageResultEntity<DepartmentDto>> GetPagingAysnc(int? parentId, int limit, int offset);

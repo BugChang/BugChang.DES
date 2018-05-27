@@ -15,73 +15,73 @@
     };
     $(function () {
 
+        //初始化zTree
+        zTreeObj = $.fn.zTree.init($("#departmentTree"), setting);
+
         //初始化table
         initTable();
 
-        //初始化zTree
-        zTreeObj = $.fn.zTree.init($("#departmentTree"), setting);
-        
+        //初始化select2选择框
+        initSelect();
+
+        $("#DepartmentCreateForm").submit(function (e) {
+            e.preventDefault();
+            var data = $(this).serialize();
+            $(this).ajaxSubmit({
+                type: 'post', // 提交方式 get/post
+                url: '/Department/Edit', // 需要提交的 url
+                data: data,
+                success: function (d) { // data 保存提交后返回的数据，一般为 json 数据
+                    // 此处可对 data 作相关处理
+                    alert('提交成功！');
+                }
+            });
+        });
+
     });
 
     //zTree节点单击回调函数
     function zTreeBeforeClick(treeId, treeNode, clickFlag) {
-        alert(treeNode.id + "-" + treeNode.name);
+        parentId = treeNode.id;
+        table.DataTable().ajax.reload();
     }
 
 
     //初始化table
     function initTable() {
-        table.bootstrapTable({
-            url: "/Department/GetListForTable",
-            method: "get",
-            dataType: "json",
-            contentType: "application/x-www-form-urlencoded",
-            //toolbar: "#toolbar",
-            pagination: true,
-            clickToSelect: true,
-            sidePagination: "server",
-            //search: true,
-            //showRefresh: true,
-            //showExport: true,
-            queryParams: function (params) {
-                return {
-                    parentId: parentId,
-                    limit: params.limit,
-                    offset: params.offset
-                };
-            },
-            columns: [
-                {
-                    field: "Id",
-                    title: "标识"
-                },
-                {
-                    field: "Name",
-                    title: "名称"
-                }, {
-                    field: "FullName",
-                    title: "全称"
-                }, {
-                    field: "Code",
-                    title: "代码"
-                }, {
-                    field: "SerialNumber",
-                    title: "序号"
-                }, {
-                    field: "Id",
-                    title: "操作",
-                    formatter: function (value) {
-                        var e = '<a class="btn btn-info btn-xs" href="javascript:Edit(' +
-                            value +
-                            ')"><i class="fa fa-edit"></i>修改</a>&nbsp;';
-                        var d = '<a class="btn btn-danger btn-xs" href="javascript:Delete(' +
-                            value +
-                            ');"><i class="fa fa-trash"></i>删除</a> ';
-                        return e + d;
-                    }
+        table.DataTable({
+            "ordering": false,
+            "processing": true,
+            "serverSide": true,
+            "autoWith": true,
+            "ajax": {
+                "url": "/Department/GetListForTable",
+                "data": function (d) {
+                    //添加额外的参数传给服务器
+                    d.parentId = parentId;
                 }
-            ]
+            },
+            "stateSave": true,
+            "columns": [
+                { "data": "id" },
+                { "data": "name" },
+                { "data": "fullName" },
+                { "data": "code" }
+            ],
+            language: {
+                url: '../../lib/datatables/language/chinese.json'
+            }
         });
     }
 
+    function initSelect() {
+        $.get("/Department/GetListForSelect",
+            function (data) {
+                $(".select2").select2({
+                    data: data,
+                    placeholder: "请选择上级机构",
+                    allowClear: true
+                });
+            });
+    }
 })();

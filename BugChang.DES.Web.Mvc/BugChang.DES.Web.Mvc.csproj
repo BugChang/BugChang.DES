@@ -8,12 +8,16 @@
   <ItemGroup>
     <Compile Remove="wwwroot\lib\dist\**" />
     <Compile Remove="wwwroot\lib\lib\**" />
+    <Compile Remove="wwwroot\lib\pages\**" />
     <Content Remove="wwwroot\lib\dist\**" />
     <Content Remove="wwwroot\lib\lib\**" />
+    <Content Remove="wwwroot\lib\pages\**" />
     <EmbeddedResource Remove="wwwroot\lib\dist\**" />
     <EmbeddedResource Remove="wwwroot\lib\lib\**" />
+    <EmbeddedResource Remove="wwwroot\lib\pages\**" />
     <None Remove="wwwroot\lib\dist\**" />
     <None Remove="wwwroot\lib\lib\**" />
+    <None Remove="wwwroot\lib\pages\**" />
   </ItemGroup>
 
 
@@ -32,6 +36,10 @@
     <None Include="wwwroot\lib\admin-lte\js\adminlte.js" />
     <None Include="wwwroot\lib\admin-lte\js\adminlte.min.js" />
     <None Include="wwwroot\lib\admin-lte\js\demo.js" />
+    <None Include="wwwroot\lib\datatables\js\dataTables.bootstrap.js" />
+    <None Include="wwwroot\lib\datatables\js\dataTables.bootstrap.min.js" />
+    <None Include="wwwroot\lib\datatables\js\jquery.dataTables.js" />
+    <None Include="wwwroot\lib\datatables\js\jquery.dataTables.min.js" />
     <None Include="wwwroot\lib\font-awesome\css\font-awesome.css.map" />
     <None Include="wwwroot\lib\font-awesome\fonts\fontawesome-webfont.svg" />
     <None Include="wwwroot\lib\font-awesome\fonts\fontawesome-webfont.woff2" />

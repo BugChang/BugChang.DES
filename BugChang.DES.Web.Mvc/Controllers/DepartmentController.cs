@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Departments;
+using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,17 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(DepartmentDto department)
+        {
+            if (ModelState.IsValid)
+            {
+                await _departmentAppService.AddOrUpdateAsync(department);
+                return Json(true);
+            }
+            return Json(false);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetTreeData(int? parentId)
         {
@@ -35,11 +47,29 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(treedata);
         }
 
-        public async Task<IActionResult> GetListForTable(int? parentId, int limit, int offset)
+        public async Task<JsonResult> GetListForTable(int draw, int start, int length, int? parentId)
         {
-            var pagereslut = await _departmentAppService.GetPagingAysnc(parentId, limit, offset);
-            return Json(pagereslut);
+            var pagereslut = await _departmentAppService.GetPagingAysnc(parentId, length, start);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
 
+        }
+
+        public async Task<IActionResult> GetListForSelect()
+        {
+            var departments = await _departmentAppService.GetAllAsync(null);
+            var json = departments.Select(a => new SelectViewModel
+            {
+                Id = a.Id,
+                Text = a.FullName
+            });
+            return Json(json);
         }
     }
 }
