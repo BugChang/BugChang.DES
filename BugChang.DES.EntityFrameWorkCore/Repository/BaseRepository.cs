@@ -36,9 +36,9 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(TEntity entity)
+        public void Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Set<TEntity>().Update(entity);
         }
     }
 }

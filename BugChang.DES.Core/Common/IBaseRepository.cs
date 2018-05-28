@@ -13,6 +13,6 @@ namespace BugChang.DES.Core.Common
 
         Task DeleteAsync(int id);
 
-        Task UpdateAsync(TEntity entity);
+        void Update(TEntity entity);
     }
 }

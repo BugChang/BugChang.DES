@@ -8,7 +8,8 @@ using BugChang.DES.EntityFrameWorkCore;
 
 namespace BugChang.DES.Application.Departments
 {
-    public class DepartmentAppService : IDepartmentAppService
+    public class
+        DepartmentAppService : IDepartmentAppService
     {
         private readonly UnitOfWork<MainDbContext> _unitOfWork;
         private readonly DepartmentManager _departmentManager;
@@ -55,6 +56,11 @@ namespace BugChang.DES.Application.Departments
         {
             var departments = await _departmentManager.GetAllAsync();
             return Mapper.Map<IList<DepartmentDto>>(departments);
+        }
+
+        public async Task<DepartmentEditDto> GetAsync(int id)
+        {
+            return Mapper.Map<DepartmentEditDto>(await _departmentManager.GetAsync(id));
         }
 
 

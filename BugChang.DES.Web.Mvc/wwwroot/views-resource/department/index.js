@@ -35,8 +35,7 @@
                 data: data,
                 success: function (result) {
                     if (result.success) {
-                        //清空表单
-                        $("#DepartmentCreateForm").resetForm();
+                        resetForm();
                         //关闭模态
                         $("#DepartmentCreateModal").modal("hide");
                         //刷新表格
@@ -69,7 +68,7 @@
     });
 
     //zTree节点单击回调函数
-    function zTreeBeforeClick(treeId, treeNode, clickFlag) {
+    function zTreeBeforeClick(treeId, treeNode) {
         currentNode = treeNode;
         table.ajax.reload();
         $(".select2").val(treeNode.id).trigger("change");
@@ -116,7 +115,7 @@
             ],
             columnDefs: [{
                 targets: 4,
-                render: function (data, type, row, meta) {
+                render: function (data, type, row) {
                     var strHtml =
                         '<button class="btn btn-info btn-xs view-department" data-department-id=' + row.id + '>查看</button>&nbsp;' +
                         '<button class="btn btn-warning btn-xs edit-department" data-department-id=' + row.id + '>修改</button>&nbsp;' +
@@ -146,11 +145,18 @@
     }
 
     function editDepartment(id) {
-        alert("修改" + id);
+        $("#DepartmentEditModal .modal-content").load("/Department/EditDepartmentModal/" + id);
+        $("#DepartmentEditModal").modal('show');
     }
 
     function deleteDepartment(id) {
         alert("删除" + id);
+    }
+
+    //清空表单
+    function resetForm() {
+        $("#DepartmentCreateForm").resetForm();
+        $(".select2").val(currentNode.id).trigger("change");
     }
 })();
 

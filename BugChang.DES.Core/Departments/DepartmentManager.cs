@@ -42,7 +42,7 @@ namespace BugChang.DES.Core.Departments
 
             if (department.Id > 0)
             {
-                await _departmentRepository.UpdateAsync(department);
+                _departmentRepository.Update(department);
             }
             else
             {
@@ -60,7 +60,17 @@ namespace BugChang.DES.Core.Departments
         /// <returns></returns>
         public async Task<bool> ExistCodeAsync(Department department)
         {
-            return await _departmentRepository.GetAsync(department.Code, department.ParentId) != null;
+            var dataBaseDepartment = await _departmentRepository.GetAsync(department.Code, department.ParentId);
+            if (dataBaseDepartment == null)
+            {
+                return false;
+            }
+            return department.Id != dataBaseDepartment.Id;
+        }
+
+        public async Task<Department> GetAsync(int id)
+        {
+            return await _departmentRepository.GetAsync(id);
         }
 
         public async Task<IList<Department>> GetAllAsync(int? parentId)

@@ -1,0 +1,26 @@
+﻿@model BugChang.DES.Application.Departments.Dtos.DepartmentEditDto
+@using BugChang.DES.Web.Mvc.Models.Common
+<form id="DepartmentEditForm" method="post" asp-controller="Department" asp-action="Edit">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("修改机构"))
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <div class="form-group">
+            <label>上级机构</label>
+            <select class="form-control select2" asp-for="ParentId" style="width: 100%" value="@Model.ParentId"></select>
+        </div>
+        <div class="form-group">
+            <label>名称</label>
+            <input type="text" class="form-control" asp-for="Name" value="@Model.Name">
+        </div>
+        <div class="form-group">
+            <label>全称</label>
+            <input type="text" class="form-control" asp-for="FullName" value="@Model.FullName" placeholder="无特殊情况无需填写">
+        </div>
+        <div class="form-group">
+            <label>机构代码</label>
+            <input type="text" class="form-control" asp-for="Code" value="@Model.Code">
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/department/_EditDepartmentModal.js"></script>

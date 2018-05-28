@@ -25,6 +25,12 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
+        public async Task<IActionResult> EditDepartmentModal(int id)
+        {
+            var model = await _departmentAppService.GetAsync(id);
+            return PartialView("_EditDepartmentModal", model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Edit(DepartmentEditDto department)
         {
