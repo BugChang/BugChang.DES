@@ -24,7 +24,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             return await query.Include(a => a.Children).ToListAsync();
         }
 
-        public async Task<PageResultEntity<Department>> GetPagingAysnc(int? parentId, int limt, int offset)
+        public async Task<PageResultEntity<Department>> GetPagingAysnc(int? parentId, int take, int skip)
         {
             var query = from department in _dbContext.Departments
                         where department.ParentId == parentId
@@ -33,10 +33,15 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             var pageResultEntity = new PageResultEntity<Department>
             {
                 Total = await query.CountAsync(),
-                Rows = await query.Take(limt).Skip(offset).ToListAsync()
+                Rows = await query.Take(take).Skip(skip).ToListAsync()
             };
 
             return pageResultEntity;
+        }
+
+        public async Task<Department> GetAsync(string code, int? parentId)
+        {
+            return await _dbContext.Departments.FirstOrDefaultAsync(d => d.ParentId == parentId && d.Code.Equals(code));
         }
     }
 }

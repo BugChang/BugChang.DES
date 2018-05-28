@@ -21,17 +21,15 @@ namespace BugChang.DES.EntityFrameWorkCore
         {
             modelBuilder.Entity<UserRole>().HasOne(a => a.User).WithMany(a => a.UserRoles);
             modelBuilder.Entity<Department>().HasMany(a => a.Users).WithOne(a => a.Department);
-
-            //这么写所有的字段都生成在baseentity表
-            //modelBuilder.Entity<BaseEntity>().HasOne(a => a.CreateUser);
-
-            //这么写太多了
             modelBuilder.Entity<User>().HasOne(a => a.CreateUser);
             modelBuilder.Entity<User>().HasOne(a => a.UpdateUser);
             modelBuilder.Entity<UserRole>().HasOne(a => a.CreateUser);
             modelBuilder.Entity<UserRole>().HasOne(a => a.UpdateUser);
             modelBuilder.Entity<Department>().HasOne(a => a.CreateUser);
             modelBuilder.Entity<Department>().HasOne(a => a.UpdateUser);
+
+            modelBuilder.Entity<Department>().HasQueryFilter(p => !p.IsDeleted);
+            modelBuilder.Entity<User>().HasQueryFilter(p => !p.IsDeleted);
         }
 
         public DbSet<User> Users { get; set; }

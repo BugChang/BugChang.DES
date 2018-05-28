@@ -17,6 +17,7 @@ namespace BugChang.DES.Application
 
                 cfg.CreateMap<Department, DepartmentDto>();
                 cfg.CreateMap<DepartmentDto, Department>();
+                cfg.CreateMap<DepartmentEditDto, Department>();
             });
         }
     }

@@ -15,10 +15,10 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             _dbContext = dbContext;
         }
 
-        public Task<TEntity> GetAsync(int id)
+        public async Task<TEntity> GetAsync(int id)
         {
 
-            throw new NotImplementedException();
+            return await _dbContext.Set<TEntity>().FindAsync(id);
         }
 
         public async Task<IList<TEntity>> GetAllAsync()

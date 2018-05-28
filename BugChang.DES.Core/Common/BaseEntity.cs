@@ -5,16 +5,18 @@ using BugChang.DES.Core.Authorization.Users;
 namespace BugChang.DES.Core.Common
 {
 
+
+    public abstract class BaseEntity<TPrimaryKey>
+    {
+        public TPrimaryKey Id { get; set; }
+    }
+
+
     /// <summary>
     /// 实体基类，所有实体必须继承，主键为int
     /// </summary>
-    public abstract class BaseEntity
+    public abstract class BaseEntity : BaseEntity<int>
     {
-        /// <summary>
-        /// 唯一标识
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// 创建人
         /// </summary>
@@ -41,7 +43,9 @@ namespace BugChang.DES.Core.Common
 
         [ForeignKey("UpdateBy")]
         public virtual User UpdateUser { get; set; }
+
     }
+
 
     /// <summary>
     /// 软删除接口

@@ -8,6 +8,8 @@ namespace BugChang.DES.Core.Departments
     {
         Task<IList<Department>> GetAllAsync(int? parentId);
 
-        Task<PageResultEntity<Department>> GetPagingAysnc(int? parentId, int limt, int offset);
+        Task<PageResultEntity<Department>> GetPagingAysnc(int? parentId, int take, int skip);
+
+        Task<Department> GetAsync(string code, int? parentId);
     }
 }

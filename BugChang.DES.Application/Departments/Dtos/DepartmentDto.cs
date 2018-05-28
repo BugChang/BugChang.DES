@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BugChang.DES.Application.Departments.Dtos
 {
@@ -8,10 +7,16 @@ namespace BugChang.DES.Application.Departments.Dtos
     {
         public int Id { get; set; }
 
+        [Required]
+        [MaxLength(50)]
         public string Name { get; set; }
 
+        [Required]
+        [MaxLength(150)]
         public string FullName { get; set; }
 
+        [Required]
+        [StringLength(3)]
         public string Code { get; set; }
 
         public int? ParentId { get; set; }

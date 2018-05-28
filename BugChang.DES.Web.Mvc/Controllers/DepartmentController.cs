@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Departments.Dtos;
+using BugChang.DES.Core.Common;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,14 +26,19 @@ namespace BugChang.DES.Web.Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(DepartmentDto department)
+        public async Task<IActionResult> Edit(DepartmentEditDto department)
         {
+            var result = new ResultEntity();
             if (ModelState.IsValid)
             {
-                await _departmentAppService.AddOrUpdateAsync(department);
-                return Json(true);
+                result = await _departmentAppService.AddOrUpdateAsync(department);
+                return Json(result);
             }
-            return Json(false);
+            result.Message = ModelState.Values
+                .FirstOrDefault(a => a.ValidationState == ModelValidationState.Invalid)?.Errors.FirstOrDefault()
+                ?.ErrorMessage;
+
+            return Json(result);
         }
 
         [HttpGet]
@@ -63,7 +70,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> GetListForSelect()
         {
-            var departments = await _departmentAppService.GetAllAsync(null);
+            var departments = await _departmentAppService.GetAllAsync();
             var json = departments.Select(a => new SelectViewModel
             {
                 Id = a.Id,
