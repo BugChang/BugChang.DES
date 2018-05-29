@@ -1,9 +1,9 @@
-﻿(function () {
+﻿var DepartmentIndex = function () {
     var currentNode = null;
     var table;
     var zTreeObj;
 
-    var setting = {// zTree 参数配置
+    var setting = { // zTree 参数配置
         async: {
             enable: true,
             url: "/Department/GetTreeData",
@@ -26,6 +26,7 @@
         //初始化select2选择框
         initSelect();
 
+        //新增机构表单提交时
         $("#DepartmentCreateForm").submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
@@ -38,10 +39,8 @@
                         resetForm();
                         //关闭模态
                         $("#DepartmentCreateModal").modal("hide");
-                        //刷新表格
-                        table.ajax.reload();
-                        //刷新机构树
-                        zTreeObj.reAsyncChildNodes(currentNode, "refresh");
+                        //刷新页面
+                        refresh();
                     } else {
                         alert(result.message);
                     }
@@ -50,20 +49,26 @@
             });
         });
 
-        $("table").delegate(".view-department", "click", function () {
-            var departmentId = $(this).attr("data-department-id");
-            viewDepartment(departmentId);
-        });
+        $("table").delegate(".view-department",
+            "click",
+            function () {
+                var departmentId = $(this).attr("data-department-id");
+                viewDepartment(departmentId);
+            });
 
-        $("table").delegate(".edit-department", "click", function () {
-            var departmentId = $(this).attr("data-department-id");
-            editDepartment(departmentId);
-        });
+        $("table").delegate(".edit-department",
+            "click",
+            function () {
+                var departmentId = $(this).attr("data-department-id");
+                editDepartment(departmentId);
+            });
 
-        $("table").delegate(".delete-department", "click", function () {
-            var departmentId = $(this).attr("data-department-id");
-            deleteDepartment(departmentId);
-        });
+        $("table").delegate(".delete-department",
+            "click",
+            function () {
+                var departmentId = $(this).attr("data-department-id");
+                deleteDepartment(departmentId);
+            });
 
     });
 
@@ -113,22 +118,31 @@
                     title: "操作"
                 }
             ],
-            columnDefs: [{
-                targets: 4,
-                render: function (data, type, row) {
-                    var strHtml =
-                        '<button class="btn btn-info btn-xs view-department" data-department-id=' + row.id + '>查看</button>&nbsp;' +
-                        '<button class="btn btn-warning btn-xs edit-department" data-department-id=' + row.id + '>修改</button>&nbsp;' +
-                        '<button class="btn btn-danger btn-xs delete-department" data-department-id=' + row.id + '>删除</button>';
-                    return strHtml;
+            columnDefs: [
+                {
+                    targets: 4,
+                    render: function (data, type, row) {
+                        var strHtml =
+                            '<button class="btn btn-info btn-xs view-department" data-department-id=' +
+                            row.id +
+                            '>查看</button>&nbsp;' +
+                            '<button class="btn btn-warning btn-xs edit-department" data-department-id=' +
+                            row.id +
+                            '>修改</button>&nbsp;' +
+                            '<button class="btn btn-danger btn-xs delete-department" data-department-id=' +
+                            row.id +
+                            '>删除</button>';
+                        return strHtml;
+                    }
                 }
-            }],
+            ],
             language: {
                 url: '../../lib/datatables/language/chinese.json'
             }
         });
     }
 
+    //初始化伏击
     function initSelect() {
         $.get("/Department/GetListForSelect",
             function (data) {
@@ -140,15 +154,22 @@
             });
     }
 
+    //查看机构详情
     function viewDepartment(id) {
         alert("查看" + id);
     }
 
+    //编辑机构信息
     function editDepartment(id) {
         $("#DepartmentEditModal .modal-content").load("/Department/EditDepartmentModal/" + id);
-        $("#DepartmentEditModal").modal('show');
+        $("#DepartmentEditModal").modal({
+            backdrop: "static",
+            keyboard: false,
+            show: true
+        });
     }
 
+    //删除机构
     function deleteDepartment(id) {
         alert("删除" + id);
     }
@@ -158,5 +179,16 @@
         $("#DepartmentCreateForm").resetForm();
         $(".select2").val(currentNode.id).trigger("change");
     }
-})();
+
+    //刷新页面
+    function refresh() {
+        //刷新表格
+        table.ajax.reload();
+        //刷新机构树
+        zTreeObj.reAsyncChildNodes(currentNode, "refresh");
+    }
+
+    //向外暴露方法
+    return { refresh: refresh };
+}();
 

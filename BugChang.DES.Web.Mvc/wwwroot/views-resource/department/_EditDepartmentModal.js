@@ -12,6 +12,8 @@
                     if (result.success) {
                         //关闭模态
                         $("#DepartmentEditModal").modal("hide");
+                        //刷新父页面
+                        DepartmentIndex.refresh();
                     } else {
                         alert(result.message);
                     }

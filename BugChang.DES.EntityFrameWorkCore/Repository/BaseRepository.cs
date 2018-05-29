@@ -18,7 +18,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         public async Task<TEntity> GetAsync(int id)
         {
 
-            return await _dbContext.Set<TEntity>().FindAsync(id);
+            return await _dbContext.Set<TEntity>().SingleOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<IList<TEntity>> GetAllAsync()

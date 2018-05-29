@@ -41,7 +41,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<Department> GetAsync(string code, int? parentId)
         {
-            return await _dbContext.Departments.FirstOrDefaultAsync(d => d.ParentId == parentId && d.Code.Equals(code));
+            return await _dbContext.Departments.AsNoTracking().SingleOrDefaultAsync(d => d.ParentId == parentId && d.Code.Equals(code));
         }
     }
 }
