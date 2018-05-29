@@ -9,15 +9,19 @@
     <Compile Remove="wwwroot\lib\dist\**" />
     <Compile Remove="wwwroot\lib\lib\**" />
     <Compile Remove="wwwroot\lib\pages\**" />
+    <Compile Remove="wwwroot\lib\sweetalert\**" />
     <Content Remove="wwwroot\lib\dist\**" />
     <Content Remove="wwwroot\lib\lib\**" />
     <Content Remove="wwwroot\lib\pages\**" />
+    <Content Remove="wwwroot\lib\sweetalert\**" />
     <EmbeddedResource Remove="wwwroot\lib\dist\**" />
     <EmbeddedResource Remove="wwwroot\lib\lib\**" />
     <EmbeddedResource Remove="wwwroot\lib\pages\**" />
+    <EmbeddedResource Remove="wwwroot\lib\sweetalert\**" />
     <None Remove="wwwroot\lib\dist\**" />
     <None Remove="wwwroot\lib\lib\**" />
     <None Remove="wwwroot\lib\pages\**" />
+    <None Remove="wwwroot\lib\sweetalert\**" />
   </ItemGroup>
 
 
@@ -57,6 +61,8 @@
     <None Include="wwwroot\lib\jquery\jquery.slim.min.map" />
     <None Include="wwwroot\lib\pace\pace.js" />
     <None Include="wwwroot\lib\pace\pace.min.js" />
+    <None Include="wwwroot\lib\toastr\toastr.js.map" />
+    <None Include="wwwroot\lib\toastr\toastr.min.js" />
   </ItemGroup>
 
 

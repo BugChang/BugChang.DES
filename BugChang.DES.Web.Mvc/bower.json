@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "admin-lte": "adminlte#v2.4.3",
-    "jquery-loading": "v1.3.0"
+    "jquery-loading": "v1.3.0",
+    "sweetalert": "v2.1.0"
   }
 }

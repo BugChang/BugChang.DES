@@ -17,6 +17,8 @@
 
     $(function () {
 
+        toastr.options.timeOut = 2000;
+
         //初始化zTree
         zTreeObj = $.fn.zTree.init($("#departmentTree"), setting);
 
@@ -41,8 +43,10 @@
                         $("#DepartmentCreateModal").modal("hide");
                         //刷新页面
                         refresh();
+                        toastr.success('操作成功');
                     } else {
-                        alert(result.message);
+                        //toastr.success('We do have the Kapua suite available.', 'Turtle Bay Resort', { timeOut: 5000 });
+                        toastr.error(result.message);
                     }
 
                 }
@@ -67,7 +71,8 @@
             "click",
             function () {
                 var departmentId = $(this).attr("data-department-id");
-                deleteDepartment(departmentId);
+                var departmentName = $(this).attr("data-department-name");
+                deleteDepartment(departmentId, departmentName);
             });
 
     });
@@ -123,15 +128,9 @@
                     targets: 4,
                     render: function (data, type, row) {
                         var strHtml =
-                            '<button class="btn btn-info btn-xs view-department" data-department-id=' +
-                            row.id +
-                            '>查看</button>&nbsp;' +
-                            '<button class="btn btn-warning btn-xs edit-department" data-department-id=' +
-                            row.id +
-                            '>修改</button>&nbsp;' +
-                            '<button class="btn btn-danger btn-xs delete-department" data-department-id=' +
-                            row.id +
-                            '>删除</button>';
+                            '<button class="btn btn-info btn-xs view-department" data-department-id=' + row.id + '>查看</button>&nbsp;' +
+                            '<button class="btn btn-warning btn-xs edit-department" data-department-id=' + row.id + '>修改</button>&nbsp;' +
+                            '<button class="btn btn-danger btn-xs delete-department" data-department-id=' + row.id + ' data-department-name=' + row.name + '>删除</button>';
                         return strHtml;
                     }
                 }
@@ -170,8 +169,20 @@
     }
 
     //删除机构
-    function deleteDepartment(id) {
-        alert("删除" + id);
+    function deleteDepartment(departmentId, departmentName) {
+        swal({
+            title: "确定删除" + departmentName + "?",
+            //text: "删除后无法恢复数据!",
+            icon: "warning",
+            buttons: ["取消", "确定"],
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                swal("数据已删除!", {
+                    icon: "success"
+                });
+            }
+        });
     }
 
     //清空表单
