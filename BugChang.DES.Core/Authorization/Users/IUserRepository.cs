@@ -11,5 +11,7 @@ namespace BugChang.DES.Core.Authorization.Users
         Task<User> GetAsync(string userName);
 
         Task<IList<User>> GetAllAsync(int limit, int offset, string keywords);
+
+        Task<int> GetCountAsync(int departmentId);
     }
 }

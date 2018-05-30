@@ -8,8 +8,8 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        private readonly MainDbContext _dbContext;
-        public UserRepository(MainDbContext dbContext) : base(dbContext)
+        private readonly DesDbContext _dbContext;
+        public UserRepository(DesDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
@@ -56,6 +56,17 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
             var users = await query.ToListAsync();
             return users;
+        }
+
+
+        /// <summary>
+        /// 获取指定机构下的用户数量
+        /// </summary>
+        /// <param name="departmentId">机构标识</param>
+        /// <returns></returns>
+        public async Task<int> GetCountAsync(int departmentId)
+        {
+            return await _dbContext.Users.CountAsync(u => u.DepartmentId == departmentId);
         }
     }
 }

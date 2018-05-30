@@ -9,8 +9,8 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 {
     public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
-        private readonly MainDbContext _dbContext;
-        public RoleRepository(MainDbContext dbContext) : base(dbContext)
+        private readonly DesDbContext _dbContext;
+        public RoleRepository(DesDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }

@@ -11,9 +11,9 @@ namespace BugChang.DES.Application.Departments
     public class
         DepartmentAppService : IDepartmentAppService
     {
-        private readonly UnitOfWork<MainDbContext> _unitOfWork;
+        private readonly UnitOfWork _unitOfWork;
         private readonly DepartmentManager _departmentManager;
-        public DepartmentAppService(UnitOfWork<MainDbContext> unitOfWork, DepartmentManager departmentManager)
+        public DepartmentAppService(UnitOfWork unitOfWork, DepartmentManager departmentManager)
         {
             _unitOfWork = unitOfWork;
             _departmentManager = departmentManager;
@@ -33,6 +33,16 @@ namespace BugChang.DES.Application.Departments
                 await _unitOfWork.CommitAsync();
             }
 
+            return result;
+        }
+
+        public async Task<ResultEntity> DeleteAsync(int id)
+        {
+            var result = await _departmentManager.DeleteAsync(id);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
             return result;
         }
 
@@ -70,10 +80,11 @@ namespace BugChang.DES.Application.Departments
         /// <param name="parentId">父Id</param>
         /// <param name="take">查询条数</param>
         /// <param name="skip">跳过条数</param>
+        /// <param name="keywords">关键字</param>
         /// <returns></returns>
-        public async Task<PageResultEntity<DepartmentDto>> GetPagingAysnc(int? parentId, int take, int skip)
+        public async Task<PageResultEntity<DepartmentDto>> GetPagingAysnc(int? parentId, int take, int skip,string keywords)
         {
-            var pageResult = await _departmentManager.GetPagingAysnc(parentId, take, skip);
+            var pageResult = await _departmentManager.GetPagingAysnc(parentId, take, skip,keywords);
             return Mapper.Map<PageResultEntity<DepartmentDto>>(pageResult);
         }
     }

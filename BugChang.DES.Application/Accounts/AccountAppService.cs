@@ -7,9 +7,9 @@ namespace BugChang.DES.Application.Accounts
     public class AccountAppService : IAccountAppService
     {
         private readonly LoginManager _loginManager;
-        private readonly UnitOfWork<MainDbContext> _mainUnitOfWork;
+        private readonly UnitOfWork _mainUnitOfWork;
 
-        public AccountAppService(UnitOfWork<MainDbContext> mainUnitOfWork, LoginManager loginManager)
+        public AccountAppService(UnitOfWork mainUnitOfWork, LoginManager loginManager)
         {
             _mainUnitOfWork = mainUnitOfWork;
             _loginManager = loginManager;

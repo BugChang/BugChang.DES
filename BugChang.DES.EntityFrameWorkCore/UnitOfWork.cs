@@ -1,19 +1,15 @@
 ﻿using System.Threading.Tasks;
-using BugChang.DES.Core;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BugChang.DES.EntityFrameWorkCore
 {
     /// <summary>
     /// 工作单元，负责统一提交
     /// </summary>
-    /// <typeparam name="TDbContext">EF上下文</typeparam>
-    public class UnitOfWork<TDbContext> where TDbContext : DbContext
+    public class UnitOfWork
     {
-        private readonly TDbContext _dbContext;
+        private readonly DesDbContext _dbContext;
 
-        public UnitOfWork(TDbContext dbContext)
+        public UnitOfWork(DesDbContext dbContext)
         {
             _dbContext = dbContext;
         }

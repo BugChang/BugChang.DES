@@ -62,7 +62,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<JsonResult> GetListForTable(int draw, int start, int length, int? parentId)
         {
-            var pagereslut = await _departmentAppService.GetPagingAysnc(parentId, length, start);
+            var keywords = Request.Query["search[value]"];
+            var pagereslut = await _departmentAppService.GetPagingAysnc(parentId, length, start, keywords);
             var json = new
             {
                 draw,
@@ -83,6 +84,13 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 Text = a.FullName
             });
             return Json(json);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _departmentAppService.DeleteAsync(id);
+            return Json(result);
         }
     }
 }

@@ -24,16 +24,13 @@ namespace BugChang.DES.Web.Mvc
 
             #region DB
 
-            var mainConnectionString = configuration.GetConnectionString("MainConnectionString");
-            var logConnectionString = configuration.GetConnectionString("LogConnectionString");
+            var mainConnectionString = configuration.GetConnectionString("DefaultConnectionString");
 
             //注册业务数据库上下文
-            services.AddDbContext<MainDbContext>(option => option.UseMySql(mainConnectionString));
+            services.AddDbContext<DesDbContext>(option => option.UseMySql(mainConnectionString));
             //注入日志数据库上下文
-            services.AddDbContext<LogDbContext>(option => option.UseMySql(logConnectionString));
 
-            services.AddScoped<UnitOfWork<MainDbContext>>();
-            services.AddScoped<UnitOfWork<LogDbContext>>();
+            services.AddScoped<UnitOfWork>();
 
             #endregion
 

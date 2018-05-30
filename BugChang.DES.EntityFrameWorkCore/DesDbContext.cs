@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using BugChang.DES.Core;
-using BugChang.DES.Core.Authorization.Menus;
+﻿using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Powers;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
@@ -11,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.EntityFrameWorkCore
 {
-    public class MainDbContext : DbContext
+    public class DesDbContext : DbContext
     {
-        public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
+        public DesDbContext(DbContextOptions<DesDbContext> options) : base(options)
         {
         }
 
@@ -28,6 +24,7 @@ namespace BugChang.DES.EntityFrameWorkCore
             modelBuilder.Entity<Department>().HasOne(a => a.CreateUser);
             modelBuilder.Entity<Department>().HasOne(a => a.UpdateUser);
 
+            //全局过滤器
             modelBuilder.Entity<Department>().HasQueryFilter(p => !p.IsDeleted);
             modelBuilder.Entity<User>().HasQueryFilter(p => !p.IsDeleted);
         }

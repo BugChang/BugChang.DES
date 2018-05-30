@@ -9,8 +9,8 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 {
     public class MenuRepository : BaseRepository<Menu>, IMenuRepository
     {
-        private readonly MainDbContext _dbContext;
-        public MenuRepository(MainDbContext dbContext) : base(dbContext)
+        private readonly DesDbContext _dbContext;
+        public MenuRepository(DesDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }

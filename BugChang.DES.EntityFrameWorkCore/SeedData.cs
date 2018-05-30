@@ -16,8 +16,8 @@ namespace BugChang.DES.EntityFrameWorkCore
         {
             using (var serviceScope = serviceProvider.CreateScope())
             {
-                var dbContext = serviceScope.ServiceProvider.GetService<MainDbContext>();
-                
+                var dbContext = serviceScope.ServiceProvider.GetService<DesDbContext>();
+
 
                 //dbContext.Database.EnsureDeleted();
 
@@ -131,12 +131,6 @@ namespace BugChang.DES.EntityFrameWorkCore
 
                     dbContext.SaveChanges();
                 }
-            }
-
-            using (var serviceScope = serviceProvider.CreateScope())
-            {
-                var dbContext = serviceScope.ServiceProvider.GetService<LogDbContext>();
-                dbContext.Database.EnsureCreated();
             }
         }
     }

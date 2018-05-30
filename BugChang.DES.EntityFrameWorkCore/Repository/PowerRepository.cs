@@ -11,8 +11,8 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 {
     public class PowerRepository : BaseRepository<Power>, IPowerRepository
     {
-        private readonly MainDbContext _dbContext;
-        public PowerRepository(MainDbContext dbContext) : base(dbContext)
+        private readonly DesDbContext _dbContext;
+        public PowerRepository(DesDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }

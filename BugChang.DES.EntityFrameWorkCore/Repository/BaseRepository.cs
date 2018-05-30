@@ -8,9 +8,9 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 {
     public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
-        private readonly MainDbContext _dbContext;
+        private readonly DesDbContext _dbContext;
 
-        protected BaseRepository(MainDbContext dbContext)
+        protected BaseRepository(DesDbContext dbContext)
         {
             _dbContext = dbContext;
         }
