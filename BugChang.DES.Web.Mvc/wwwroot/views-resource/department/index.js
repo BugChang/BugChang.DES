@@ -52,6 +52,10 @@
                 }
             });
         });
+        $('#btnLoadRoot').click(function() {
+            currentNode = null;
+            refresh();
+        });
 
         $('table').delegate('.view-department',
             'click',

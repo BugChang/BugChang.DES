@@ -73,7 +73,7 @@ namespace BugChang.DES.Core.Departments
             var childCount = await _departmentRepository.GetCountAsync(id);
             if (childCount > 0)
             {
-                resultEntity.Message = $"若要删除此机构，请先删除机构下的{userCount}个下级!";
+                resultEntity.Message = $"若要删除此机构，请先删除机构下的{childCount}个下级机构!";
                 return resultEntity;
             }
             //检查有效性
@@ -119,7 +119,7 @@ namespace BugChang.DES.Core.Departments
 
         public async Task<PageResultEntity<Department>> GetPagingAysnc(int? parentId, int take, int skip, string keywords)
         {
-            return await _departmentRepository.GetPagingAysnc(parentId, take, skip,keywords);
+            return await _departmentRepository.GetPagingAysnc(parentId, take, skip, keywords);
         }
     }
 }
