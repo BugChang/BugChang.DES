@@ -24,6 +24,9 @@ namespace BugChang.DES.Core.Authorization.Menus
         [MaxLength(50)]
         public string Icon { get; set; }
 
+        [MaxLength(200, ErrorMessage = "菜单描述不能多于200个字")]
+        public string Description { get; set; }
+
         public int? ParentId { get; set; }
 
         public virtual IList<Menu> Items { get; set; }

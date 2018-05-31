@@ -7,7 +7,6 @@ using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
@@ -56,7 +55,20 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 Id = a.Id,
                 Name = a.Name,
                 IsParent = a.Children.Count > 0
-            });
+            }).ToList();
+            if (parentId == null)
+            {
+                var treeDataWithRoot = new TreeViewModel
+                {
+                    Id = null,
+                    Name = "机构树",
+                    Open = true,
+                    IsParent = true,
+                    Children = treedata
+                };
+                return Json(treeDataWithRoot);
+            }
+
             return Json(treedata);
         }
 

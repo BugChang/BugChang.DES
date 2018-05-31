@@ -66,7 +66,6 @@ namespace BugChang.DES.Core.Authentication
                     };
                     var claimsIdentity = new ClaimsIdentity("BugChang.DES.Cookies");
                     claimsIdentity.AddClaims(claims);
-                    CurrentUserHelper.Initialize(claims);
                     loginResult.ClaimsPrincipal = new ClaimsPrincipal(claimsIdentity);
                 }
             }

@@ -1,9 +1,4 @@
 ﻿@using BugChang.DES.Web.Mvc.Models.Common
-@section css
-    {
-    <link href="~/lib/zTree/css/metroStyle/metroStyle.css" rel="stylesheet" />
-    <link href="~/lib/select2/css/select2.min.css" rel="stylesheet" />
-}
 <div class="row">
     <div class="col-xs-2">
         <div class="box box-primary">
@@ -23,7 +18,7 @@
                     <div class="box-header with-border">
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#DepartmentCreateModal" data-backdrop="static" data-keyboard="false"><i class="fa  fa-plus-circle"></i> 新增</button>
-                            <button type="button" id="btnLoadRoot" class="btn btn-primary"><i class="fa fa-upload"></i> 加载顶级</button>
+                            <button id="btnRefresh" type="button" class="btn btn-primary"><i class="fa  fa-refresh"></i> 刷新</button>
                         </div>
                     </div>
                     <div class="box-body">
@@ -71,9 +66,5 @@
 </div>
 @section scripts
     {
-    <script src="~/lib/select2/js/select2.full.min.js"></script>
-    <script src="~/lib/select2/js/i18n/zh-CN.js"></script>
-    <script src="~/lib/zTree/js/jquery.ztree.all.min.js"></script>
-    <script src="~/lib/sweetalert/sweetalert.min.js"></script>
-    <script src="~/views-resource/department/Index.js" asp-append-version="true"></script>
+    <script src="~/views-resource/department/index.js" asp-append-version="true"></script>
 }

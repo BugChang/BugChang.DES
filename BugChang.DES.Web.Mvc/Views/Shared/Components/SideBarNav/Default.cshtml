@@ -1,5 +1,4 @@
-﻿@using BugChang.DES.Core.Authentication
-@model BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav.SideBarNavViewModel
+﻿@model BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav.SideBarNavViewModel
 
 
 
@@ -12,7 +11,7 @@
                 <img src="~/images/user2-160x160.jpg" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p>@CurrentUserHelper.DisplayName</p>
+                <p>@(User.FindFirst("DisplayName").Value)</p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>

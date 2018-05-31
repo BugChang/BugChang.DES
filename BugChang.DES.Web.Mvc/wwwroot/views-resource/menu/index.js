@@ -1,4 +1,4 @@
-﻿var DepartmentIndex = function () {
+﻿var MenuIndex = function () {
     var currentNode = null;
     var table;
     var zTreeObj;
@@ -6,7 +6,7 @@
     var setting = { // zTree 参数配置
         async: {
             enable: true,
-            url: '/Department/GetTreeData',
+            url: '/Menu/GetTreeData',
             autoParam: ['id=parentId'],
             type: 'get'
         },
@@ -21,7 +21,7 @@
         window.toastr.options.timeOut = 2000;
 
         //初始化zTree
-        zTreeObj = $.fn.zTree.init($('#departmentTree'), setting);
+        zTreeObj = $.fn.zTree.init($('#menuTree'), setting);
 
         //初始化table
         initTable();
@@ -30,55 +30,60 @@
         initSelect();
 
         //新增机构表单提交时
-        $('#DepartmentCreateForm').submit(function (e) {
+        $('#MenuCreateForm').submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            $.post('/Department/Edit', data,
-                function (result) {
+            $(this).ajaxSubmit({
+                type: 'post',
+                url: '/Menu/Edit',
+                data: data,
+                success: function (result) {
                     if (result.success) {
                         resetForm();
                         //关闭模态
-                        $('#DepartmentCreateModal').modal('hide');
+                        $('#MenuCreateModal').modal('hide');
                         //刷新页面
                         refresh();
                         window.toastr.success('操作成功');
                     } else {
                         window.toastr.error(result.message);
                     }
-                });
+                }
+            });
         });
 
-        $('table').delegate('.view-department',
+        $('table').delegate('.view-menu',
             'click',
             function () {
-                var departmentId = $(this).attr('data-department-id');
-                viewDepartment(departmentId);
+                var menuId = $(this).attr('data-menu-id');
+                viewMenu(menuId);
             });
 
-        $('table').delegate('.edit-department',
+        $('table').delegate('.edit-menu',
             'click',
             function () {
-                var departmentId = $(this).attr('data-department-id');
-                editDepartment(departmentId);
+                var menuId = $(this).attr('data-menu-id');
+                editMenu(menuId);
             });
 
-        $('table').delegate('.delete-department',
+        $('table').delegate('.delete-menu',
             'click',
             function () {
-                var departmentId = $(this).attr('data-department-id');
-                var departmentName = $(this).attr('data-department-name');
-                deleteDepartment(departmentId, departmentName);
+                var menuId = $(this).attr('data-menu-id');
+                var menuName = $(this).attr('data-menu-name');
+                deleteMenu(menuId, menuName);
             });
-        $('#btnRefresh').click(function() {
-            reload();
-        });
-
 
     });
 
     //zTree节点单击回调函数
     function zTreeBeforeClick(treeId, treeNode) {
         currentNode = treeNode;
+        if (!currentNode.customData) {
+            showAddButton(true);
+        } else {
+            showAddButton(false);
+        }
         table.ajax.reload();
         $('.select2').val(treeNode.id).trigger('change');
     }
@@ -92,7 +97,7 @@
             serverSide: true,
             autoWith: true,
             ajax: {
-                url: '/Department/GetListForTable',
+                url: '/Menu/GetListForTable',
                 data: function (para) {
                     //添加额外的参数传给服务器
                     para.parentId = currentNode === null ? null : currentNode.id;
@@ -110,12 +115,16 @@
                     title: '名称'
                 },
                 {
-                    data: 'fullName',
-                    title: '全称'
+                    data: 'url',
+                    title: '地址'
                 },
                 {
-                    data: 'code',
-                    title: '代码'
+                    data: 'description',
+                    title: '描述'
+                },
+                {
+                    data: 'icon',
+                    title: '图标'
                 },
                 {
                     data: null,
@@ -124,12 +133,12 @@
             ],
             columnDefs: [
                 {
-                    targets: 4,
+                    targets: 5,
                     render: function (data, type, row) {
                         var strHtml =
-                            '<button class="btn btn-info btn-xs view-department" data-department-id=' + row.id + '>查看</button>&nbsp;' +
-                            '<button class="btn btn-warning btn-xs edit-department" data-department-id=' + row.id + '>修改</button>&nbsp;' +
-                            '<button class="btn btn-danger btn-xs delete-department" data-department-id=' + row.id + ' data-department-name=' + row.name + '>删除</button>';
+                            '<button class="btn btn-info btn-xs view-menu" data-menu-id=' + row.id + '>查看</button>&nbsp;' +
+                            '<button class="btn btn-warning btn-xs edit-menu" data-menu-id=' + row.id + '>修改</button>&nbsp;' +
+                            '<button class="btn btn-danger btn-xs delete-menu" data-menu-id=' + row.id + ' data-menu-name=' + row.name + '>删除</button>';
                         return strHtml;
                     }
                 }
@@ -140,77 +149,79 @@
         });
     }
 
-    //初始化上级机构
+    //初始化上级菜单
     function initSelect() {
-        $.get('/Department/GetListForSelect',
+        $.get('/Menu/GetListForSelect',
             function (data) {
                 $('.select2').select2({
                     data: data,
-                    placeholder: '请选择上级机构',
+                    placeholder: '请选择上级菜单',
                     allowClear: true
                 });
             });
     }
 
-    //查看机构详情
-    function viewDepartment(id) {
+    //查看菜单详情
+    function viewMenu(id) {
         alert('查看' + id);
     }
 
-    //编辑机构信息
-    function editDepartment(id) {
-        $('#DepartmentEditModal .modal-content').load('/Department/EditDepartmentModal/' + id);
-        $('#DepartmentEditModal').modal({
+    //编辑菜单信息
+    function editMenu(id) {
+        $('#MenuEditModal .modal-content').load('/Menu/EditMenuModal/' + id);
+        $('#MenuEditModal').modal({
             backdrop: 'static',
             keyboard: false,
             show: true
         });
     }
 
-    //删除机构
-    function deleteDepartment(departmentId, departmentName) {
+    //删除菜单
+    function deleteMenu(menuId, menuName) {
         window.swal({
-            title: '确定删除' + departmentName + '?',
+            title: '确定删除' + menuName + '?',
             //text: '删除后无法恢复数据!',
             icon: 'warning',
             buttons: ['取消', '确定'],
             dangerMode: true
         }).then((willDelete) => {
             if (willDelete) {
-                $.post('/Department/Delete/' + departmentId,
+                $.post('/Menu/Delete/' + menuId,
                     function (result) {
                         if (result.success) {
-                            window.swal('操作成功', departmentName + '已被删除!', 'success');
+                            window.swal('操作成功', menuName + '已被删除!', 'success');
                             refresh();
                         } else {
                             window.swal('操作失败', result.message, 'error');
                         }
+                    }).error(function () {
+                        window.swal('操作失败', "111", 'error');
                     });
             }
         });
     }
 
+    //控制新增按钮的显示
+    function showAddButton(isShow) {
+        if (isShow) {
+            $('#btnAddMenu').show();
+        } else {
+            $('#btnAddMenu').hide();
+        }
+    }
+
     //清空表单
     function resetForm() {
-        $('#DepartmentCreateForm')[0].reset();
+        $('#MenuCreateForm').form('clear');
         $('.select2').val(currentNode.id).trigger('change');
     }
 
-    //刷新数据
+    //刷新页面
     function refresh() {
         //刷新表格
         table.ajax.reload();
-        currentNode.isParent = true;
-        zTreeObj.updateNode(currentNode);
-        //刷新机构树
+        //刷新菜单树
         zTreeObj.reAsyncChildNodes(currentNode, 'refresh');
-        //刷新上级单位列表
-        initSelect();
-    }
-
-    //重新加载页面
-    function reload() {
-        window.location.reload();
     }
 
     //向外暴露方法
