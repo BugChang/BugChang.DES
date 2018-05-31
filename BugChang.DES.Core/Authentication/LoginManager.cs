@@ -67,6 +67,9 @@ namespace BugChang.DES.Core.Authentication
                     var claimsIdentity = new ClaimsIdentity("BugChang.DES.Cookies");
                     claimsIdentity.AddClaims(claims);
                     loginResult.ClaimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    //设置当前用户信息
+                    CurrentUser.Id = user.Id;
                 }
             }
             return loginResult;

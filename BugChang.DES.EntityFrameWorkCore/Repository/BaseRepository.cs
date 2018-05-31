@@ -17,7 +17,6 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<TEntity> GetAsync(int id)
         {
-
             return await _dbContext.Set<TEntity>().SingleOrDefaultAsync(a => a.Id == id);
         }
 
@@ -28,6 +27,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task AddAsync(TEntity entity)
         {
+            entity.SetCreateInfo();
             await _dbContext.Set<TEntity>().AddAsync(entity);
         }
 
@@ -38,6 +38,8 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public void Update(TEntity entity)
         {
+            entity.SetUpdateInfo();
+
             _dbContext.Set<TEntity>().Update(entity);
         }
     }

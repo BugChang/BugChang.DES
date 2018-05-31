@@ -13,5 +13,7 @@ namespace BugChang.DES.Core.Departments
         Task<Department> GetAsync(string code, int? parentId);
 
         Task<int> GetCountAsync(int parentId);
+
+        Task<Department> GetViewAsync(int id);
     }
 }

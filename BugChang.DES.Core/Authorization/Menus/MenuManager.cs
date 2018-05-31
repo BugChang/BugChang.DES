@@ -41,5 +41,21 @@ namespace BugChang.DES.Core.Authorization.Menus
         {
             return await _menuRepository.GetPagingAysnc(parentId, take, skip, keywords);
         }
+
+        public async Task<ResultEntity> AddOrUpdateAsync(Menu menu)
+        {
+            var result = new ResultEntity();
+            if (menu.Id > 0)
+            {
+                _menuRepository.Update(menu);
+            }
+            else
+            {
+                await _menuRepository.AddAsync(menu);
+            }
+
+            result.Success = true;
+            return result;
+        }
     }
 }

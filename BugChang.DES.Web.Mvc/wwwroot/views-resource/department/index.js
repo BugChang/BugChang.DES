@@ -69,7 +69,7 @@
                 var departmentName = $(this).attr('data-department-name');
                 deleteDepartment(departmentId, departmentName);
             });
-        $('#btnRefresh').click(function() {
+        $('#btnRefresh').click(function () {
             reload();
         });
 
@@ -154,7 +154,12 @@
 
     //查看机构详情
     function viewDepartment(id) {
-        alert('查看' + id);
+        $('#DepartmentViewModal .modal-content').load('/Department/ViewDepartmentModal/' + id);
+        $('#DepartmentViewModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
     }
 
     //编辑机构信息

@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using BugChang.DES.Application.Menus;
 using BugChang.DES.Application.Menus.Dtos;
+using BugChang.DES.Core.Common;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
@@ -25,7 +27,17 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(MenuEditDto menu)
         {
-            return View();
+            var result = new ResultEntity();
+            if (ModelState.IsValid)
+            {
+                result = await _menuAppService.AddOrUpdateAsync(menu);
+                return Json(result);
+            }
+            result.Message = ModelState.Values
+                .FirstOrDefault(a => a.ValidationState == ModelValidationState.Invalid)?.Errors.FirstOrDefault()
+                ?.ErrorMessage;
+
+            return Json(result);
         }
 
         [HttpGet]

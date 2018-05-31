@@ -33,23 +33,18 @@
         $('#MenuCreateForm').submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            $(this).ajaxSubmit({
-                type: 'post',
-                url: '/Menu/Edit',
-                data: data,
-                success: function (result) {
-                    if (result.success) {
-                        resetForm();
-                        //关闭模态
-                        $('#MenuCreateModal').modal('hide');
-                        //刷新页面
-                        refresh();
-                        window.toastr.success('操作成功');
-                    } else {
-                        window.toastr.error(result.message);
-                    }
+            $.post('/Menu/Edit', data, function (result) {
+                if (result.success) {
+                    resetForm();
+                    //关闭模态
+                    $('#MenuCreateModal').modal('hide');
+                    //刷新页面
+                    refresh();
+                    window.toastr.success('操作成功');
+                } else {
+                    window.toastr.error(result.message);
                 }
-            });
+            })
         });
 
         $('table').delegate('.view-menu',
@@ -212,7 +207,7 @@
 
     //清空表单
     function resetForm() {
-        $('#MenuCreateForm').form('clear');
+        $('#MenuCreateForm')[0].reset();
         $('.select2').val(currentNode.id).trigger('change');
     }
 

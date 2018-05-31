@@ -1,25 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace BugChang.DES.Application.Departments.Dtos
 {
-    public class DepartmentDto
+    public class DepartmentViewDto
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public string FullName { get; set; }
 
         public string Code { get; set; }
 
-        public int? ParentId { get; set; }
-
-        public bool IsDeleted { get; set; }
-
-        public IList<DepartmentDto> Children { get; set; }
-
-        public DepartmentDto Parent { get; set; }
+        public string ParentName { get; set; }
 
         public string CreateUserName { get; set; }
 
@@ -27,6 +18,6 @@ namespace BugChang.DES.Application.Departments.Dtos
 
         public DateTime CreateTime { get; set; }
 
-        public DateTime UpdateTime { get; set; }
+        public DateTime UpdateTime { get; set; }    
     }
 }

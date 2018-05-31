@@ -52,5 +52,11 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         {
             return await _dbContext.Departments.CountAsync(d => d.ParentId == parentId);
         }
+
+        public async Task<Department> GetViewAsync(int id)
+        {
+            return await _dbContext.Departments.Include(a => a.Parent).Include(a => a.CreateUser).Include(a => a.UpdateUser)
+                .SingleOrDefaultAsync(a => a.Id == id);
+        }
     }
 }

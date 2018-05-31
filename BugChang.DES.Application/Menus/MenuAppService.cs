@@ -4,16 +4,18 @@ using AutoMapper;
 using BugChang.DES.Application.Menus.Dtos;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Common;
+using BugChang.DES.EntityFrameWorkCore;
 
 namespace BugChang.DES.Application.Menus
 {
     public class MenuAppService : IMenuAppService
     {
         private readonly MenuManager _menuManager;
-
-        public MenuAppService(MenuManager menuManager)
+        private readonly UnitOfWork _unitOfWork;
+        public MenuAppService(MenuManager menuManager, UnitOfWork unitOfWork)
         {
             _menuManager = menuManager;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IList<MenuDto>> GetUserMenusAsync(int userId)
@@ -44,6 +46,17 @@ namespace BugChang.DES.Application.Menus
         {
             var pageResult = await _menuManager.GetPagingAysnc(parentId, take, skip, keywords);
             return Mapper.Map<PageResultEntity<MenuDto>>(pageResult);
+        }
+
+        public async Task<ResultEntity> AddOrUpdateAsync(MenuEditDto menu)
+        {
+            var model = Mapper.Map<Menu>(menu);
+            var result = await _menuManager.AddOrUpdateAsync(model);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+            return result;
         }
     }
 }

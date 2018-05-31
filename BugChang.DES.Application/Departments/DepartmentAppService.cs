@@ -68,9 +68,14 @@ namespace BugChang.DES.Application.Departments
             return Mapper.Map<IList<DepartmentDto>>(departments);
         }
 
-        public async Task<DepartmentEditDto> GetAsync(int id)
+        public async Task<DepartmentEditDto> GetEditAsync(int id)
         {
-            return Mapper.Map<DepartmentEditDto>(await _departmentManager.GetAsync(id));
+            return Mapper.Map<DepartmentEditDto>(await _departmentManager.GetEditAsync(id));
+        }
+
+        public async Task<DepartmentViewDto> GetViewAsync(int id)
+        {
+            return Mapper.Map<DepartmentViewDto>(await _departmentManager.GetViewAsync(id));
         }
 
 
@@ -82,9 +87,9 @@ namespace BugChang.DES.Application.Departments
         /// <param name="skip">跳过条数</param>
         /// <param name="keywords">关键字</param>
         /// <returns></returns>
-        public async Task<PageResultEntity<DepartmentDto>> GetPagingAysnc(int? parentId, int take, int skip,string keywords)
+        public async Task<PageResultEntity<DepartmentDto>> GetPagingAysnc(int? parentId, int take, int skip, string keywords)
         {
-            var pageResult = await _departmentManager.GetPagingAysnc(parentId, take, skip,keywords);
+            var pageResult = await _departmentManager.GetPagingAysnc(parentId, take, skip, keywords);
             return Mapper.Map<PageResultEntity<DepartmentDto>>(pageResult);
         }
     }
