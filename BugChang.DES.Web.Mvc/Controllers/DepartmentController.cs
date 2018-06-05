@@ -24,7 +24,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             _departmentAppService = departmentAppService;
         }
 
-        [AuthorizeFilter]
+        [ServiceFilter(typeof(MenuFilter))]
         public IActionResult Index()
         {
             return View();

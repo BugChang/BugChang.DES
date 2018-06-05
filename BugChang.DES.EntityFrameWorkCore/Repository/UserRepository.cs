@@ -22,8 +22,8 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         /// <returns>User Or Null</returns>
         public async Task<User> GetAsync(string userName, string password)
         {
-            var user = await _dbContext.Users.SingleOrDefaultAsync(u =>
-                u.UserName.Equals(userName.Trim()) && u.Password.Equals(password.Trim()));
+            var user = await _dbContext.Users.Include(a => a.UserRoles).ThenInclude(a => a.Role).SingleOrDefaultAsync(u =>
+                    u.UserName.Equals(userName.Trim()) && u.Password.Equals(password.Trim()));
             return user;
         }
 

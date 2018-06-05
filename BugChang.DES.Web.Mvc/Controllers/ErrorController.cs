@@ -4,7 +4,7 @@
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
-    public class ErrorsController : BaseController
+    public class ErrorController : BaseController
     {
 
         [Route("Errors/{statusCode}")]
@@ -17,6 +17,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
             }
 
             return View("500");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View("AccessDenied");
         }
     }
 }

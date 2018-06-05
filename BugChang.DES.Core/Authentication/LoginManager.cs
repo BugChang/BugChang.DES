@@ -64,6 +64,10 @@ namespace BugChang.DES.Core.Authentication
                         new Claim("UserName",user.UserName),
                         new Claim("DisplayName",user.DisplayName)
                     };
+                    foreach (var role in user.UserRoles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
+                    }
                     var claimsIdentity = new ClaimsIdentity("BugChang.DES.Cookies");
                     claimsIdentity.AddClaims(claims);
                     loginResult.ClaimsPrincipal = new ClaimsPrincipal(claimsIdentity);

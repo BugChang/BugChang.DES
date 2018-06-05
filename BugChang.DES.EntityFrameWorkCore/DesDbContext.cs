@@ -37,7 +37,7 @@ namespace BugChang.DES.EntityFrameWorkCore
 
         public DbSet<Power> Powers { get; set; }
 
-        public DbSet<RolePower> RolePowers { get; set; }
+        public DbSet<RoleMenu> RoleMenus { get; set; }
 
         public DbSet<Menu> Menus { get; set; }
 

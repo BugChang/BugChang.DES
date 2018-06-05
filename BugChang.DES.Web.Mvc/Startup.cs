@@ -33,6 +33,7 @@ namespace BugChang.DES.Web.Mvc
                 .AddCookie(options =>
                 {
                     options.Cookie.Name = "BugChang.DES.AuthenticationCookies";
+                    options.AccessDeniedPath = "/Error/AccessDenied";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(20);//默认20分钟过期
                 });
 
@@ -69,11 +70,11 @@ namespace BugChang.DES.Web.Mvc
             else
             {
                 //报错指向路径
-                app.UseExceptionHandler("/Errors/500");
+                app.UseExceptionHandler("/Error/500");
             }
 
             //其他错误代码指向路径
-            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
             //静态文件
             app.UseStaticFiles();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Menus;
 using BugChang.DES.Application.Menus.Dtos;
@@ -30,7 +31,8 @@ namespace BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav
             }
             else
             {
-                menus = await _menuAppService.GetUserMenusAsync(Convert.ToInt32(userId));
+                var roles = HttpContext.User.Claims.Where(a => a.Type == ClaimTypes.Role).Select(a => a.Value).ToList();
+                menus = await _menuAppService.GetUserMenusAsync(roles);
             }
             var model = new SideBarNavViewModel
             {

@@ -6,7 +6,7 @@ namespace BugChang.DES.Core.Authorization.Menus
 {
     public interface IMenuRepository : IBaseRepository<Menu>
     {
-        Task<IList<Menu>> GetAllByUserIdAsync(int userId);
+        Task<IList<Menu>> GetMenusByRolesAsync(IList<string> roles);
         Task<IList<Menu>> GetAllAsync(int? parentId);
 
         Task<IList<Menu>> GetAllRootAsync();

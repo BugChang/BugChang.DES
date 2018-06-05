@@ -10,6 +10,7 @@ using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.EntityFrameWorkCore;
 using BugChang.DES.EntityFrameWorkCore.Repository;
+using BugChang.DES.Web.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,7 @@ namespace BugChang.DES.Web.Mvc
 
             #endregion
 
+            services.AddScoped<MenuFilter>();
 
             #region AppService
 
@@ -58,7 +60,6 @@ namespace BugChang.DES.Web.Mvc
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<IPowerRepository, PowerRepository>();
             services.AddScoped<IMenuRepository, MenuRepository>();
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 

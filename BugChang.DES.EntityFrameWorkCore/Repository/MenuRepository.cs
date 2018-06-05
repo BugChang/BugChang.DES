@@ -19,15 +19,13 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         /// <summary>
         /// 根据用户标识获取菜单列表
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="roles"></param>
         /// <returns></returns>
-        public async Task<IList<Menu>> GetAllByUserIdAsync(int userId)
+        public async Task<IList<Menu>> GetMenusByRolesAsync(IList<string> roles)
         {
-            var query = from menu in _dbContext.Menus
-                        join rolePower in _dbContext.RolePowers on menu.Id equals rolePower.Power.ResourceId
-                        join userRole in _dbContext.UserRoles on rolePower.Role.Id equals userRole.Role.Id
-                        where rolePower.Power.Type == PowerType.菜单 && userRole.User.Id == userId
-                        select menu;
+            var query = from roleMenu in _dbContext.RoleMenus
+                        where roles.Contains(roleMenu.Role.Name)
+                        select roleMenu.Menu;
             return await query.ToListAsync();
         }
 

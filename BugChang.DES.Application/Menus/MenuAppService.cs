@@ -18,9 +18,9 @@ namespace BugChang.DES.Application.Menus
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IList<MenuDto>> GetUserMenusAsync(int userId)
+        public async Task<IList<MenuDto>> GetUserMenusAsync(IList<string> userRoles)
         {
-            var menus = await _menuManager.GetUserMenusAsync(userId);
+            var menus = await _menuManager.GetUserMenusAsync(userRoles);
             return Mapper.Map<IList<MenuDto>>(menus);
         }
 
@@ -57,6 +57,11 @@ namespace BugChang.DES.Application.Menus
                 await _unitOfWork.CommitAsync();
             }
             return result;
+        }
+
+        public async Task<bool> HasMenu(IList<string> userRoles, string url)
+        {
+            return await _menuManager.HasMenu(userRoles, url);
         }
     }
 }

@@ -14,9 +14,9 @@ namespace BugChang.DES.Core.Authorization.Menus
             _menuRepository = menuRepository;
         }
 
-        public async Task<IList<Menu>> GetUserMenusAsync(int userId)
+        public async Task<IList<Menu>> GetUserMenusAsync(IList<string> userRoles)
         {
-            var menus = await _menuRepository.GetAllByUserIdAsync(userId);
+            var menus = await _menuRepository.GetMenusByRolesAsync(userRoles);
             return menus;
         }
 
@@ -57,6 +57,16 @@ namespace BugChang.DES.Core.Authorization.Menus
 
             result.Success = true;
             return result;
+        }
+
+        public async Task<bool> HasMenu(IList<string> userRoles, string url)
+        {
+            var menus = await _menuRepository.GetMenusByRolesAsync(userRoles);
+            if (menus.FirstOrDefault(a => a.Url.Equals(url)) != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
