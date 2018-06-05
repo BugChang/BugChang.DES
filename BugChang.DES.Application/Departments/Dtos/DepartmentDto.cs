@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace BugChang.DES.Application.Departments.Dtos
 {
-    public class DepartmentDto
+    public class DepartmentDto : BaseDto
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public string FullName { get; set; }
@@ -19,14 +17,6 @@ namespace BugChang.DES.Application.Departments.Dtos
 
         public IList<DepartmentDto> Children { get; set; }
 
-        public DepartmentDto Parent { get; set; }
-
-        public string CreateUserName { get; set; }
-
-        public string UpdateUserName { get; set; }
-
-        public DateTime CreateTime { get; set; }
-
-        public DateTime UpdateTime { get; set; }
+        public string ParentName { get; set; }
     }
 }

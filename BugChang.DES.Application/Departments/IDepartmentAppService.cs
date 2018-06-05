@@ -15,10 +15,8 @@ namespace BugChang.DES.Application.Departments
 
         Task<IList<DepartmentDto>> GetAllAsync();
 
-        Task<DepartmentEditDto> GetEditAsync(int id);
-
-        Task<DepartmentViewDto> GetViewAsync(int id);
-
+        Task<DepartmentEditDto> GetAsync(int id);
+        
         Task<PageResultEntity<DepartmentDto>> GetPagingAysnc(int? parentId, int take, int skip, string keywords);
     }
 }

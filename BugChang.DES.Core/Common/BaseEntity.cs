@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Net;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Authorization.Users;
 
@@ -46,15 +47,12 @@ namespace BugChang.DES.Core.Common
         public virtual User UpdateUser { get; set; }
 
         public void SetUpdateInfo()
-        {
-            UpdateBy = CurrentUser.Id;
+        {;
             UpdateTime = DateTime.Now;
         }
 
         public void SetCreateInfo()
         {
-            UpdateBy = null;
-            CreateBy = CurrentUser.Id;
             CreateTime = DateTime.Now;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BugChang.DES.Core.Common
@@ -8,6 +9,8 @@ namespace BugChang.DES.Core.Common
         Task<TEntity> GetAsync(int id);
 
         Task<IList<TEntity>> GetAllAsync();
+
+        IQueryable<TEntity> GetQueryable();
 
         Task AddAsync(TEntity entity);
 

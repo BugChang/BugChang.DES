@@ -68,14 +68,9 @@ namespace BugChang.DES.Application.Departments
             return Mapper.Map<IList<DepartmentDto>>(departments);
         }
 
-        public async Task<DepartmentEditDto> GetEditAsync(int id)
+        public async Task<DepartmentEditDto> GetAsync(int id)
         {
-            return Mapper.Map<DepartmentEditDto>(await _departmentManager.GetEditAsync(id));
-        }
-
-        public async Task<DepartmentViewDto> GetViewAsync(int id)
-        {
-            return Mapper.Map<DepartmentViewDto>(await _departmentManager.GetViewAsync(id));
+            return Mapper.Map<DepartmentEditDto>(await _departmentManager.GetAsync(id));
         }
 
 

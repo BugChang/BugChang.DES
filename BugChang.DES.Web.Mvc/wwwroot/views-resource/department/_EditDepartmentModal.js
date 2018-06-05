@@ -4,11 +4,9 @@
         $("#DepartmentEditForm").submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            $(this).ajaxSubmit({
-                type: "post",
-                url: "/Department/Edit",
-                data: data,
-                success: function (result) {
+            $.post('/Department/Edit',
+                data,
+                function (result) {
                     if (result.success) {
                         //关闭模态
                         $("#DepartmentEditModal").modal("hide");
@@ -17,8 +15,7 @@
                     } else {
                         alert(result.message);
                     }
-                }
-            });
+                });
         });
     });
 

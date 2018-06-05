@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Common;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
     {
         private readonly DesDbContext _dbContext;
 
+        public virtual DbSet<TEntity> Table => _dbContext.Set<TEntity>();
+
         protected BaseRepository(DesDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -17,12 +20,19 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<TEntity> GetAsync(int id)
         {
-            return await _dbContext.Set<TEntity>().SingleOrDefaultAsync(a => a.Id == id);
+            return await Table.SingleOrDefaultAsync(a => a.Id == id);
         }
+
+
 
         public async Task<IList<TEntity>> GetAllAsync()
         {
-            return await _dbContext.Set<TEntity>().ToListAsync();
+            return await Table.ToListAsync();
+        }
+
+        public IQueryable<TEntity> GetQueryable()
+        {
+            return Table;
         }
 
         public async Task AddAsync(TEntity entity)
@@ -33,7 +43,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("接口尚未实现");
         }
 
         public void Update(TEntity entity)

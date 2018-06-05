@@ -118,17 +118,32 @@
                     title: '代码'
                 },
                 {
+                    data: 'createUserName',
+                    title: '创建人'
+                },
+                {
+                    data: 'createTime',
+                    title: '创建时间'
+                },
+                {
+                    data: 'updateUserName',
+                    title: '最后更新人'
+                },
+                {
+                    data: 'updateTime',
+                    title: '最后更新时间'
+                },
+                {
                     data: null,
                     title: '操作'
                 }
             ],
             columnDefs: [
                 {
-                    targets: 4,
+                    targets: 8,
                     render: function (data, type, row) {
                         var strHtml =
-                            '<button class="btn btn-info btn-xs view-department" data-department-id=' + row.id + '>查看</button>&nbsp;' +
-                            '<button class="btn btn-warning btn-xs edit-department" data-department-id=' + row.id + '>修改</button>&nbsp;' +
+                            '<button class="btn btn-info btn-xs edit-department" data-department-id=' + row.id + '>修改</button>&nbsp;' +
                             '<button class="btn btn-danger btn-xs delete-department" data-department-id=' + row.id + ' data-department-name=' + row.name + '>删除</button>';
                         return strHtml;
                     }

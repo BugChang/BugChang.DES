@@ -102,14 +102,9 @@ namespace BugChang.DES.Core.Departments
             return department.Id != dataBaseDepartment.Id;
         }
 
-        public async Task<Department> GetEditAsync(int id)
+        public async Task<Department> GetAsync(int id)
         {
             return await _departmentRepository.GetAsync(id);
-        }
-
-        public async Task<Department> GetViewAsync(int id)
-        {
-            return await _departmentRepository.GetViewAsync(id);
         }
 
         public async Task<IList<Department>> GetAllAsync(int? parentId)

@@ -50,10 +50,10 @@ namespace BugChang.DES.Web.Mvc
             services.AddMvc(config =>
             {
                 //全局不允许匿名访问
-                var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
-                config.Filters.Add(new AuthorizeFilter(policy));
+                //var policy = new AuthorizationPolicyBuilder()
+                //    .RequireAuthenticatedUser()
+                //   .Build();
+                //config.Filters.Add(new AuthorizeFilter(policy));
             });
 
             services.AddOptions();

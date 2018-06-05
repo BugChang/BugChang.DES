@@ -34,6 +34,8 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
                 query = query.Where(q =>
                     q.Name.Contains(keywords) || q.FullName.Contains(keywords) || q.Code.Contains(keywords));
             }
+
+            query = query.Include(a => a.Parent).Include(a => a.CreateUser).Include(a => a.UpdateUser);
             var pageResultEntity = new PageResultEntity<Department>
             {
                 Total = await query.CountAsync(),

@@ -121,6 +121,11 @@ namespace BugChang.DES.EntityFrameWorkCore
                             {
                                 Name = "组织机构",
                                 Url = "/Department/Index"
+                            },
+                            new Menu
+                            {
+                                Name = "菜单管理",
+                                Url = "/Menu/Index"
                             }
                         }
                     };

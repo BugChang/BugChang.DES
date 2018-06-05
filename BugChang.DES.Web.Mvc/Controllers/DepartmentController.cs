@@ -1,9 +1,14 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Core.Common;
+using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -19,6 +24,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             _departmentAppService = departmentAppService;
         }
 
+        [AuthorizeFilter]
         public IActionResult Index()
         {
             return View();
@@ -26,14 +32,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> EditDepartmentModal(int id)
         {
-            var model = await _departmentAppService.GetEditAsync(id);
+            var model = await _departmentAppService.GetAsync(id);
             return PartialView("_EditDepartmentModal", model);
-        }
-
-        public async Task<IActionResult> ViewDepartmentModal(int id)
-        {
-            var model = await _departmentAppService.GetViewAsync(id);
-            return PartialView("_ViewDepartmentModal", model);
         }
 
         [HttpPost]
