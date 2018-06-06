@@ -45,6 +45,12 @@
     <None Include="wwwroot\lib\font-awesome\fonts\fontawesome-webfont.woff2" />
     <None Include="wwwroot\lib\iCheck\icheck.js" />
     <None Include="wwwroot\lib\iCheck\icheck.min.js" />
+    <None Include="wwwroot\lib\input-mask\jquery.inputmask.date.extensions.js" />
+    <None Include="wwwroot\lib\input-mask\jquery.inputmask.extensions.js" />
+    <None Include="wwwroot\lib\input-mask\jquery.inputmask.js" />
+    <None Include="wwwroot\lib\input-mask\jquery.inputmask.numeric.extensions.js" />
+    <None Include="wwwroot\lib\input-mask\jquery.inputmask.phone.extensions.js" />
+    <None Include="wwwroot\lib\input-mask\jquery.inputmask.regex.extensions.js" />
     <None Include="wwwroot\lib\Ionicons\fonts\ionicons.svg" />
     <None Include="wwwroot\lib\jquery-slimscroll\jquery.slimscroll.js" />
     <None Include="wwwroot\lib\jquery-slimscroll\jquery.slimscroll.min.js" />

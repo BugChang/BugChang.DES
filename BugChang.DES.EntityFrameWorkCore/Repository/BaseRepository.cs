@@ -41,9 +41,10 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             await _dbContext.Set<TEntity>().AddAsync(entity);
         }
 
-        public Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException("接口尚未实现");
+            var entity = await Table.FindAsync(id);
+            Table.Remove(entity);
         }
 
         public void Update(TEntity entity)

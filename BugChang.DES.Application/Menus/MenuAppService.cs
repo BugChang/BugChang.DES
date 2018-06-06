@@ -11,11 +11,13 @@ namespace BugChang.DES.Application.Menus
     public class MenuAppService : IMenuAppService
     {
         private readonly MenuManager _menuManager;
+        private readonly IMenuRepository _menuRepository;
         private readonly UnitOfWork _unitOfWork;
-        public MenuAppService(MenuManager menuManager, UnitOfWork unitOfWork)
+        public MenuAppService(MenuManager menuManager, UnitOfWork unitOfWork, IMenuRepository menuRepository)
         {
             _menuManager = menuManager;
             _unitOfWork = unitOfWork;
+            _menuRepository = menuRepository;
         }
 
         public async Task<IList<MenuDto>> GetUserMenusAsync(IList<string> userRoles)
@@ -66,7 +68,28 @@ namespace BugChang.DES.Application.Menus
 
         public Task<string> GetMenuBreadCrumbAsync(string url)
         {
-          return _menuManager.GetMenuBreadCrumb(url);
+            return _menuManager.GetMenuBreadCrumb(url);
+        }
+
+        public async Task<MenuEditDto> GetAsync(int id)
+        {
+            var menu = await _menuRepository.GetAsync(id);
+            return Mapper.Map<MenuEditDto>(menu);
+        }
+
+        public async Task<ResultEntity> DeleteAsync(int id)
+        {
+            var result = await _menuManager.DeleteAsync(id);
+            if (result.Success)
+            {
+                if (await _unitOfWork.CommitAsync() == 0)
+                {
+                    result.Success = false;
+                    result.Message = "执行Commit失败！";
+                }
+            }
+
+            return result;
         }
     }
 }

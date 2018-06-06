@@ -1,22 +1,58 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Users;
+using BugChang.DES.Application.Users.Dtos;
+using BugChang.DES.Core.Common;
+using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
     public class UserController : BaseController
     {
         private readonly IUserAppService _userAppService;
+        private readonly IDepartmentAppService _departmentAppService;
 
-        public UserController(IUserAppService userAppService)
+        public UserController(IUserAppService userAppService, IDepartmentAppService departmentAppService)
         {
             _userAppService = userAppService;
+            _departmentAppService = departmentAppService;
         }
 
         public async Task<IActionResult> Index()
         {
             var model = await _userAppService.GetUsersAsync();
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UserEditDto user)
+        {
+            var result = new ResultEntity();
+            if (ModelState.IsValid)
+            {
+                result = await _userAppService.AddOrUpdateAsync(user);
+                return Json(result);
+            }
+            result.Message = ModelState.Values
+                .FirstOrDefault(a => a.ValidationState == ModelValidationState.Invalid)?.Errors.FirstOrDefault()
+                ?.ErrorMessage;
+
+            return Json(result);
+        }
+
+
+        public async Task<IActionResult> GetListForSelect()
+        {
+            var departments = await _departmentAppService.GetAllAsync();
+            var json = departments.Select(a => new SelectViewModel
+            {
+                Id = a.Id,
+                Text = a.FullName
+            });
+            return Json(json);
         }
     }
 }

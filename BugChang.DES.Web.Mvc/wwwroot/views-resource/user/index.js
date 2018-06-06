@@ -1,27 +1,10 @@
-﻿var MenuIndex = function () {
-    var currentNode = null;
+﻿var UserIndex = function () {
     var table;
-    var zTreeObj;
-
-    var setting = { // zTree 参数配置
-        async: {
-            enable: true,
-            url: '/Menu/GetTreeData',
-            autoParam: ['id=parentId'],
-            type: 'get'
-        },
-        callback: {
-            beforeClick: zTreeBeforeClick
-        }
-    };
 
     $(function () {
 
         //toastr提示2s自动关闭
         window.toastr.options.timeOut = 2000;
-
-        //初始化zTree
-        zTreeObj = $.fn.zTree.init($('#menuTree'), setting);
 
         //初始化table
         initTable();
@@ -30,16 +13,16 @@
         initSelect();
 
         //新增菜单表单提交
-        $('#MenuCreateForm').submit(function (e) {
+        $('#UserCreateForm').submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            $.post('/Menu/Edit',
+            $.post('/User/Edit',
                 data,
                 function (result) {
                     if (result.success) {
                         resetForm();
                         //关闭模态
-                        $('#MenuCreateModal').modal('hide');
+                        $('#UserCreateModal').modal('hide');
                         //刷新页面
                         refresh();
                         window.toastr.success('操作成功');
@@ -49,35 +32,22 @@
                 });
         });
 
-        $('table').delegate('.edit-menu',
+        $('table').delegate('.edit-user',
             'click',
             function () {
-                var menuId = $(this).attr('data-menu-id');
-                editMenu(menuId);
+                var userId = $(this).attr('data-user-id');
+                editUser(userId);
             });
 
-        $('table').delegate('.delete-menu',
+        $('table').delegate('.delete-user',
             'click',
             function () {
-                var menuId = $(this).attr('data-menu-id');
-                var menuName = $(this).attr('data-menu-name');
-                deleteMenu(menuId, menuName);
+                var userId = $(this).attr('data-user-id');
+                var userName = $(this).attr('data-user-name');
+                deleteUser(userId, userName);
             });
 
     });
-
-    //zTree节点单击回调函数
-    function zTreeBeforeClick(treeId, treeNode) {
-        currentNode = treeNode;
-        if (!currentNode.customData) {
-            showAddButton(true);
-        } else {
-            showAddButton(false);
-        }
-        table.ajax.reload();
-        $('.select2').val(treeNode.id).trigger('change');
-    }
-
 
     //初始化table
     function initTable() {
@@ -87,11 +57,7 @@
             serverSide: true,
             autoWith: true,
             ajax: {
-                url: '/Menu/GetListForTable',
-                data: function (para) {
-                    //添加额外的参数传给服务器
-                    para.parentId = currentNode === null ? null : currentNode.id;
-                }
+                url: '/User/GetListForTable'
             },
             stateSave: true,
             columns: [
@@ -101,20 +67,52 @@
 
                 },
                 {
-                    data: 'name',
-                    title: '名称'
+                    data: 'userNamae',
+                    title: '用户名'
                 },
                 {
-                    data: 'url',
-                    title: '地址'
+                    data: 'displayName',
+                    title: '姓名'
                 },
                 {
-                    data: 'description',
-                    title: '描述'
+                    data: 'departmentName',
+                    title: '所属机构'
                 },
                 {
-                    data: 'icon',
-                    title: '图标'
+                    data: 'viewRole',
+                    title: '查看角色'
+                },
+                {
+                    data: 'locked',
+                    title: '锁定状态'
+                },
+                {
+                    data: 'enabled',
+                    title: '启用状态'
+                },
+                {
+                    data: 'phone',
+                    title: '移动电话'
+                },
+                {
+                    data: 'tel',
+                    title: '固定电话'
+                },
+                {
+                    data: 'createUserName',
+                    title: '创建人'
+                },
+                {
+                    data: 'createTime',
+                    title: '创建时间'
+                },
+                {
+                    data: 'updateUserName',
+                    title: '最后更改人'
+                },
+                {
+                    data: 'updateTime',
+                    title: '最后更改时间'
                 },
                 {
                     data: null,
@@ -123,11 +121,11 @@
             ],
             columnDefs: [
                 {
-                    targets: 5,
+                    targets: 13,
                     render: function (data, type, row) {
                         var strHtml =
-                            '<button class="btn btn-info btn-xs edit-menu" data-menu-id=' + row.id + '>修改</button>&nbsp;' +
-                            '<button class="btn btn-danger btn-xs delete-menu" data-menu-id=' + row.id + ' data-menu-name=' + row.name + '>删除</button>';
+                            '<button class="btn btn-info btn-xs edit-user" data-user-id=' + row.id + '>修改</button>&nbsp;' +
+                            '<button class="btn btn-danger btn-xs delete-user" data-user-id=' + row.id + ' data-user-name=' + row.name + '>删除</button>';
                         return strHtml;
                     }
                 }
@@ -140,7 +138,7 @@
 
     //初始化上级菜单
     function initSelect() {
-        $.get('/Menu/GetListForSelect',
+        $.get('/User/GetListForSelect',
             function (data) {
                 $('.select2').select2({
                     data: data,
@@ -150,15 +148,10 @@
             });
     }
 
-    //查看菜单详情
-    function viewMenu(id) {
-        alert('查看' + id);
-    }
-
     //编辑菜单信息
-    function editMenu(id) {
-        $('#MenuEditModal .modal-content').load('/Menu/EditMenuModal/' + id);
-        $('#MenuEditModal').modal({
+    function editUser(id) {
+        $('#UserEditModal .modal-content').load('/User/EditUserModal/' + id);
+        $('#UserEditModal').modal({
             backdrop: 'static',
             keyboard: false,
             show: true
@@ -166,19 +159,19 @@
     }
 
     //删除菜单
-    function deleteMenu(menuId, menuName) {
+    function deleteUser(userId, userName) {
         window.swal({
-            title: '确定删除' + menuName + '?',
+            title: '确定删除' + userName + '?',
             //text: '删除后无法恢复数据!',
             icon: 'warning',
             buttons: ['取消', '确定'],
             dangerMode: true
         }).then((willDelete) => {
             if (willDelete) {
-                $.post('/Menu/Delete/' + menuId,
+                $.post('/User/Delete/' + userId,
                     function (result) {
                         if (result.success) {
-                            window.swal('操作成功', menuName + '已被删除!', 'success');
+                            window.swal('操作成功', userName + '已被删除!', 'success');
                             refresh();
                         } else {
                             window.swal('操作失败', result.message, 'error');
@@ -188,18 +181,9 @@
         });
     }
 
-    //控制新增按钮的显示
-    function showAddButton(isShow) {
-        if (isShow) {
-            $('#btnAddMenu').show();
-        } else {
-            $('#btnAddMenu').hide();
-        }
-    }
-
     //清空表单
     function resetForm() {
-        $('#MenuCreateForm')[0].reset();
+        $('#UserCreateForm')[0].reset();
         $('.select2').val(currentNode.id).trigger('change');
     }
 
@@ -207,8 +191,6 @@
     function refresh() {
         //刷新表格
         table.ajax.reload();
-        //刷新菜单树
-        zTreeObj.reAsyncChildNodes(currentNode, 'refresh');
     }
 
     //向外暴露方法

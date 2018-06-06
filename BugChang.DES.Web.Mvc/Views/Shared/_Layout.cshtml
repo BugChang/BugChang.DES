@@ -192,12 +192,12 @@
             </nav>
         </header>
         <!-- 左侧菜单 Begin-->
-        @await Component.InvokeAsync(typeof(SideBarNavViewComponent), new { activeMenuName = ViewBag.MenuName })
+        @await Component.InvokeAsync(typeof(SideBarNavViewComponent), new { url = ViewBag.Url })
         <!-- 左侧菜单 End-->
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            @await Component.InvokeAsync(typeof(BreadCrumbViewComponent), new { activeMenuName = ViewBag.MenuName })
+            @await Component.InvokeAsync(typeof(BreadCrumbViewComponent), new { url = ViewBag.Url })
             <!-- Main content -->
             <section class="content">
                 <section class="content">

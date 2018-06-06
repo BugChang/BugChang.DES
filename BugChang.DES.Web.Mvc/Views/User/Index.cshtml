@@ -1,12 +1,8 @@
-﻿@model IList<BugChang.DES.Application.Users.Dtos.UserDto>
-@{
-    ViewBag.MenuName = "系统管理-用户管理";
-}
-
+﻿@using BugChang.DES.Web.Mvc.Models.Common
 <div class="box box-primary">
     <div class="box-header with-border">
         <div class="btn-group">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#DepartmentCreateModal" data-backdrop="static" data-keyboard="false"><i class="fa  fa-plus-circle"></i> 新增</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UserCreateModal" data-backdrop="static" data-keyboard="false"><i class="fa  fa-plus-circle"></i> 新增</button>
             <button id="btnRefresh" type="button" class="btn btn-primary"><i class="fa  fa-refresh"></i> 刷新</button>
         </div>
     </div>
@@ -14,4 +10,54 @@
         <table id="table" class="table table-bordered table-hover"></table>
     </div>
 </div>
-@Html.Partial("_UserCreateModel")
+<div class="modal fade" id="UserCreateModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="DepartmentCreateForm" method="post" asp-controller="User" asp-action="Edit">
+                @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("新增用户"))
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>所属机构</label>
+                        <select class="form-control select2" name="DepartmentId" style="width: 100%"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" class="form-control" name="UserName">
+                    </div>
+                    <div class="form-group">
+                        <label>姓名</label>
+                        <input type="text" class="form-control" name="DisplayName">
+                        <div class="form-group">
+                            <label>移动电话</label>
+                            <input type="text" class="form-control" name="Phone">
+                        </div>
+                        <div class="form-group">
+                            <label>固定电话</label>
+                            <input type="text" class="form-control" name="Tel">
+                        </div>
+                        <div class="form-group">
+                            <label>启用状态</label>
+                            <select class="form-control" name="Enabled">
+                                <option value="1">启用</option>
+                                <option value="0">停用</option>
+                            </select>
+                        </div>
+                    </div>
+                    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="DepartmentEditModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/views-resource/user/index.js"></script>
+}

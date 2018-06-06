@@ -23,6 +23,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
+        public async Task<IActionResult> EditMenuModal(int id)
+        {
+            var model = await _menuAppService.GetAsync(id);
+            return PartialView("_EditMenuModal", model);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Edit(MenuEditDto menu)
@@ -90,6 +95,13 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 data = pagereslut.Rows
             };
             return Json(json);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _menuAppService.DeleteAsync(id);
+            return Json(result);
         }
     }
 }

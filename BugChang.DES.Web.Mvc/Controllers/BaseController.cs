@@ -9,5 +9,9 @@ namespace BugChang.DES.Web.Mvc.Controllers
     [Authorize]
     public class BaseController : Controller
     {
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            ViewBag.Url = "/" + context.RouteData.Values["Controller"] + "/" + context.RouteData.Values["Action"];
+        }
     }
 }

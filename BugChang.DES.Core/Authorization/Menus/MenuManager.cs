@@ -76,17 +76,32 @@ namespace BugChang.DES.Core.Authorization.Menus
             if (menu != null)
             {
                 breadCrumb = menu.Name;
-                while (menu?.ParentId != null)
+                var tempMenu = menu;
+                while (tempMenu?.ParentId != null)
                 {
-                    menu = _menuRepository.GetQueryable().FirstOrDefault(a => a.ParentId == menu.ParentId);
-                    if (menu != null)
+                    tempMenu = _menuRepository.GetQueryable().FirstOrDefault(a => a.Id == menu.ParentId);
+                    if (tempMenu != null)
                     {
-                        breadCrumb = menu.Name + "-" + menu;
+                        breadCrumb = tempMenu.Name + "#" + breadCrumb;
                     }
 
                 }
             }
             return Task.FromResult(breadCrumb);
+        }
+
+        public async Task<ResultEntity> DeleteAsync(int id)
+        {
+            var resultEntity = new ResultEntity();
+            var subMenus = await _menuRepository.GetAllAsync(id);
+            if (subMenus.Count > 0)
+            {
+                resultEntity.Message = $"请先删除本菜单下的{subMenus.Count}个子项";
+                return resultEntity;
+            }
+            await _menuRepository.DeleteAsync(id);
+            resultEntity.Success = true;
+            return resultEntity;
         }
     }
 }

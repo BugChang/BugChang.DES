@@ -21,9 +21,8 @@ namespace BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav
             _environment = environment;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string activeMenuName = "")
+        public async Task<IViewComponentResult> InvokeAsync(string url = "")
         {
-            var userId = HttpContext.User.Claims.Single(a => a.Type == "Id").Value;
             IList<MenuDto> menus;
             if (_environment.IsDevelopment())
             {
@@ -34,10 +33,11 @@ namespace BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav
                 var roles = HttpContext.User.Claims.Where(a => a.Type == ClaimTypes.Role).Select(a => a.Value).ToList();
                 menus = await _menuAppService.GetUserMenusAsync(roles);
             }
+            var breadCrumb = await _menuAppService.GetMenuBreadCrumbAsync(url);
             var model = new SideBarNavViewModel
             {
                 Menus = menus,
-                ActiveMenuName = activeMenuName ?? ""
+                ActiveMenuName = breadCrumb ?? ""
             };
             return View(model);
         }
