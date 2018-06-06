@@ -63,5 +63,10 @@ namespace BugChang.DES.Application.Menus
         {
             return await _menuManager.HasMenu(userRoles, url);
         }
+
+        public Task<string> GetMenuBreadCrumbAsync(string url)
+        {
+          return _menuManager.GetMenuBreadCrumb(url);
+        }
     }
 }

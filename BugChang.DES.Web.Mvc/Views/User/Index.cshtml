@@ -5,89 +5,13 @@
 
 <div class="box box-primary">
     <div class="box-header with-border">
-        <h3 class="box-title">操作面板</h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
-                <i class="fa fa-minus"></i>
-            </button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#DepartmentCreateModal" data-backdrop="static" data-keyboard="false"><i class="fa  fa-plus-circle"></i> 新增</button>
+            <button id="btnRefresh" type="button" class="btn btn-primary"><i class="fa  fa-refresh"></i> 刷新</button>
         </div>
     </div>
     <div class="box-body">
-        <form class="form-inline">
-            <div class="form-group">
-                <label for="exampleInputName2">用户名</label>
-                <input type="text" class="form-control" id="exampleInputName2" placeholder="用户名">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail2">显示名</label>
-                <input type="email" class="form-control" id="exampleInputEmail2" placeholder="显示名">
-            </div>
-        </form>
-    </div>
-    <div class="box-footer">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UserCreateModal">新增</button>
-        <button type="submit" class="btn btn-primary">查询</button>
-    </div>
-    <!-- /.box-footer-->
-</div>
-<div class="box box-info">
-    <div class="box-header">
-        <h3 class="box-title">结果列表</h3>
-    </div>
-    <!-- /.box-header -->
-    <div class="box-body table-responsive no-padding">
-
-        <table class="table table-hover table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>序号</th>
-                    <th>用户名</th>
-                    <th>显示名称</th>
-                    <th>启用</th>
-                    <th>锁定</th>
-                    <th>移动电话</th>
-                    <th>固定电话</th>
-                    <th>创建时间</th>
-                    <th>创建人</th>
-                    <th>最后更改人</th>
-                    <th>最后更时间</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model)
-                {
-                    <tr>
-                        <td>@user.Id</td>
-                        <td>@user.UserName</td>
-                        <td>@user.DisplayName</td>
-                        <td><span class="label @(user.Enabled?"label-success":"label-danger")">@(user.Enabled ? "已启用" : "已禁用")</span></td>
-                        <td><span class="label @(user.Locked?"label-danger":"label-success")">@(user.Locked ? "已锁定" : "正常")</span></td>
-                        <td>@user.Phone</td>
-                        <td>@user.Tel</td>
-                        <td>@user.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td>@user.CreateBy</td>
-                        <td>@user.UpdateBy</td>
-                        <td>@user.UpdateTime</td>
-                        <td>
-                           <button class="btn btn-info btn-xs">修改</button>
-                           <button class="btn btn-primary btn-xs">角色</button>
-                           <button class="btn btn-danger btn-xs">删除</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <!-- /.box-body -->
-    <div class="box-footer clearfix">
-        <ul class="pagination pagination-sm no-margin pull-right">
-            <li><a href="#">&laquo;</a></li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">&raquo;</a></li>
-        </ul>
+        <table id="table" class="table table-bordered table-hover"></table>
     </div>
 </div>
 @Html.Partial("_UserCreateModel")

@@ -14,5 +14,6 @@ namespace BugChang.DES.Application.Menus
         Task<PageResultEntity<MenuDto>> GetPagingAysnc(int? parentId, int take, int skip, string keywords);
         Task<ResultEntity> AddOrUpdateAsync(MenuEditDto menu);
         Task<bool> HasMenu(IList<string> userRoles, string url);
+        Task<string> GetMenuBreadCrumbAsync(string url);
     }
 }

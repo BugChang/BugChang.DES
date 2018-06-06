@@ -1,14 +1,23 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
+using BugChang.DES.Application.Menus;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BugChang.DES.Web.Mvc.Views.Shared.Components.BreadCrumb
 {
     public class BreadCrumbViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke(string activeMenuName = "")
+        private readonly IMenuAppService _menuAppService;
+
+        public BreadCrumbViewComponent(IMenuAppService menuAppService)
         {
-            activeMenuName = activeMenuName ?? "";
-            var model = activeMenuName.Split("-").ToList();
+            _menuAppService = menuAppService;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            var url = Request.Path;
+            var model = await _menuAppService.GetMenuBreadCrumbAsync(url);
             return View(model);
         }
     }

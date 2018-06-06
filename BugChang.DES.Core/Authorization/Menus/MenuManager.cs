@@ -68,5 +68,25 @@ namespace BugChang.DES.Core.Authorization.Menus
             }
             return false;
         }
+
+        public Task<string> GetMenuBreadCrumb(string url)
+        {
+            var breadCrumb = "";
+            var menu = _menuRepository.GetQueryable().FirstOrDefault(a => a.Url == url);
+            if (menu != null)
+            {
+                breadCrumb = menu.Name;
+                while (menu?.ParentId != null)
+                {
+                    menu = _menuRepository.GetQueryable().FirstOrDefault(a => a.ParentId == menu.ParentId);
+                    if (menu != null)
+                    {
+                        breadCrumb = menu.Name + "-" + menu;
+                    }
+
+                }
+            }
+            return Task.FromResult(breadCrumb);
+        }
     }
 }
