@@ -1,40 +1,58 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Users.Dtos;
 using BugChang.DES.Core.Authorization.Users;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
+using BugChang.DES.EntityFrameWorkCore;
 
 namespace BugChang.DES.Application.Users
 {
     public class UserAppService : IUserAppService
     {
         private readonly IUserRepository _userRepository;
+        private readonly UserManager _userManager;
+        private readonly UnitOfWork _unitOfWork;
 
-        public UserAppService(IUserRepository userRepository)
+        public UserAppService(IUserRepository userRepository, UserManager userManager, UnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
+            _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<IList<UserDto>> GetUsersAsync()
+        public async Task<IList<UserListDto>> GetUsersAsync()
         {
             var users = await _userRepository.GetAllAsync();
-            return Mapper.Map<IList<UserDto>>(users);
+            return Mapper.Map<IList<UserListDto>>(users);
         }
 
-        public Task<ResultEntity> AddOrUpdateAsync(UserEditDto dto)
+        public async Task<ResultEntity> AddOrUpdateAsync(UserEditDto userEditDto)
+        {
+            var result = await _userManager.AddOrUpdateAsync(Mapper.Map<User>(userEditDto));
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+
+            return result;
+        }
+
+        public Task<ResultEntity> DeleteByIdAsync(int id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<ResultEntity> DeleteAsync(int id)
+        public Task<UserEditDto> GetForEditByIdAsync(int id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<UserEditDto> GetAsync(int id)
+        public async Task<PageResultModel<UserListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
         {
-            throw new System.NotImplementedException();
+            var users = await _userRepository.GetPagingAysnc(pageSearchDto);
+            return Mapper.Map<PageResultModel<UserListDto>>(users);
         }
     }
 }

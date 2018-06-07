@@ -1,9 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Application.Users.Dtos;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -52,6 +53,26 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 Id = a.Id,
                 Text = a.FullName
             });
+            return Json(json);
+        }
+
+        public async Task<JsonResult> GetListForTable(int draw, int start, int length)
+        {
+            var keywords = Request.Query["search[value]"];
+            var pageSearchDto = new PageSearchModel
+            {
+                Keywords = keywords,
+                Take = length,
+                Skip = start
+            };
+            var pagereslut = await _userAppService.GetPagingAysnc(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
             return Json(json);
         }
     }

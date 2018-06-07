@@ -12,8 +12,9 @@
                         $("#DepartmentEditModal").modal("hide");
                         //刷新父页面
                         DepartmentIndex.refresh();
+                        window.toastr.success('操作成功');
                     } else {
-                        alert(result.message);
+                        window.toastr.error(result.message);
                     }
                 });
         });

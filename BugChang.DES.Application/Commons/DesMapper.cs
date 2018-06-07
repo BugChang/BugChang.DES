@@ -6,7 +6,7 @@ using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Departments;
 
-namespace BugChang.DES.Application
+namespace BugChang.DES.Application.Commons
 {
     public static class DesMapper
     {
@@ -14,11 +14,11 @@ namespace BugChang.DES.Application
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Menu, MenuDto>();
-                cfg.CreateMap<MenuDto, Menu>();
+                cfg.CreateMap<Menu, MenuListDto>();
+                cfg.CreateMap<MenuListDto, Menu>();
                 cfg.CreateMap<MenuEditDto, Menu>();
 
-                cfg.CreateMap<Department, DepartmentDto>()
+                cfg.CreateMap<Department, DepartmentListDto>()
                     .ForMember(a => a.ParentName, b => b.MapFrom(c => c.Parent.Name))
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
                     .ForMember(a => a.UpdateUserName, b => b.MapFrom(c => c.UpdateUser.DisplayName))
@@ -26,6 +26,12 @@ namespace BugChang.DES.Application
                     .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
                 cfg.CreateMap<DepartmentEditDto, Department>();
 
+                cfg.CreateMap<User, UserListDto>()
+                    .ForMember(a => a.DepartmentName, b => b.MapFrom(c => c.Department.Name))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.UpdateUserName, b => b.MapFrom(c => c.UpdateUser.DisplayName))
+                    .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
+                    .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
                 cfg.CreateMap<UserEditDto, User>();
             });
         }

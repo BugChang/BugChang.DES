@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.EntityFrameWorkCore.Repository
@@ -18,7 +18,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<TEntity> GetAsync(int id)
+        public async Task<TEntity> GetByIdAsync(int id)
         {
             return await Table.SingleOrDefaultAsync(a => a.Id == id);
         }
@@ -41,7 +41,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             await _dbContext.Set<TEntity>().AddAsync(entity);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteByIdAsync(int id)
         {
             var entity = await Table.FindAsync(id);
             Table.Remove(entity);

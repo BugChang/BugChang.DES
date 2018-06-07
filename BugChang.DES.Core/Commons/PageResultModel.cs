@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace BugChang.DES.Core.Common
+namespace BugChang.DES.Core.Commons
 {
-    public class PageResultEntity<T>
+    public class PageResultModel<T>
     {
         public int Total { get; set; }
 

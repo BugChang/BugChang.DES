@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Commons;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.EntityFrameWorkCore.Repository
@@ -39,25 +40,6 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             return user;
         }
 
-        /// <summary>
-        /// 获取所有用户
-        /// </summary>
-        /// <param name="limit">查询数量</param>
-        /// <param name="offset">跳过数量</param>
-        /// <param name="keywords">关键字</param>
-        /// <returns></returns>
-        public async Task<IList<User>> GetAllAsync(int limit, int offset, string keywords)
-        {
-            var query = _dbContext.Users.Where(a => a.Enabled);
-            if (!string.IsNullOrEmpty(keywords))
-            {
-                query = query.Where(a => a.DisplayName.Contains(keywords) || a.UserName.Contains(keywords));
-            }
-
-            var users = await query.ToListAsync();
-            return users;
-        }
-
 
         /// <summary>
         /// 获取指定机构下的用户数量
@@ -67,6 +49,22 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         public async Task<int> GetCountAsync(int departmentId)
         {
             return await _dbContext.Users.CountAsync(u => u.DepartmentId == departmentId);
+        }
+
+        public async Task<PageResultModel<User>> GetPagingAysnc(PageSearchModel pageSearchModel)
+        {
+            var query = _dbContext.Users.Include(a => a.CreateUser).Include(a => a.UpdateUser)
+                .Include(a => a.Department).Where(a => true);
+            if (!string.IsNullOrEmpty(pageSearchModel.Keywords))
+            {
+                query = query.Where(a => a.DisplayName.Contains(pageSearchModel.Keywords) || a.UserName.Contains(pageSearchModel.Keywords));
+            }
+            var pageResult = new PageResultModel<User>()
+            {
+                Total = await query.CountAsync(),
+                Rows = await query.ToListAsync()
+            };
+            return pageResult;
         }
     }
 }

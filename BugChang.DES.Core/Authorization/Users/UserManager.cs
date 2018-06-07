@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
+using NETCore.Encrypt.Extensions;
 
 namespace BugChang.DES.Core.Authorization.Users
 {
@@ -14,6 +15,7 @@ namespace BugChang.DES.Core.Authorization.Users
 
         public async Task<ResultEntity> AddOrUpdateAsync(User user)
         {
+            var result = new ResultEntity();
             if (user.Id > 0)
             {
 
@@ -22,11 +24,17 @@ namespace BugChang.DES.Core.Authorization.Users
             {
                 if (await ExistUserNameAsync(user.UserName))
                 {
-
+                    result.Message = "已存在的用户名";
+                }
+                else
+                {
+                    user.Password = User.DefaultPassword.MD5();
+                    await _userRepository.AddAsync(user);
+                    result.Success = true;
                 }
             }
 
-            return new ResultEntity();
+            return result;
         }
 
         /// <summary>

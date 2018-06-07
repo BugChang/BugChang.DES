@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Core.Authorization.Menus
 {
@@ -11,6 +11,6 @@ namespace BugChang.DES.Core.Authorization.Menus
 
         Task<IList<Menu>> GetAllRootAsync();
 
-        Task<PageResultEntity<Menu>> GetPagingAysnc(int? parentId, int take, int skip, string keywords);
+        Task<PageResultModel<Menu>> GetPagingAysnc(int? parentId, int take, int skip, string keywords);
     }
 }

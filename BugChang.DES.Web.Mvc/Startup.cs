@@ -1,12 +1,10 @@
 ﻿using System;
-using BugChang.DES.Application;
+using BugChang.DES.Application.Commons;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.EntityFrameWorkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

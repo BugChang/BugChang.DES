@@ -67,7 +67,7 @@
 
                 },
                 {
-                    data: 'userNamae',
+                    data: 'userName',
                     title: '用户名'
                 },
                 {
@@ -79,7 +79,7 @@
                     title: '所属机构'
                 },
                 {
-                    data: 'viewRole',
+                    data: null,
                     title: '查看角色'
                 },
                 {
@@ -125,7 +125,41 @@
                     render: function (data, type, row) {
                         var strHtml =
                             '<button class="btn btn-info btn-xs edit-user" data-user-id=' + row.id + '>修改</button>&nbsp;' +
-                            '<button class="btn btn-danger btn-xs delete-user" data-user-id=' + row.id + ' data-user-name=' + row.name + '>删除</button>';
+                            '<button class="btn btn-danger btn-xs delete-user" data-user-id=' + row.id + ' data-user-name=' + row.displayName + '>删除</button>';
+                        return strHtml;
+                    }
+                },
+                {
+                    targets: 4,
+                    render: function (data, type, row) {
+                        var strHtml =
+                            '<button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> 查看</button>&nbsp;';
+                        return strHtml;
+                    }
+                },
+                {
+                    targets: 5,
+                    render: function (data, type, row) {
+                        var strHtml = '';
+                        if (row.locked) {
+                            strHtml = '<label class="label label-danger"><i class="fa fa-lock"></i> 已锁定</label>&nbsp;';
+                        } else {
+                            strHtml = '<label class="label label-success"><i class="fa fa-unlock"></i> 未锁定</label>&nbsp;';
+                        }
+                       
+                        return strHtml;
+                    }
+                },
+                {
+                    targets: 6,
+                    render: function (data, type, row) {
+                        var strHtml = '';
+                        if (row.enabled) {
+                            strHtml = '<label class="label label-success">已启用</label>&nbsp;';
+                        } else {
+                            strHtml = '<label class="label label-danger">已停用</label>&nbsp;';
+                        }
+
                         return strHtml;
                     }
                 }

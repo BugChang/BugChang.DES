@@ -6,7 +6,7 @@ namespace BugChang.DES.Application.Menus.Dtos
     /// 菜单
     /// </summary>
 
-    public class MenuDto
+    public class MenuListDto
     {
         public int Id { get; set; }
 
@@ -20,7 +20,7 @@ namespace BugChang.DES.Application.Menus.Dtos
 
         public int? ParentId { get; set; }
 
-        public IList<MenuDto> Items { get; set; }
+        public IList<MenuListDto> Items { get; set; }
 
     }
 }

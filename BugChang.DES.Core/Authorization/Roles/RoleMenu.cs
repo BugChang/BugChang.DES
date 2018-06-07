@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using BugChang.DES.Core.Authorization.Menus;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Core.Authorization.Roles
 {

@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Menus;
 using BugChang.DES.Application.Menus.Dtos;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -25,7 +26,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> EditMenuModal(int id)
         {
-            var model = await _menuAppService.GetAsync(id);
+            var model = await _menuAppService.GetForEditByIdAsync(id);
             return PartialView("_EditMenuModal", model);
         }
 
@@ -86,7 +87,14 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<JsonResult> GetListForTable(int draw, int start, int length, int? parentId)
         {
             var keywords = Request.Query["search[value]"];
-            var pagereslut = await _menuAppService.GetPagingAysnc(parentId, length, start, keywords);
+            var pageSearchDto = new PageSearchModel
+            {
+                Keywords = keywords,
+                ParentId = parentId,
+                Take = length,
+                Skip = start
+            };
+            var pagereslut = await _menuAppService.GetPagingAysnc(pageSearchDto);
             var json = new
             {
                 draw,
@@ -100,7 +108,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _menuAppService.DeleteAsync(id);
+            var result = await _menuAppService.DeleteByIdAsync(id);
             return Json(result);
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Authorization.Users;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Core.Departments
 {
@@ -38,7 +38,7 @@ namespace BugChang.DES.Core.Departments
             //设置机构全称
             if (department.ParentId != null)
             {
-                var parentDepartment = await _departmentRepository.GetAsync(department.ParentId.Value);
+                var parentDepartment = await _departmentRepository.GetByIdAsync(department.ParentId.Value);
                 department.SetFullName(parentDepartment);
             }
 
@@ -77,7 +77,7 @@ namespace BugChang.DES.Core.Departments
                 return resultEntity;
             }
             //检查有效性
-            var department = await _departmentRepository.GetAsync(id);
+            var department = await _departmentRepository.GetByIdAsync(id);
             if (department == null)
             {
                 resultEntity.Message = "不存在的机构";
@@ -104,7 +104,7 @@ namespace BugChang.DES.Core.Departments
 
         public async Task<Department> GetAsync(int id)
         {
-            return await _departmentRepository.GetAsync(id);
+            return await _departmentRepository.GetByIdAsync(id);
         }
 
         public async Task<IList<Department>> GetAllAsync(int? parentId)
@@ -115,11 +115,6 @@ namespace BugChang.DES.Core.Departments
         public async Task<IList<Department>> GetAllAsync()
         {
             return await _departmentRepository.GetAllAsync();
-        }
-
-        public async Task<PageResultEntity<Department>> GetPagingAysnc(int? parentId, int take, int skip, string keywords)
-        {
-            return await _departmentRepository.GetPagingAysnc(parentId, take, skip, keywords);
         }
     }
 }

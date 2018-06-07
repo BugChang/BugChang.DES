@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace BugChang.DES.Application
+﻿namespace BugChang.DES.Application.Commons
 {
     public abstract class BaseDto
     {
-
         public int Id { get; set; }
 
         public string CreateUserName { get; set; }

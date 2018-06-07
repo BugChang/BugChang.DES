@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Net;
-using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Authorization.Users;
 
-namespace BugChang.DES.Core.Common
+namespace BugChang.DES.Core.Commons
 {
 
 

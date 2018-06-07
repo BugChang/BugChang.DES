@@ -1,4 +1,4 @@
-﻿namespace BugChang.DES.Core.Common
+﻿namespace BugChang.DES.Core.Commons
 {
     public class ResultEntity
     {

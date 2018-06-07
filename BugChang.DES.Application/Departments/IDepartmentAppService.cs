@@ -2,16 +2,15 @@
 using System.Threading.Tasks;
 using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Departments.Dtos;
-using BugChang.DES.Core.Common;
 
 namespace BugChang.DES.Application.Departments
 {
-    public interface IDepartmentAppService : ICurdAppService<DepartmentEditDto>
+    public interface IDepartmentAppService : ICurdAppService<DepartmentEditDto,DepartmentListDto>
     {
-        Task<IList<DepartmentDto>> GetAllAsync(int? parentId);
+        Task<IList<DepartmentListDto>> GetAllAsync(int? parentId);
 
-        Task<IList<DepartmentDto>> GetAllAsync();
+        Task<IList<DepartmentListDto>> GetAllAsync();
 
-        Task<PageResultEntity<DepartmentDto>> GetPagingAysnc(int? parentId, int take, int skip, string keywords);
+       
     }
 }

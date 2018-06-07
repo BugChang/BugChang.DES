@@ -5,8 +5,8 @@ using BugChang.DES.Application.Users.Dtos;
 
 namespace BugChang.DES.Application.Users
 {
-    public interface IUserAppService : ICurdAppService<UserEditDto>
+    public interface IUserAppService : ICurdAppService<UserEditDto,UserListDto>
     {
-        Task<IList<UserDto>> GetUsersAsync();
+        Task<IList<UserListDto>> GetUsersAsync();
     }
 }

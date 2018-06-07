@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Core.Authorization.Powers
 {

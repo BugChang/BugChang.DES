@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Core.Authorization.Menus
 {
@@ -38,7 +38,7 @@ namespace BugChang.DES.Core.Authorization.Menus
             return menus;
         }
 
-        public async Task<PageResultEntity<Menu>> GetPagingAysnc(int? parentId, int take, int skip, string keywords)
+        public async Task<PageResultModel<Menu>> GetPagingAysnc(int? parentId, int take, int skip, string keywords)
         {
             return await _menuRepository.GetPagingAysnc(parentId, take, skip, keywords);
         }
@@ -99,7 +99,7 @@ namespace BugChang.DES.Core.Authorization.Menus
                 resultEntity.Message = $"请先删除本菜单下的{subMenus.Count}个子项";
                 return resultEntity;
             }
-            await _menuRepository.DeleteAsync(id);
+            await _menuRepository.DeleteByIdAsync(id);
             resultEntity.Success = true;
             return resultEntity;
         }

@@ -1,22 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Departments.Dtos;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.EntityFrameWorkCore;
 
 namespace BugChang.DES.Application.Departments
 {
-    public class
-        DepartmentAppService : IDepartmentAppService
+    public class DepartmentAppService : IDepartmentAppService
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly DepartmentManager _departmentManager;
-        public DepartmentAppService(UnitOfWork unitOfWork, DepartmentManager departmentManager)
+        private readonly IDepartmentRepository _departmentRepository;
+        public DepartmentAppService(UnitOfWork unitOfWork, DepartmentManager departmentManager, IDepartmentRepository departmentRepository)
         {
             _unitOfWork = unitOfWork;
             _departmentManager = departmentManager;
+            _departmentRepository = departmentRepository;
         }
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace BugChang.DES.Application.Departments
             return result;
         }
 
-        public async Task<ResultEntity> DeleteAsync(int id)
+        public async Task<ResultEntity> DeleteByIdAsync(int id)
         {
             var result = await _departmentManager.DeleteAsync(id);
             if (result.Success)
@@ -46,46 +48,38 @@ namespace BugChang.DES.Application.Departments
             return result;
         }
 
+        public async Task<DepartmentEditDto> GetForEditByIdAsync(int id)
+        {
+            return Mapper.Map<DepartmentEditDto>(await _departmentManager.GetAsync(id));
+        }
+
+
 
         /// <summary>
         /// 根据parentId获取全部机构
         /// </summary>
         /// <param name="parentId"></param>
         /// <returns></returns>
-        public async Task<IList<DepartmentDto>> GetAllAsync(int? parentId)
+        public async Task<IList<DepartmentListDto>> GetAllAsync(int? parentId)
         {
             var departments = await _departmentManager.GetAllAsync(parentId);
-            return Mapper.Map<IList<DepartmentDto>>(departments);
+            return Mapper.Map<IList<DepartmentListDto>>(departments);
         }
 
         /// <summary>
         /// 获取全部机构
         /// </summary>
         /// <returns></returns>
-        public async Task<IList<DepartmentDto>> GetAllAsync()
+        public async Task<IList<DepartmentListDto>> GetAllAsync()
         {
             var departments = await _departmentManager.GetAllAsync();
-            return Mapper.Map<IList<DepartmentDto>>(departments);
+            return Mapper.Map<IList<DepartmentListDto>>(departments);
         }
 
-        public async Task<DepartmentEditDto> GetAsync(int id)
+        public async Task<PageResultModel<DepartmentListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
         {
-            return Mapper.Map<DepartmentEditDto>(await _departmentManager.GetAsync(id));
-        }
-
-
-        /// <summary>
-        /// 分页获取机构数据
-        /// </summary>
-        /// <param name="parentId">父Id</param>
-        /// <param name="take">查询条数</param>
-        /// <param name="skip">跳过条数</param>
-        /// <param name="keywords">关键字</param>
-        /// <returns></returns>
-        public async Task<PageResultEntity<DepartmentDto>> GetPagingAysnc(int? parentId, int take, int skip, string keywords)
-        {
-            var pageResult = await _departmentManager.GetPagingAysnc(parentId, take, skip, keywords);
-            return Mapper.Map<PageResultEntity<DepartmentDto>>(pageResult);
+            var pageResult = await _departmentRepository.GetPagingAysnc(pageSearchDto);
+            return Mapper.Map<PageResultModel<DepartmentListDto>>(pageResult);
         }
     }
 }

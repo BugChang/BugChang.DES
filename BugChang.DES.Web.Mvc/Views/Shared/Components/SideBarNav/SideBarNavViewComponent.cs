@@ -23,7 +23,7 @@ namespace BugChang.DES.Web.Mvc.Views.Shared.Components.SideBarNav
 
         public async Task<IViewComponentResult> InvokeAsync(string url = "")
         {
-            IList<MenuDto> menus;
+            IList<MenuListDto> menus;
             if (_environment.IsDevelopment())
             {
                 menus = await _menuAppService.GetAllRootAsync();

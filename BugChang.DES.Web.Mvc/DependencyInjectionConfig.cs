@@ -52,6 +52,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<LoginManager>();
             services.AddScoped<MenuManager>();
             services.AddScoped<DepartmentManager>();
+            services.AddScoped<UserManager>();
 
             #endregion
 

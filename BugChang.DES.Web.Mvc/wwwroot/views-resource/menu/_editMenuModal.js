@@ -1,7 +1,7 @@
 ﻿(function () {
     $(function () {
         initSelect();
-        $("#DepartmentEditForm").submit(function (e) {
+        $("#MenuEditForm").submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
             $.post('/Menu/Edit',
@@ -9,11 +9,12 @@
                 function (result) {
                     if (result.success) {
                         //关闭模态
-                        $("#DepartmentEditModal").modal("hide");
+                        $("#MenuEditModal").modal("hide");
                         //刷新父页面
-                        DepartmentIndex.refresh();
+                        MenuIndex.refresh();
+                        window.toastr.success('操作成功');
                     } else {
-                        alert(result.message);
+                        window.toastr.error(result.message);
                     }
                 });
         });

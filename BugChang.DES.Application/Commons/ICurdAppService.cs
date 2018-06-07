@@ -1,14 +1,16 @@
 ﻿using System.Threading.Tasks;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Application.Commons
 {
-    public interface ICurdAppService<TEntityDto> where TEntityDto : class
+    public interface ICurdAppService<TEditDto,TListDto>
     {
-        Task<ResultEntity> AddOrUpdateAsync(TEntityDto dto);
+        Task<ResultEntity> AddOrUpdateAsync(TEditDto editDto);
 
-        Task<ResultEntity> DeleteAsync(int id);
+        Task<ResultEntity> DeleteByIdAsync(int id);
 
-        Task<TEntityDto> GetAsync(int id);
+        Task<TEditDto> GetForEditByIdAsync(int id);
+
+        Task<PageResultModel<TListDto>> GetPagingAysnc(PageSearchModel pageSearchDto);
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Menus.Dtos;
 using BugChang.DES.Core.Authorization.Menus;
-using BugChang.DES.Core.Common;
+using BugChang.DES.Core.Commons;
 using BugChang.DES.EntityFrameWorkCore;
 
 namespace BugChang.DES.Application.Menus
@@ -20,34 +21,34 @@ namespace BugChang.DES.Application.Menus
             _menuRepository = menuRepository;
         }
 
-        public async Task<IList<MenuDto>> GetUserMenusAsync(IList<string> userRoles)
+        public async Task<IList<MenuListDto>> GetUserMenusAsync(IList<string> userRoles)
         {
             var menus = await _menuManager.GetUserMenusAsync(userRoles);
-            return Mapper.Map<IList<MenuDto>>(menus);
+            return Mapper.Map<IList<MenuListDto>>(menus);
         }
 
-        public async Task<IList<MenuDto>> GetAllAsync(int? parentId)
+        public async Task<IList<MenuListDto>> GetAllAsync(int? parentId)
         {
             var menus = await _menuManager.GetAllAsync(parentId);
-            return Mapper.Map<IList<MenuDto>>(menus);
+            return Mapper.Map<IList<MenuListDto>>(menus);
         }
 
-        public async Task<IList<MenuDto>> GetAllAsync()
+        public async Task<IList<MenuListDto>> GetAllAsync()
         {
             var menus = await _menuManager.GetAllAsync();
-            return Mapper.Map<IList<MenuDto>>(menus);
+            return Mapper.Map<IList<MenuListDto>>(menus);
         }
 
-        public async Task<IList<MenuDto>> GetAllRootAsync()
+        public async Task<IList<MenuListDto>> GetAllRootAsync()
         {
             var menus = await _menuManager.GetAllRootAsync();
-            return Mapper.Map<IList<MenuDto>>(menus);
+            return Mapper.Map<IList<MenuListDto>>(menus);
         }
 
-        public async Task<PageResultEntity<MenuDto>> GetPagingAysnc(int? parentId, int take, int skip, string keywords)
+        public async Task<PageResultModel<MenuListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
         {
-            var pageResult = await _menuManager.GetPagingAysnc(parentId, take, skip, keywords);
-            return Mapper.Map<PageResultEntity<MenuDto>>(pageResult);
+            var pageResult = await _menuRepository.GetPagingAysnc(pageSearchDto.ParentId, pageSearchDto.Take, pageSearchDto.Skip, pageSearchDto.Keywords);
+            return Mapper.Map<PageResultModel<MenuListDto>>(pageResult);
         }
 
         public async Task<ResultEntity> AddOrUpdateAsync(MenuEditDto menu)
@@ -61,6 +62,22 @@ namespace BugChang.DES.Application.Menus
             return result;
         }
 
+        public async Task<ResultEntity> DeleteByIdAsync(int id)
+        {
+            var result = await _menuManager.DeleteAsync(id);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+            return result;
+        }
+
+        public async Task<MenuEditDto> GetForEditByIdAsync(int id)
+        {
+            var menu = await _menuRepository.GetByIdAsync(id);
+            return Mapper.Map<MenuEditDto>(menu);
+        }
+
         public async Task<bool> HasMenu(IList<string> userRoles, string url)
         {
             return await _menuManager.HasMenu(userRoles, url);
@@ -69,27 +86,6 @@ namespace BugChang.DES.Application.Menus
         public Task<string> GetMenuBreadCrumbAsync(string url)
         {
             return _menuManager.GetMenuBreadCrumb(url);
-        }
-
-        public async Task<MenuEditDto> GetAsync(int id)
-        {
-            var menu = await _menuRepository.GetAsync(id);
-            return Mapper.Map<MenuEditDto>(menu);
-        }
-
-        public async Task<ResultEntity> DeleteAsync(int id)
-        {
-            var result = await _menuManager.DeleteAsync(id);
-            if (result.Success)
-            {
-                if (await _unitOfWork.CommitAsync() == 0)
-                {
-                    result.Success = false;
-                    result.Message = "执行Commit失败！";
-                }
-            }
-
-            return result;
         }
     }
 }
