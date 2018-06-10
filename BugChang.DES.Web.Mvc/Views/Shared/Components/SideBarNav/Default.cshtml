@@ -36,7 +36,7 @@
                 {
                     <li class="treeview @(Model.ActiveMenuName.Contains(menu.Name)?"active":"")">
                         <a href="#">
-                            <i class="fa fa-dashboard"></i> <span>@menu.Name</span>
+                            <i class="fa fa-book"></i> <span>@menu.Name</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
@@ -48,7 +48,7 @@
                                 {
                                     <li class="treeview @(Model.ActiveMenuName.Contains(item.Name)?"active":"")">
                                         <a href="#">
-                                            <i class="fa fa-dashboard"></i> <span>@item.Name</span>
+                                            <i class="fa fa-book"></i> <span>@item.Name</span>
                                             <span class="pull-right-container">
                                                 <i class="fa fa-angle-left pull-right"></i>
                                             </span>
@@ -56,7 +56,7 @@
                                         <ul class="treeview-menu">
                                             @foreach (var subItem in item.Items)
                                             {
-                                                <li class="@(Model.ActiveMenuName.Contains(subItem.Name) ? "active" : "")"><a href="@subItem.Url"><i class="fa fa-circle-o"></i> @subItem.Name</a></li>
+                                                <li class="@(Model.ActiveMenuName.Contains(subItem.Name) ? "active" : "")"><a href="@subItem.Url"><i class="fa fa-bookmark"></i> @subItem.Name</a></li>
                                             }
                                         </ul>
 
@@ -64,7 +64,7 @@
                                 }
                                 else
                                 {
-                                    <li class="@(Model.ActiveMenuName.Contains(item.Name) ? "active" : "")"><a href="@item.Url"><i class="fa fa-circle-o"></i> @item.Name</a></li>
+                                    <li class="@(Model.ActiveMenuName.Contains(item.Name) ? "active" : "")"><a href="@item.Url"><i class="fa fa-bookmark"></i> @item.Name</a></li>
                                 }
                             }
                         </ul>
@@ -73,7 +73,7 @@
                 }
                 else
                 {
-                    <li class="@(Model.ActiveMenuName.Contains(menu.Name) ? "active" : ""))"><a href="@menu.Url"><i class="fa fa-circle-o"></i> @menu.Name</a></li>
+                    <li class="@(Model.ActiveMenuName.Contains(menu.Name) ? "active" : ""))"><a href="@menu.Url"><i class="fa fa-bookmark"></i> @menu.Name</a></li>
                 }
             }
         </ul>

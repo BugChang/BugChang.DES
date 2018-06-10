@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
@@ -35,7 +34,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         /// <returns></returns>
         public async Task<User> GetAsync(string userName)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
+            var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u =>
                 u.UserName.Equals(userName.Trim()));
             return user;
         }
@@ -51,6 +50,11 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             return await _dbContext.Users.CountAsync(u => u.DepartmentId == departmentId);
         }
 
+        /// <summary>
+        /// 分页获取用户列表
+        /// </summary>
+        /// <param name="pageSearchModel"></param>
+        /// <returns></returns>
         public async Task<PageResultModel<User>> GetPagingAysnc(PageSearchModel pageSearchModel)
         {
             var query = _dbContext.Users.Include(a => a.CreateUser).Include(a => a.UpdateUser)

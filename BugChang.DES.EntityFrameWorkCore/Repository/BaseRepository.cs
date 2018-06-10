@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Commons;
@@ -23,8 +22,6 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             return await Table.SingleOrDefaultAsync(a => a.Id == id);
         }
 
-
-
         public async Task<IList<TEntity>> GetAllAsync()
         {
             return await Table.ToListAsync();
@@ -37,7 +34,6 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task AddAsync(TEntity entity)
         {
-            entity.SetCreateInfo();
             await _dbContext.Set<TEntity>().AddAsync(entity);
         }
 
@@ -49,9 +45,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public void Update(TEntity entity)
         {
-            entity.SetUpdateInfo();
-
-            _dbContext.Set<TEntity>().Update(entity);
+            Table.Update(entity);
         }
     }
 }

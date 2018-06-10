@@ -43,6 +43,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = new ResultEntity();
             if (ModelState.IsValid)
             {
+                department.SetCreateOrUpdateInfo(CurrentUserId);
                 result = await _departmentAppService.AddOrUpdateAsync(department);
                 return Json(result);
             }

@@ -48,7 +48,7 @@ namespace BugChang.DES.Core.Authorization.Menus
             var result = new ResultEntity();
             if (menu.Id > 0)
             {
-                _menuRepository.Update(menu);
+               _menuRepository.Update(menu);
             }
             else
             {

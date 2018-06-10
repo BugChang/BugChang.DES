@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using BugChang.DES.Core.Authorization.Users;
+using Microsoft.AspNetCore.Http;
 
 namespace BugChang.DES.Core.Commons
 {
@@ -43,16 +44,6 @@ namespace BugChang.DES.Core.Commons
 
         [ForeignKey("UpdateBy")]
         public virtual User UpdateUser { get; set; }
-
-        public void SetUpdateInfo()
-        {;
-            UpdateTime = DateTime.Now;
-        }
-
-        public void SetCreateInfo()
-        {
-            CreateTime = DateTime.Now;
-        }
     }
 
 

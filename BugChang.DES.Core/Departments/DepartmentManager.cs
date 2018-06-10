@@ -42,7 +42,6 @@ namespace BugChang.DES.Core.Departments
                 department.SetFullName(parentDepartment);
             }
 
-
             if (department.Id > 0)
             {
                 _departmentRepository.Update(department);

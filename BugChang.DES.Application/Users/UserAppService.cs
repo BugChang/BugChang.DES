@@ -39,14 +39,21 @@ namespace BugChang.DES.Application.Users
             return result;
         }
 
-        public Task<ResultEntity> DeleteByIdAsync(int id)
+        public async Task<ResultEntity> DeleteByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var result = await _userManager.DeleteByIdAsync(id);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+
+            return result;
         }
 
-        public Task<UserEditDto> GetForEditByIdAsync(int id)
+        public async Task<UserEditDto> GetForEditByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(id);
+            return Mapper.Map<UserEditDto>(user);
         }
 
         public async Task<PageResultModel<UserListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)

@@ -39,7 +39,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<IList<Menu>> GetAllRootAsync()
         {
-            return await _dbContext.Menus.Include(a => a.Items).Where(a => a.ParentId == null).ToListAsync();
+            return await _dbContext.Menus.Include(a => a.Items).ThenInclude(a=>a.Items).Where(a => a.ParentId == null).ToListAsync();
         }
 
         public async Task<PageResultModel<Menu>> GetPagingAysnc(int? parentId, int take, int skip, string keywords)

@@ -47,6 +47,9 @@
                 deleteUser(userId, userName);
             });
 
+        $('#btnRefresh').click(function() {
+            reload();
+        });
     });
 
     //初始化table
@@ -155,9 +158,22 @@
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (row.enabled) {
-                            strHtml = '<label class="label label-success">已启用</label>&nbsp;';
+                            strHtml = '<label class="label label-success">已启用</label>';
                         } else {
-                            strHtml = '<label class="label label-danger">已停用</label>&nbsp;';
+                            strHtml = '<label class="label label-danger">已停用</label>';
+                        }
+
+                        return strHtml;
+                    }
+                },
+                {
+                    targets: 9,
+                    render: function (data, type, row) {
+                        var strHtml = '';
+                        if (!row.createUserName) {
+                            strHtml = '系统';
+                        } else {
+                            strHtml = row.createUserName;
                         }
 
                         return strHtml;
@@ -218,13 +234,17 @@
     //清空表单
     function resetForm() {
         $('#UserCreateForm')[0].reset();
-        $('.select2').val(currentNode.id).trigger('change');
     }
 
     //刷新页面
     function refresh() {
         //刷新表格
         table.ajax.reload();
+    }
+
+    //重新加载页面
+    function reload() {
+        window.location.reload();
     }
 
     //向外暴露方法

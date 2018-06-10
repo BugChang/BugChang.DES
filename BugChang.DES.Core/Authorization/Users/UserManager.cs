@@ -18,7 +18,16 @@ namespace BugChang.DES.Core.Authorization.Users
             var result = new ResultEntity();
             if (user.Id > 0)
             {
-
+                var dataBaseUser = await _userRepository.GetAsync(user.UserName);
+                if (dataBaseUser != null && dataBaseUser.UserName != user.UserName)
+                {
+                    result.Message = "已存在的用户名";
+                }
+                else
+                {
+                    _userRepository.Update(user);
+                    result.Success = true;
+                }
             }
             else
             {
@@ -51,6 +60,15 @@ namespace BugChang.DES.Core.Authorization.Users
             }
 
             return true;
+        }
+
+        public async Task<ResultEntity> DeleteByIdAsync(int userId)
+        {
+            var result = new ResultEntity();
+            var user = await _userRepository.GetByIdAsync(userId);
+            user.IsDeleted = true;
+            result.Success = true;
+            return result;
         }
     }
 }

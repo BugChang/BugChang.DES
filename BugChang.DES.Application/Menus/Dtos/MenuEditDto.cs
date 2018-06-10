@@ -1,9 +1,9 @@
-﻿namespace BugChang.DES.Application.Menus.Dtos
-{
-    public class MenuEditDto
-    {
-        public int Id { get; set; }
+﻿using BugChang.DES.Application.Commons;
 
+namespace BugChang.DES.Application.Menus.Dtos
+{
+    public class MenuEditDto : EditDto
+    {
         public string Name { get; set; }
 
         public string Url { get; set; }

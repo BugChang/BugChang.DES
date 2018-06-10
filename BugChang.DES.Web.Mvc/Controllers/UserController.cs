@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Departments;
@@ -16,10 +17,12 @@ namespace BugChang.DES.Web.Mvc.Controllers
         private readonly IUserAppService _userAppService;
         private readonly IDepartmentAppService _departmentAppService;
 
+
         public UserController(IUserAppService userAppService, IDepartmentAppService departmentAppService)
         {
             _userAppService = userAppService;
             _departmentAppService = departmentAppService;
+
         }
 
         public async Task<IActionResult> Index()
@@ -28,12 +31,19 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> EditUserModal(int id)
+        {
+            var model = await _userAppService.GetForEditByIdAsync(id);
+            return PartialView("_EditUserModal", model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditDto user)
         {
             var result = new ResultEntity();
             if (ModelState.IsValid)
             {
+                user.SetCreateOrUpdateInfo(CurrentUserId);
                 result = await _userAppService.AddOrUpdateAsync(user);
                 return Json(result);
             }
@@ -74,6 +84,13 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 data = pagereslut.Rows
             };
             return Json(json);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _userAppService.DeleteByIdAsync(id);
+            return Json(result);
         }
     }
 }

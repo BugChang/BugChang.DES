@@ -4,6 +4,10 @@
     @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("修改菜单"))
     <div class="modal-body">
         <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <input type="hidden" asp-for="CreateBy" value="@Model.CreateBy" />
+        <input type="hidden" asp-for="CreateTime" value="@Model.CreateTime" />
+        <input type="hidden" asp-for="UpdateBy" value="@Model.UpdateBy" />
+        <input type="hidden" asp-for="UpdateTime" value="@Model.UpdateTime" />
         <div class="form-group">
             <label>上级菜单</label>
             <select class="form-control select2" asp-for="ParentId" style="width: 100%" value="@Model.ParentId"></select>

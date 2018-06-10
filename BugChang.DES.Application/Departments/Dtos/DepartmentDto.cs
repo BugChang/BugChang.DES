@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BugChang.DES.Application.Commons;
 
 namespace BugChang.DES.Application.Departments.Dtos

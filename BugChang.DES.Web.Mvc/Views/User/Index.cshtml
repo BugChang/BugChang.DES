@@ -7,7 +7,9 @@
         </div>
     </div>
     <div class="box-body">
-        <table id="table" class="table table-bordered table-hover"></table>
+        <div class="table-responsive">
+            <table id="table" class="table table-bordered table-hover text-nowrap"></table>
+        </div>
     </div>
 </div>
 <div class="modal fade" id="UserCreateModal" role="dialog">
@@ -27,21 +29,21 @@
                     <div class="form-group">
                         <label>姓名</label>
                         <input type="text" class="form-control" name="DisplayName">
-                        <div class="form-group">
-                            <label>移动电话</label>
-                            <input type="text" class="form-control" name="Phone">
-                        </div>
-                        <div class="form-group">
-                            <label>固定电话</label>
-                            <input type="text" class="form-control" name="Tel">
-                        </div>
-                        <div class="form-group">
-                            <label>启用状态</label>
-                            <select class="form-control" name="Enabled">
-                                <option value="1">启用</option>
-                                <option value="0">停用</option>
-                            </select>
-                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>移动电话</label>
+                        <input type="text" class="form-control" name="Phone">
+                    </div>
+                    <div class="form-group">
+                        <label>固定电话</label>
+                        <input type="text" class="form-control" name="Tel">
+                    </div>
+                    <div class="form-group">
+                        <label>启用状态</label>
+                        <select class="form-control" name="Enabled">
+                            <option value="1">启用</option>
+                            <option value="0">停用</option>
+                        </select>
                     </div>
                     @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
                 </div>
@@ -49,7 +51,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="DepartmentEditModal" role="dialog">
+<div class="modal fade" id="UserEditModal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
 

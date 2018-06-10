@@ -36,6 +36,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = new ResultEntity();
             if (ModelState.IsValid)
             {
+                menu.SetCreateOrUpdateInfo(CurrentUserId);
                 result = await _menuAppService.AddOrUpdateAsync(menu);
                 return Json(result);
             }

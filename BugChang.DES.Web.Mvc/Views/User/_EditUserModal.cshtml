@@ -1,0 +1,43 @@
+﻿@model BugChang.DES.Application.Users.Dtos.UserEditDto
+@using BugChang.DES.Web.Mvc.Models.Common
+<form id="UserEditForm" method="post" asp-controller="User" asp-action="Edit">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("修改用户"))
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <input type="hidden" asp-for="Password" value="@Model.Password" />
+        <input type="hidden" asp-for="CreateBy" value="@Model.CreateBy" />
+        <input type="hidden" asp-for="CreateTime" value="@Model.CreateTime" />
+        <input type="hidden" asp-for="UpdateBy" value="@Model.UpdateBy" />
+        <input type="hidden" asp-for="UpdateTime" value="@Model.UpdateTime" />
+        <div class="form-group">
+            <label>所属机构</label>
+            <select class="form-control select2" asp-for="DepartmentId" style="width: 100%"></select>
+        </div>
+        <div class="form-group">
+            <label>用户名</label>
+            <input type="text" class="form-control" asp-for="UserName">
+        </div>
+        <div class="form-group">
+            <label>姓名</label>
+            <input type="text" class="form-control" asp-for="DisplayName">
+        </div>
+        <div class="form-group">
+            <label>移动电话</label>
+            <input type="text" class="form-control" asp-for="Phone">
+        </div>
+        <div class="form-group">
+            <label>固定电话</label>
+            <input type="text" class="form-control" asp-for="Tel">
+        </div>
+        <div class="form-group">
+            <label>启用状态</label>
+            <select class="form-control" asp-for="Enabled">
+                <option value="1">启用</option>
+                <option value="0">停用</option>
+            </select>
+        </div>
+
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/user/_editUserModal.js" asp-append-version="true"></script>

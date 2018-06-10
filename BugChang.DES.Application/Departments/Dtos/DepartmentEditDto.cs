@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BugChang.DES.Application.Commons;
 
 namespace BugChang.DES.Application.Departments.Dtos
 {
-    public class DepartmentEditDto
+    public class DepartmentEditDto:EditDto
     {
-        public int Id { get; set; }
 
         [Required(ErrorMessage = "机构名称不允许为空")]
         [MaxLength(50)]
