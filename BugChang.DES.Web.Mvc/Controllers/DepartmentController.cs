@@ -43,6 +43,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = new ResultEntity();
             if (ModelState.IsValid)
             {
+                department.ParentId = department.ParentId == 0 ? null : department.ParentId;
                 department.SetCreateOrUpdateInfo(CurrentUserId);
                 result = await _departmentAppService.AddOrUpdateAsync(department);
                 return Json(result);
@@ -57,7 +58,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTreeData(int? parentId)
         {
-            var departments = await _departmentAppService.GetAllAsync(parentId);
+            var tempParentId = parentId == 0 ? null : parentId;
+            var departments = await _departmentAppService.GetAllAsync(tempParentId);
             var treedata = departments.Select(a => new TreeViewModel
             {
                 Id = a.Id,
@@ -68,7 +70,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             {
                 var treeDataWithRoot = new TreeViewModel
                 {
-                    Id = null,
+                    Id = 0,
                     Name = "机构树",
                     Open = true,
                     IsParent = true,
@@ -86,7 +88,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var pageSearchDto = new PageSearchModel
             {
                 Keywords = keywords,
-                ParentId = parentId,
+                ParentId = parentId == 0 ? null : parentId,
                 Take = length,
                 Skip = start
             };
@@ -105,6 +107,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> GetListForSelect()
         {
             var departments = await _departmentAppService.GetAllAsync();
+            departments.Insert(0, new DepartmentListDto
+            {
+                Id = 0,
+                FullName = "无"
+            });
             var json = departments.Select(a => new SelectViewModel
             {
                 Id = a.Id,

@@ -1,0 +1,22 @@
+﻿@model BugChang.DES.Application.Roles.Dtos.RoleEditDto
+@using BugChang.DES.Web.Mvc.Models.Common
+<form id="RoleEditForm" method="post" asp-controller="Role" asp-action="Edit">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("修改角色"))
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <input type="hidden" asp-for="CreateBy" value="@Model.CreateBy" />
+        <input type="hidden" asp-for="CreateTime" value="@Model.CreateTime" />
+        <input type="hidden" asp-for="UpdateBy" value="@Model.UpdateBy" />
+        <input type="hidden" asp-for="UpdateTime" value="@Model.UpdateTime" />
+        <div class="form-group">
+            <label>角色名称</label>
+            <input type="text" class="form-control" asp-for="Name" value="@Model.Name">
+        </div>
+        <div class="form-group">
+            <label>角色描述</label>
+            <textarea class="form-control" asp-for="Description" rows="3">@Model.Description</textarea>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/role/_editRoleModal.js" asp-append-version="true"></script>

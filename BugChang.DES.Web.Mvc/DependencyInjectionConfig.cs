@@ -1,6 +1,7 @@
 ﻿using BugChang.DES.Application.Accounts;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Menus;
+using BugChang.DES.Application.Roles;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Authorization.Menus;
@@ -43,6 +44,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IAccountAppService, AccountAppService>();
             services.AddScoped<IMenuAppService, MenuAppService>();
             services.AddScoped<IDepartmentAppService, DepartmentAppService>();
+            services.AddScoped<IRoleAppService, RoleAppService>();
 
             #endregion
 
@@ -53,6 +55,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<MenuManager>();
             services.AddScoped<DepartmentManager>();
             services.AddScoped<UserManager>();
+            services.AddScoped<RoleManager>();
 
             #endregion
 
@@ -63,6 +66,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IMenuRepository, MenuRepository>();
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
 
             #endregion
 

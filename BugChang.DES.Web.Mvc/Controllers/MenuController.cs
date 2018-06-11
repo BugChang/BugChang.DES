@@ -36,6 +36,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = new ResultEntity();
             if (ModelState.IsValid)
             {
+                menu.ParentId = menu.ParentId == 0 ? null : menu.ParentId;
                 menu.SetCreateOrUpdateInfo(CurrentUserId);
                 result = await _menuAppService.AddOrUpdateAsync(menu);
                 return Json(result);
@@ -50,7 +51,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTreeData(int? parentId)
         {
-            var menus = await _menuAppService.GetAllAsync(parentId);
+            var tempParentId = parentId == 0 ? null : parentId;
+            var menus = await _menuAppService.GetAllAsync(tempParentId);
             var treedata = menus.Select(a => new TreeViewModel
             {
                 Id = a.Id,
@@ -62,7 +64,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             {
                 var treeDataWithRoot = new TreeViewModel
                 {
-                    Id = null,
+                    Id = 0,
                     Name = "菜单树",
                     Open = true,
                     IsParent = true,
@@ -77,6 +79,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> GetListForSelect()
         {
             var departments = await _menuAppService.GetAllAsync();
+            departments.Insert(0, new MenuListDto { Id = 0, Name = "无" });
             var json = departments.Select(a => new SelectViewModel
             {
                 Id = a.Id,
@@ -91,7 +94,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var pageSearchDto = new PageSearchModel
             {
                 Keywords = keywords,
-                ParentId = parentId,
+                ParentId = parentId == 0 ? null : parentId,
                 Take = length,
                 Skip = start
             };
