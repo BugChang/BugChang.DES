@@ -33,9 +33,15 @@ namespace BugChang.DES.Application.Roles
             return result;
         }
 
-        public Task<ResultEntity> DeleteByIdAsync(int id)
+        public async Task<ResultEntity> DeleteByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await _roleManager.DeleteByIdAsync(id);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+
+            return result;
         }
 
         public async Task<RoleEditDto> GetForEditByIdAsync(int id)

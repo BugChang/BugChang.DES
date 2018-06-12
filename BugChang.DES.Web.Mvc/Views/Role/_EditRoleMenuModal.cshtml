@@ -1,0 +1,7 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+@Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("菜单分配"))
+<div class="modal-body">
+    <ul id="menuTree" class="ztree"></ul>
+</div>
+@Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+<script src="~/views-resource/role/_editRoleMenuModal.js" asp-append-version="true"></script>

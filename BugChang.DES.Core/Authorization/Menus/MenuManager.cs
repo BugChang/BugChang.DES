@@ -26,12 +26,6 @@ namespace BugChang.DES.Core.Authorization.Menus
             return menus;
         }
 
-        public async Task<IList<Menu>> GetAllAsync()
-        {
-            var menus = await _menuRepository.GetAllAsync();
-            return menus;
-        }
-
         public async Task<IList<Menu>> GetAllRootAsync()
         {
             var menus = await _menuRepository.GetAllRootAsync();

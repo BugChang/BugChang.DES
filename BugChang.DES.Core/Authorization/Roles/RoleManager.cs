@@ -41,5 +41,14 @@ namespace BugChang.DES.Core.Authorization.Roles
             return result;
         }
 
+        public async Task<ResultEntity> DeleteByIdAsync(int userId)
+        {
+            var result = new ResultEntity();
+            var role = await _roleRepository.GetByIdAsync(userId);
+            role.IsDeleted = true;
+            result.Success = true;
+            return result;
+        }
+
     }
 }

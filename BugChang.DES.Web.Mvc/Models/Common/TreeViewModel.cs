@@ -15,4 +15,13 @@ namespace BugChang.DES.Web.Mvc.Models.Common
 
         public IList<TreeViewModel> Children { get; set; }
     }
+
+    public class SimpleTreeViewModel
+    {
+        public int? Id { get; set; }
+
+        public string Name { get; set; }
+
+        public int? ParentId { get; set; }
+    }
 }

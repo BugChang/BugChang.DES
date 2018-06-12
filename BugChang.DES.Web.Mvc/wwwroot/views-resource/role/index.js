@@ -9,7 +9,7 @@
         //初始化table
         initTable();
 
-        //新增菜单表单提交
+        //新增角色表单提交
         $('#RoleCreateForm').submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
@@ -30,7 +30,7 @@
                     });
             } catch (e) {
                 console.log(e);
-            } 
+            }
 
         });
 
@@ -39,6 +39,27 @@
             function () {
                 var roleId = $(this).attr('data-role-id');
                 editRole(roleId);
+            });
+
+        $('table').delegate('.edit-menu',
+            'click',
+            function () {
+                var roleId = $(this).attr('data-role-id');
+                editMenu(roleId);
+            });
+
+        $('table').delegate('.edit-operation',
+            'click',
+            function () {
+                var roleId = $(this).attr('data-role-id');
+                editOperation(roleId);
+            });
+
+        $('table').delegate('.edit-data',
+            'click',
+            function () {
+                var roleId = $(this).attr('data-role-id');
+                editData(roleId);
             });
 
         $('table').delegate('.delete-role',
@@ -105,8 +126,11 @@
                     targets: 7,
                     render: function (data, type, row) {
                         var strHtml =
+                            '<button class="btn btn-primary btn-xs edit-menu" data-role-id=' + row.id + '>菜单分配</button>&nbsp;' +
+                            '<button class="btn btn-primary btn-xs edit-operation" data-role-id=' + row.id + '>操作权限</button>&nbsp;' +
+                            '<button class="btn btn-primary btn-xs edit-data" data-role-id=' + row.id + '>数据权限</button>&nbsp;' +
                             '<button class="btn btn-info btn-xs edit-role" data-role-id=' + row.id + '>修改</button>&nbsp;' +
-                            '<button class="btn btn-danger btn-xs delete-role" data-role-id=' + row.id + ' data-role-name=' + row.displayName + '>删除</button>';
+                            '<button class="btn btn-danger btn-xs delete-role" data-role-id=' + row.id + ' data-role-name=' + row.name + '>删除</button>';
                         return strHtml;
                     }
                 }
@@ -117,7 +141,7 @@
         });
     }
 
-    //编辑菜单信息
+    //编辑角色信息
     function editRole(id) {
         $('#RoleEditModal .modal-content').load('/Role/EditRoleModal/' + id);
         $('#RoleEditModal').modal({
@@ -127,7 +151,7 @@
         });
     }
 
-    //删除菜单
+    //删除角色
     function deleteRole(roleId, roleName) {
         window.swal({
             title: '确定删除' + roleName + '?',
@@ -148,6 +172,26 @@
                     });
             }
         });
+    }
+
+    //菜单分配
+    function editMenu(roleId) {
+        $('#RoleMenuEditModal .modal-content').load('/Role/EditRoleMenuModal/' + roleId);
+        $('#RoleMenuEditModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
+    }
+
+    //操作权限分配
+    function editOperation(roleId) {
+        alert('操作权限');
+    }
+
+    //数据权限分配
+    function editData(roleId) {
+        alert('数据权限');
     }
 
     //清空表单

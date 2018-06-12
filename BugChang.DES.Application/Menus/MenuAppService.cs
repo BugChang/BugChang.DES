@@ -35,7 +35,7 @@ namespace BugChang.DES.Application.Menus
 
         public async Task<IList<MenuListDto>> GetAllAsync()
         {
-            var menus = await _menuManager.GetAllAsync();
+            var menus = await _menuRepository.GetAllAsync();
             return Mapper.Map<IList<MenuListDto>>(menus);
         }
 

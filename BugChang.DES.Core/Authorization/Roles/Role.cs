@@ -8,7 +8,7 @@ namespace BugChang.DES.Core.Authorization.Roles
     /// <summary>
     /// 角色
     /// </summary>
-    public class Role : BaseEntity
+    public class Role : BaseEntity,ISoftDelete
     {
 
         public const string SysAdmin = "系统管理员";
@@ -29,5 +29,6 @@ namespace BugChang.DES.Core.Authorization.Roles
         public string Description { get; set; }
 
         public IList<UserRole> UserRoles { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
