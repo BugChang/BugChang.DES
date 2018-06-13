@@ -10,4 +10,8 @@ namespace BugChang.DES.Core.Authorization.Roles
 
         Task<Role> GetByName(string roleName);
     }
+
+    public interface IRoleMenuRepository : IBaseRepository<RoleMenu>
+    {
+    }
 }

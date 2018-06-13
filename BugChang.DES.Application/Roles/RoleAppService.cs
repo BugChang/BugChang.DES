@@ -1,10 +1,8 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BugChang.DES.Application.Roles.Dtos;
-using BugChang.DES.Application.Users.Dtos;
 using BugChang.DES.Core.Authorization.Roles;
-using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.EntityFrameWorkCore;
 
@@ -54,6 +52,17 @@ namespace BugChang.DES.Application.Roles
         {
             var roles = await _roleRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<RoleListDto>>(roles);
+        }
+
+        public async Task<ResultEntity> EditRoleMenu(int roleId, IList<int> lstMenuId)
+        {
+            var result = await _roleManager.EditRoleMenu(roleId, lstMenuId);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+
+            return result;
         }
     }
 }

@@ -1,7 +1,11 @@
-﻿using BugChang.DES.Core.Authorization.Menus;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
+using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Powers;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,8 +29,16 @@ namespace BugChang.DES.EntityFrameWorkCore
             modelBuilder.Entity<Department>().HasOne(a => a.UpdateUser);
 
             //全局过滤器
-            modelBuilder.Entity<Department>().HasQueryFilter(p => !p.IsDeleted);
-            modelBuilder.Entity<User>().HasQueryFilter(p => !p.IsDeleted);
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes()
+                .Where(e => typeof(ISoftDelete).IsAssignableFrom(e.ClrType)))
+            {
+                modelBuilder.Entity(entityType.ClrType).Property<Boolean>("IsDeleted");
+                var parameter = Expression.Parameter(entityType.ClrType, "e");
+                var body = Expression.Equal(
+                    Expression.Call(typeof(EF), nameof(EF.Property), new[] { typeof(bool) }, parameter, Expression.Constant("IsDeleted")),
+                    Expression.Constant(false));
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(Expression.Lambda(body, parameter));
+            }
         }
 
         public DbSet<User> Users { get; set; }

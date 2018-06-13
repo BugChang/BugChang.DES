@@ -11,6 +11,9 @@ namespace BugChang.DES.Core.Authorization.Menus
 
         Task<IList<Menu>> GetAllRootAsync();
 
+        Task<IList<Menu>> GetAllByRoleIdAsync(int roleId);
+
         Task<PageResultModel<Menu>> GetPagingAysnc(int? parentId, int take, int skip, string keywords);
+
     }
 }

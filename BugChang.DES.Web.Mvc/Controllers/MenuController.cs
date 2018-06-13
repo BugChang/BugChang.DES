@@ -4,6 +4,7 @@ using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Menus;
 using BugChang.DES.Application.Menus.Dtos;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -19,6 +20,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
             _menuAppService = menuAppService;
         }
 
+
+        [ServiceFilter(typeof(MenuFilter))]
         public IActionResult Index()
         {
             return View();

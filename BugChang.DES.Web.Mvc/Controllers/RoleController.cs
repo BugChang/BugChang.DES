@@ -6,6 +6,7 @@ using BugChang.DES.Application.Menus;
 using BugChang.DES.Application.Roles;
 using BugChang.DES.Application.Roles.Dtos;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -24,6 +25,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             _menuAppService = menuAppService;
         }
 
+        [ServiceFilter(typeof(MenuFilter))]
         public IActionResult Index()
         {
             return View();
@@ -35,8 +37,9 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return PartialView("_EditRoleModal", model);
         }
 
-        public async Task<IActionResult> EditRoleMenuModal(int id)
+        public IActionResult EditRoleMenuModal(int id)
         {
+            ViewBag.RoleId = id;
             return PartialView("_EditRoleMenuModal");
         }
 
@@ -53,6 +56,27 @@ namespace BugChang.DES.Web.Mvc.Controllers
             result.Message = ModelState.Values
                 .FirstOrDefault(a => a.ValidationState == ModelValidationState.Invalid)?.Errors.FirstOrDefault()
                 ?.ErrorMessage;
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRoleMenu(int roleId, string strMenuId)
+        {
+            var result = new ResultEntity();
+            if (roleId == 0)
+            {
+                result.Message = "角色Id有误";
+            }
+            else if (strMenuId == null)
+            {
+                result.Message = "菜单分配有误";
+            }
+            else
+            {
+                var lstMenuId = strMenuId.Split(',').ToList().Select(x => Convert.ToInt32(x)).ToList();
+                result = await _roleAppService.EditRoleMenu(roleId, lstMenuId);
+            }
 
             return Json(result);
         }
@@ -85,14 +109,16 @@ namespace BugChang.DES.Web.Mvc.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTreeForRoleMenu()
+        public async Task<IActionResult> GetTreeForRoleMenu(int id)
         {
             var menus = await _menuAppService.GetAllAsync();
+            var roleMenus = await _menuAppService.GetAllByRoleIdAsync(id);
             var treedata = menus.Select(a => new SimpleTreeViewModel
             {
                 Id = a.Id,
                 Name = a.Name,
-                ParentId = a.ParentId
+                ParentId = a.ParentId,
+                Checked = roleMenus.Any(b => b.Id == a.Id)
             }).ToList();
 
             return Json(treedata);

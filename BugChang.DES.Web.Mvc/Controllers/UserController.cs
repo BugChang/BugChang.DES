@@ -6,6 +6,7 @@ using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Application.Users.Dtos;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -25,6 +26,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         }
 
+        [ServiceFilter(typeof(MenuFilter))]
         public async Task<IActionResult> Index()
         {
             var model = await _userAppService.GetUsersAsync();

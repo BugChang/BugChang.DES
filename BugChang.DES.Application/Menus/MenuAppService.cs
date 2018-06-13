@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Menus.Dtos;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Commons;
@@ -42,6 +41,12 @@ namespace BugChang.DES.Application.Menus
         public async Task<IList<MenuListDto>> GetAllRootAsync()
         {
             var menus = await _menuManager.GetAllRootAsync();
+            return Mapper.Map<IList<MenuListDto>>(menus);
+        }
+
+        public async Task<IList<MenuListDto>> GetAllByRoleIdAsync(int roleId)
+        {
+            var menus = await _menuRepository.GetAllByRoleIdAsync(roleId);
             return Mapper.Map<IList<MenuListDto>>(menus);
         }
 

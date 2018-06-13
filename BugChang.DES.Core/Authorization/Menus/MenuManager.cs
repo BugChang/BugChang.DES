@@ -42,7 +42,7 @@ namespace BugChang.DES.Core.Authorization.Menus
             var result = new ResultEntity();
             if (menu.Id > 0)
             {
-               _menuRepository.Update(menu);
+                _menuRepository.Update(menu);
             }
             else
             {
@@ -56,7 +56,7 @@ namespace BugChang.DES.Core.Authorization.Menus
         public async Task<bool> HasMenu(IList<string> userRoles, string url)
         {
             var menus = await _menuRepository.GetMenusByRolesAsync(userRoles);
-            if (menus.FirstOrDefault(a => a.Url.Equals(url)) != null)
+            if (menus.FirstOrDefault(a => a.Url==url) != null)
             {
                 return true;
             }
@@ -97,5 +97,7 @@ namespace BugChang.DES.Core.Authorization.Menus
             resultEntity.Success = true;
             return resultEntity;
         }
+
+
     }
 }

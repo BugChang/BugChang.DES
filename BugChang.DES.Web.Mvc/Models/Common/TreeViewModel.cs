@@ -22,6 +22,8 @@ namespace BugChang.DES.Web.Mvc.Models.Common
 
         public string Name { get; set; }
 
+        public bool Checked { get; set; }
+
         public int? ParentId { get; set; }
     }
 }
