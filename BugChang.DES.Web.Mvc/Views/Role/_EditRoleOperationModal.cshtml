@@ -1,0 +1,48 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+<link href="~/lib/iCheck/all.css" rel="stylesheet" />
+@Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("操作权限"))
+<form id="RoleOperationEditForm" method="post">
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-4" style="border-right:1px solid #e5e5e5">
+                <ul id="menuTree" data-role-id="@ViewBag.RoleId" class="ztree"></ul>
+            </div>
+            <div class="col-xs-8">
+                <div class="row">
+                    <label class="col-md-4">
+                        <input type="checkbox">
+                        新增
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox">
+                        删除
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox">
+                        修改
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox">
+                        修改
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox">
+                        修改
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox">
+                        打印取件单
+                    </label>
+                    <label class="col-md-4">
+                        <input type="checkbox">
+                        修改
+                    </label>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/lib/iCheck/icheck.min.js"></script>
+<script src="~/views-resource/role/_editRoleOperationModal.js" asp-append-version="true"></script>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Menus;
+using BugChang.DES.Application.Operations;
 using BugChang.DES.Application.Roles;
 using BugChang.DES.Application.Roles.Dtos;
 using BugChang.DES.Core.Commons;
@@ -18,11 +19,13 @@ namespace BugChang.DES.Web.Mvc.Controllers
     {
         private readonly IRoleAppService _roleAppService;
         private readonly IMenuAppService _menuAppService;
+        private readonly IOperationAppService _operationAppService;
 
-        public RoleController(IRoleAppService roleAppService, IMenuAppService menuAppService)
+        public RoleController(IRoleAppService roleAppService, IMenuAppService menuAppService, IOperationAppService operationAppService)
         {
             _roleAppService = roleAppService;
             _menuAppService = menuAppService;
+            _operationAppService = operationAppService;
         }
 
         [ServiceFilter(typeof(MenuFilter))]
@@ -41,6 +44,12 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             ViewBag.RoleId = id;
             return PartialView("_EditRoleMenuModal");
+        }
+
+        public IActionResult EditRoleOperationModal(int id)
+        {
+            ViewBag.RoleId = id;
+            return PartialView("_EditRoleOperationModal");
         }
 
         [HttpPost]
@@ -123,5 +132,28 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
             return Json(treedata);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTreeForRoleOperation(int id)
+        {
+            var roleMenus = await _menuAppService.GetAllByRoleIdAsync(id);
+            var treedata = roleMenus.Select(a => new SimpleTreeViewModel
+            {
+                Id = a.Id,
+                Name = a.Name,
+                ParentId = a.ParentId,
+                CustomData = a.Url
+            }).ToList();
+
+            return Json(treedata);
+        }
+
+
+        public IActionResult GetOperationsByUrl(string url)
+        {
+            var operations=  _operationAppService.GetOperationsByUrl(url);
+            return Json(operations); 
+        }
+
     }
 }

@@ -1,10 +1,16 @@
-﻿using BugChang.DES.Application.Accounts;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using BugChang.DES.Application.Accounts;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Menus;
+using BugChang.DES.Application.Operations;
 using BugChang.DES.Application.Roles;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Authorization.Menus;
+using BugChang.DES.Core.Authorization.Operations;
 using BugChang.DES.Core.Authorization.Powers;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
@@ -45,6 +51,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IMenuAppService, MenuAppService>();
             services.AddScoped<IDepartmentAppService, DepartmentAppService>();
             services.AddScoped<IRoleAppService, RoleAppService>();
+            services.AddScoped<IOperationAppService, OperationAppService>();
 
             #endregion
 
@@ -56,6 +63,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<DepartmentManager>();
             services.AddScoped<UserManager>();
             services.AddScoped<RoleManager>();
+            services.AddScoped<OperationManager>();
 
             #endregion
 
@@ -71,6 +79,56 @@ namespace BugChang.DES.Web.Mvc
 
             #endregion
 
+            ////集中注册服务
+            //foreach (var item in GetClassName("AppService"))
+            //{
+            //    foreach (var typeArray in item.Value)
+            //    {
+            //        services.AddScoped(typeArray, item.Key);
+            //    }
+            //}
+
+            ////集中注册服务
+            //foreach (var item in GetClassName("Manager"))
+            //{
+            //    foreach (var typeArray in item.Value)
+            //    {
+            //        services.AddScoped(typeArray, item.Key);
+            //    }
+            //}
+
+            ////集中注册服务
+            //foreach (var item in GetClassName("Repository"))
+            //{
+            //    foreach (var typeArray in item.Value)
+            //    {
+            //        services.AddScoped(typeArray, item.Key);
+            //    }
+            //}
         }
+
+
+        /// <summary>  
+        /// 获取程序集中的实现类对应的多个接口
+        /// </summary>  
+        /// <param name="assemblyName">程序集</param>
+        public static Dictionary<Type, Type[]> GetClassName(string assemblyName)
+        {
+            if (!String.IsNullOrEmpty(assemblyName))
+            {
+                Assembly assembly = Assembly.Load(assemblyName);
+                List<Type> ts = assembly.GetTypes().ToList();
+
+                var result = new Dictionary<Type, Type[]>();
+                foreach (var item in ts.Where(s => !s.IsInterface))
+                {
+                    var interfaceType = item.GetInterfaces();
+                    result.Add(item, interfaceType);
+                }
+                return result;
+            }
+            return new Dictionary<Type, Type[]>();
+        }
+
     }
 }

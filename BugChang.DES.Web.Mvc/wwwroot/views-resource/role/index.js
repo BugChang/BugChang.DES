@@ -186,7 +186,12 @@
 
     //操作权限分配
     function editOperation(roleId) {
-        alert('操作权限');
+        $('#RoleOperationEditModal .modal-content').load('/Role/EditRoleOperationModal/' + roleId);
+        $('#RoleOperationEditModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
     }
 
     //数据权限分配

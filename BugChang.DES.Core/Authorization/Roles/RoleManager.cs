@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BugChang.DES.Core.Authorization.Operations;
 using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Core.Authorization.Roles
@@ -91,6 +92,7 @@ namespace BugChang.DES.Core.Authorization.Roles
                 };
                 await _roleMenuRepository.AddAsync(newRoleMenu);
             }
+            
 
             resultEntity.Success = true;
             return resultEntity;

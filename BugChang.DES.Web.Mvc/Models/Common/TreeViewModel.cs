@@ -11,6 +11,8 @@ namespace BugChang.DES.Web.Mvc.Models.Common
 
         public bool IsParent { get; set; }
 
+        public bool Checked { get; set; }
+
         public string CustomData { get; set; }
 
         public IList<TreeViewModel> Children { get; set; }
@@ -25,5 +27,8 @@ namespace BugChang.DES.Web.Mvc.Models.Common
         public bool Checked { get; set; }
 
         public int? ParentId { get; set; }
+
+        public string CustomData { get; set; }
+        
     }
 }
