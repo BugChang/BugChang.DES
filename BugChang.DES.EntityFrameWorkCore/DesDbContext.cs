@@ -55,5 +55,7 @@ namespace BugChang.DES.EntityFrameWorkCore
 
         public DbSet<Department> Departments { get; set; }
 
+        public DbSet<RoleOperation> RoleOperations { get; set; }
+
     }
 }

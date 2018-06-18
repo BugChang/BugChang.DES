@@ -76,6 +76,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRoleMenuRepository, RoleMenuRepository>();
+            services.AddScoped<IRoleOperationRepository, RoleOperationRepository>();
 
             #endregion
 

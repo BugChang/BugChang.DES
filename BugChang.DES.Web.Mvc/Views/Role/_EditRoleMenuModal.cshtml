@@ -2,7 +2,7 @@
 @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("菜单分配"))
 <form id="RoleMenuEditForm" method="post">
     <div class="modal-body">
-        <ul id="menuTree" data-role-id="@ViewBag.RoleId" class="ztree"></ul>
+        <ul id="roleMenuTree" data-role-id="@ViewBag.RoleId" class="ztree"></ul>
     </div>
     @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
 </form>

@@ -1,7 +1,6 @@
-﻿@using System.Linq
-<section class="content-header">
+﻿<section class="content-header">
     <h1>
-        @((Model as List<string>).LastOrDefault())
+        @((Model as List<string> ?? throw new InvalidOperationException("面包屑数据为空")).LastOrDefault())
         <small>菜单功能描述</small>
     </h1>
     <ol class="breadcrumb">

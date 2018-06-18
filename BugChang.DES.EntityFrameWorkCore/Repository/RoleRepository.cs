@@ -74,4 +74,16 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             _dbContext = dbContext;
         }
     }
+
+    /// <summary>
+    /// 角色和操作关联关系仓储
+    /// </summary>
+    public class RoleOperationRepository : BaseRepository<RoleOperation>, IRoleOperationRepository
+    {
+        private readonly DesDbContext _dbContext;
+        public RoleOperationRepository(DesDbContext dbContext) : base(dbContext)
+        {
+            _dbContext = dbContext;
+        }
+    }
 }

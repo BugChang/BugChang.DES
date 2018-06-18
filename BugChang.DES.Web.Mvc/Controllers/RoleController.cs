@@ -9,6 +9,7 @@ using BugChang.DES.Application.Roles.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
+using BugChang.DES.Web.Mvc.Models.Role;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -149,10 +150,31 @@ namespace BugChang.DES.Web.Mvc.Controllers
         }
 
 
-        public IActionResult GetOperationsByUrl(string url)
+        public IActionResult GetOperationsByUrl(string url, int roleId)
         {
-            var operations=  _operationAppService.GetOperationsByUrl(url);
-            return Json(operations); 
+            var operations = _operationAppService.GetOperationsByUrl(url, out string module);
+            var roleOperationCodes = _roleAppService.GetRoleOperationCodes(module, roleId);
+            var json = operations.Select(a => new RoleOperationViewModel
+            {
+                Checked = roleOperationCodes.Contains(a.Code),
+                OperationCode = a.Code,
+                OperationName = a.Name
+            }).ToList();
+            return Json(json);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRoleOperation(int roleId, string operationCode)
+        {
+            var result = await _roleAppService.DeleteRoleOperation(roleId, operationCode);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRoleOperation(int roleId, string operationCode)
+        {
+            var result = await _roleAppService.AddRoleOperation(roleId, operationCode);
+            return Json(result);
         }
 
     }

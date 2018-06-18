@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BugChang.DES.Application.Roles.Dtos;
@@ -57,6 +58,33 @@ namespace BugChang.DES.Application.Roles
         public async Task<ResultEntity> EditRoleMenu(int roleId, IList<int> lstMenuId)
         {
             var result = await _roleManager.EditRoleMenu(roleId, lstMenuId);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+
+            return result;
+        }
+
+        public IList<string> GetRoleOperationCodes(string module, int roleId)
+        {
+            return _roleManager.GetRoleOperationCodes(module, roleId);
+        }
+
+        public async Task<ResultEntity> AddRoleOperation(int roleId, string operationCode)
+        {
+            var result =await  _roleManager.AddRoleOperation(roleId, operationCode);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+
+            return result;
+        }
+
+        public async Task<ResultEntity> DeleteRoleOperation(int roleId, string operationCode)
+        {
+            var result =  _roleManager.DeleteRoleOperation(roleId, operationCode);
             if (result.Success)
             {
                 await _unitOfWork.CommitAsync();

@@ -26,5 +26,10 @@
         {
             return "/Department/Index";
         }
+
+        public string GetModuleName()
+        {
+            return "Department";
+        }
     }
 }

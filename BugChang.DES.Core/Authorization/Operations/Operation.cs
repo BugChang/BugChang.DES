@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection;
-
-namespace BugChang.DES.Core.Authorization.Operations
+﻿namespace BugChang.DES.Core.Authorization.Operations
 {
     /// <summary>
     /// 操作

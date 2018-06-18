@@ -14,4 +14,8 @@ namespace BugChang.DES.Core.Authorization.Roles
     public interface IRoleMenuRepository : IBaseRepository<RoleMenu>
     {
     }
+
+    public interface IRoleOperationRepository : IBaseRepository<RoleOperation>
+    {
+    }
 }

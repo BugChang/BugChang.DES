@@ -10,11 +10,13 @@ namespace BugChang.DES.Core.Authorization.Roles
     {
         private readonly IRoleRepository _roleRepository;
         private readonly IRoleMenuRepository _roleMenuRepository;
+        private readonly IRoleOperationRepository _roleOperationRepository;
 
-        public RoleManager(IRoleRepository roleRepository, IRoleMenuRepository roleMenuRepository)
+        public RoleManager(IRoleRepository roleRepository, IRoleMenuRepository roleMenuRepository, IRoleOperationRepository roleOperationRepository)
         {
             _roleRepository = roleRepository;
             _roleMenuRepository = roleMenuRepository;
+            _roleOperationRepository = roleOperationRepository;
         }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace BugChang.DES.Core.Authorization.Roles
                 };
                 await _roleMenuRepository.AddAsync(newRoleMenu);
             }
-            
+
 
             resultEntity.Success = true;
             return resultEntity;
@@ -111,5 +113,70 @@ namespace BugChang.DES.Core.Authorization.Roles
             }
         }
 
+        /// <summary>
+        /// 获取操作代码列表
+        /// </summary>
+        /// <param name="module">模块</param>
+        /// <param name="roleId">角色ID</param>
+        /// <returns></returns>
+        public IList<string> GetRoleOperationCodes(string module, int roleId)
+        {
+            var roleOperationCodes = _roleOperationRepository.GetQueryable().Where(a => a.RoleId == roleId && a.OperationCode.Contains(module))
+                .Select(a => a.OperationCode).ToList();
+            return roleOperationCodes;
+        }
+
+        /// <summary>
+        /// 添加角色和操作关联
+        /// </summary>
+        /// <param name="roleId">角色ID</param>
+        /// <param name="operationCode">操作代码</param>
+        /// <returns></returns>
+        public async Task<ResultEntity> AddRoleOperation(int roleId, string operationCode)
+        {
+            var result = new ResultEntity();
+            var roleOperation = _roleOperationRepository.GetQueryable()
+                .FirstOrDefault(a => a.RoleId == roleId && a.OperationCode == operationCode);
+            if (roleOperation != null)
+            {
+                result.Message = "已经存在的操作，请勿重复添加！";
+            }
+            else
+            {
+                var newRoleOperation = new RoleOperation()
+                {
+                    RoleId = roleId,
+                    OperationCode = operationCode
+                };
+                await _roleOperationRepository.AddAsync(newRoleOperation);
+                result.Success = true;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///删除角色和操作关联
+        /// </summary>
+        /// <param name="roleId">角色ID</param>
+        /// <param name="operationCode">操作代码</param>
+        /// <returns></returns>
+        public  ResultEntity DeleteRoleOperation(int roleId, string operationCode)
+        {
+            var result = new ResultEntity();
+            var roleOperation = _roleOperationRepository.GetQueryable()
+                .FirstOrDefault(a => a.RoleId == roleId && a.OperationCode == operationCode);
+            if (roleOperation == null)
+            {
+                result.Message = "删除失败，不存在的操作条目！";
+            }
+            else
+            {
+                roleOperation.IsDeleted = true;
+                result.Success = true;
+            }
+
+            return result;
+        }
     }
 }
