@@ -153,7 +153,9 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public IActionResult GetOperationsByUrl(string url, int roleId)
         {
             var operations = _operationAppService.GetOperationsByUrl(url, out string module);
-            var roleOperationCodes = _roleAppService.GetRoleOperationCodes(module, roleId);
+
+            var lstRoleId = new List<int> { roleId };
+            var roleOperationCodes = _roleAppService.GetRoleOperationCodes(module, lstRoleId);
             var json = operations.Select(a => new RoleOperationViewModel
             {
                 Checked = roleOperationCodes.Contains(a.Code),
@@ -177,5 +179,19 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(result);
         }
 
+
+        [HttpGet]
+        public IActionResult GetRoleOperations(string module)
+        {
+            var roles = HttpContext.User.FindAll("RoleId").ToList();
+            var lstRoleId = new List<int>();
+            foreach (var roleClaim in roles)
+            {
+                lstRoleId.Add(Convert.ToInt32(roleClaim.Value));
+            }
+
+            var operations = _roleAppService.GetRoleOperationCodes(module, lstRoleId);
+            return Json(operations);
+        }
     }
 }

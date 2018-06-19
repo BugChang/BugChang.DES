@@ -3,6 +3,7 @@
     var table;
     var zTreeObj;
 
+
     var setting = { // zTree 参数配置
         async: {
             enable: true,
@@ -19,6 +20,12 @@
 
         //toastr提示2s自动关闭
         window.toastr.options.timeOut = 2000;
+
+        //初始化操作代码
+        Common.initOperations('Department');
+
+        //初始化页面元素
+        initPageElement();
 
         //初始化zTree
         zTreeObj = $.fn.zTree.init($('#departmentTree'), setting);
@@ -75,6 +82,8 @@
 
 
     });
+
+
 
     //zTree节点单击回调函数
     function zTreeBeforeClick(treeId, treeNode) {
@@ -142,9 +151,13 @@
                 {
                     targets: 8,
                     render: function (data, type, row) {
-                        var strHtml =
-                            '<button class="btn btn-info btn-xs edit-department" data-department-id=' + row.id + '>修改</button>&nbsp;' +
-                            '<button class="btn btn-danger btn-xs delete-department" data-department-id=' + row.id + ' data-department-name=' + row.name + '>删除</button>';
+                        var strHtml = '';
+                        if (Common.hasOperation("Department.Edit")) {
+                            strHtml += '<button class="btn btn-info btn-xs edit-department" data-department-id=' + row.id + '>修改</button>&nbsp;';
+                        }
+                        if (Common.hasOperation("Department.Delete")) {
+                            strHtml += '<button class="btn btn-danger btn-xs delete-department" data-department-id=' + row.id + ' data-department-name=' + row.name + '>删除</button>';
+                        }
                         return strHtml;
                     }
                 }
@@ -231,6 +244,13 @@
     //重新加载页面
     function reload() {
         window.location.reload();
+    }
+
+    //初始化页面元素
+    function initPageElement() {
+        if (!Common.hasOperation('Department.Create')) {
+            $('#btnAddDepartment').hide();
+        }
     }
 
     //向外暴露方法

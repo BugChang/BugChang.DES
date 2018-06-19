@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BugChang.DES.Core.Authorization.Operations;
 using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Core.Authorization.Roles
@@ -117,11 +116,11 @@ namespace BugChang.DES.Core.Authorization.Roles
         /// 获取操作代码列表
         /// </summary>
         /// <param name="module">模块</param>
-        /// <param name="roleId">角色ID</param>
+        /// <param name="lstRoleId">角色ID</param>
         /// <returns></returns>
-        public IList<string> GetRoleOperationCodes(string module, int roleId)
+        public IList<string> GetRoleOperationCodes(string module, List<int> lstRoleId)
         {
-            var roleOperationCodes = _roleOperationRepository.GetQueryable().Where(a => a.RoleId == roleId && a.OperationCode.Contains(module))
+            var roleOperationCodes = _roleOperationRepository.GetQueryable().Where(a => lstRoleId.Any(r => r == a.RoleId) && a.OperationCode.Contains(module))
                 .Select(a => a.OperationCode).ToList();
             return roleOperationCodes;
         }
@@ -161,7 +160,7 @@ namespace BugChang.DES.Core.Authorization.Roles
         /// <param name="roleId">角色ID</param>
         /// <param name="operationCode">操作代码</param>
         /// <returns></returns>
-        public  ResultEntity DeleteRoleOperation(int roleId, string operationCode)
+        public ResultEntity DeleteRoleOperation(int roleId, string operationCode)
         {
             var result = new ResultEntity();
             var roleOperation = _roleOperationRepository.GetQueryable()

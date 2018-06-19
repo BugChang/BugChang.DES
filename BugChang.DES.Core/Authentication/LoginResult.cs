@@ -30,7 +30,7 @@ namespace BugChang.DES.Core.Authentication
         {
             switch (Result)
             {
-                case EnumLoginResult.登陆成功:
+                case EnumLoginResult.登录成功:
                     Message = "，正在跳转页面...";
                     break;
                 case EnumLoginResult.用户名或密码错误:
@@ -51,7 +51,7 @@ namespace BugChang.DES.Core.Authentication
 
     public enum EnumLoginResult
     {
-        登陆成功,
+        登录成功,
         用户名或密码错误,
         账号已锁定,
         账号已停用

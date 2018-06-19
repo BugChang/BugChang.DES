@@ -11,10 +11,10 @@ using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Operations;
-using BugChang.DES.Core.Authorization.Powers;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
 using BugChang.DES.EntityFrameWorkCore.Repository;
 using BugChang.DES.Web.Mvc.Filters;
@@ -64,6 +64,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<UserManager>();
             services.AddScoped<RoleManager>();
             services.AddScoped<OperationManager>();
+            services.AddScoped<LogManager>();
 
             #endregion
 
@@ -77,6 +78,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRoleMenuRepository, RoleMenuRepository>();
             services.AddScoped<IRoleOperationRepository, RoleOperationRepository>();
+            services.AddScoped<ILogRepository, LogRepository>();
 
             #endregion
 

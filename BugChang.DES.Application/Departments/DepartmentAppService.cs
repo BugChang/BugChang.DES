@@ -5,6 +5,7 @@ using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
 
 namespace BugChang.DES.Application.Departments
@@ -14,11 +15,13 @@ namespace BugChang.DES.Application.Departments
         private readonly UnitOfWork _unitOfWork;
         private readonly DepartmentManager _departmentManager;
         private readonly IDepartmentRepository _departmentRepository;
-        public DepartmentAppService(UnitOfWork unitOfWork, DepartmentManager departmentManager, IDepartmentRepository departmentRepository)
+        private readonly LogManager _logManager;
+        public DepartmentAppService(UnitOfWork unitOfWork, DepartmentManager departmentManager, IDepartmentRepository departmentRepository, LogManager logManager)
         {
             _unitOfWork = unitOfWork;
             _departmentManager = departmentManager;
             _departmentRepository = departmentRepository;
+            _logManager = logManager;
         }
 
         /// <summary>
@@ -34,7 +37,7 @@ namespace BugChang.DES.Application.Departments
             {
                 await _unitOfWork.CommitAsync();
             }
-
+            
             return result;
         }
 

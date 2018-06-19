@@ -48,7 +48,7 @@
                 $.each(result, function (idx, obj) {
                     var html = '<label class="col-md-4"><input type = "checkbox"';
                     if (obj.checked) {
-                        html += ' checked = ' + obj.checked;
+                        html += ' checked ';
                     }
                     html += ' value="' + obj.operationCode + '">&nbsp;' + obj.operationName + '</label >';
                     $('#operationList').append(html);
@@ -68,7 +68,7 @@
 
     //新增角色和操作关联
     function addRoleOperation(operationCode) {
-        $.post('/Role/AddRoleOperation', { roleId: roleId, operationCode: operationCode }, function(result) {
+        $.post('/Role/AddRoleOperation', { roleId: roleId, operationCode: operationCode }, function (result) {
             if (result.success) {
                 window.toastr.success('操作成功');
             } else {

@@ -1,6 +1,6 @@
 ﻿(function () {
     var zTreeObj;
-    var roleId = $('#roleOperationTree').attr('data-role-id');
+    var roleId = $('#roleMenuTree').attr('data-role-id');
     // zTree 参数配置
     var setting = {
         data: {

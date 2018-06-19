@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using BugChang.DES.Core.Authorization.Users;
-using Microsoft.AspNetCore.Http;
 
 namespace BugChang.DES.Core.Commons
 {

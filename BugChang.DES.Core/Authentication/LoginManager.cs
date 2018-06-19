@@ -56,7 +56,7 @@ namespace BugChang.DES.Core.Authentication
                 }
                 else
                 {
-                    loginResult.Result = EnumLoginResult.登陆成功;
+                    loginResult.Result = EnumLoginResult.登录成功;
                     ClearErrorCount(user);
                     var claims = new List<Claim>
                     {
@@ -66,6 +66,7 @@ namespace BugChang.DES.Core.Authentication
                     };
                     foreach (var role in user.UserRoles)
                     {
+                        claims.Add(new Claim("RoleId", role.Role.Id.ToString()));
                         claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
                     }
                     var claimsIdentity = new ClaimsIdentity("BugChang.DES.Cookies");

@@ -66,9 +66,9 @@ namespace BugChang.DES.Application.Roles
             return result;
         }
 
-        public IList<string> GetRoleOperationCodes(string module, int roleId)
+        public IList<string> GetRoleOperationCodes(string module, List<int> lstRoleId)
         {
-            return _roleManager.GetRoleOperationCodes(module, roleId);
+            return _roleManager.GetRoleOperationCodes(module, lstRoleId);
         }
 
         public async Task<ResultEntity> AddRoleOperation(int roleId, string operationCode)

@@ -7,7 +7,6 @@ using BugChang.DES.Application.Accounts;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Security;
 using BugChang.DES.Web.Mvc.Models.Account;
-using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -50,7 +49,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
                 switch (loginResult.Result)
                 {
-                    case EnumLoginResult.登陆成功:
+                    case EnumLoginResult.登录成功:
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, loginResult.ClaimsPrincipal, new AuthenticationProperties
                         {
                             IsPersistent = model.RememberMe,

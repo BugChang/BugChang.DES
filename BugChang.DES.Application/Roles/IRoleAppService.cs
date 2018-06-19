@@ -10,7 +10,7 @@ namespace BugChang.DES.Application.Roles
     {
         Task<ResultEntity> EditRoleMenu(int roleId, IList<int> lstMenuId);
 
-        IList<string> GetRoleOperationCodes(string module, int roleId);
+        IList<string> GetRoleOperationCodes(string module, List<int> lstRoleId);
 
 
         Task<ResultEntity> AddRoleOperation(int roleId, string operationCode);

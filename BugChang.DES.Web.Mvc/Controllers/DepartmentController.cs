@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Departments.Dtos;
+using BugChang.DES.Application.Operations;
+using BugChang.DES.Application.Roles;
+using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -19,10 +17,12 @@ namespace BugChang.DES.Web.Mvc.Controllers
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentAppService _departmentAppService;
+        private readonly IRoleAppService _roleAppService;
 
-        public DepartmentController(IDepartmentAppService departmentAppService)
+        public DepartmentController(IDepartmentAppService departmentAppService, IRoleAppService roleAppService)
         {
             _departmentAppService = departmentAppService;
+            _roleAppService = roleAppService;
         }
 
         [ServiceFilter(typeof(MenuFilter))]
@@ -126,5 +126,6 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = await _departmentAppService.DeleteByIdAsync(id);
             return Json(result);
         }
+
     }
 }

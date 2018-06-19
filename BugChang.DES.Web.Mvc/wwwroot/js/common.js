@@ -1,6 +1,9 @@
-﻿$(function () {
+﻿var Common = function () {
     //toastr提示2s自动关闭
     window.toastr.options.timeOut = 2000;
+
+    var operationCodes;
+
     // 设置jQuery Ajax全局的参数  
     $.ajaxSetup({
         error: function (jqXhr, textStatus, errorThrown) {
@@ -22,4 +25,36 @@
             }
         }
     });
-});  
+
+    //初始化操作列表
+    function initOperations(module) {
+        $.ajax({
+            type: 'GET',
+            async: false,
+            data: { module: module },
+            url: "/Role/GetRoleOperations",
+            success: function (result) {
+                operationCodes = result;
+            }
+        });
+    }
+
+    //判断是否具备操作权限
+    function hasOperation(operationCode) {
+        var flag = false;
+        $.each(operationCodes, function (idx, obj) {
+            if (obj === operationCode) {
+                flag = true;
+                return false;
+            }
+            return true;
+        });
+        return flag;
+    }
+
+    //向外暴露方法
+    return {
+        initOperations: initOperations,
+        hasOperation: hasOperation
+    };
+}();  
