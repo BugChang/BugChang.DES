@@ -1,7 +1,7 @@
 ﻿var Common = function () {
     //toastr提示2s自动关闭
     window.toastr.options.timeOut = 2000;
-
+    var isDevelopment = true;
     var operationCodes;
 
     // 设置jQuery Ajax全局的参数  
@@ -41,6 +41,9 @@
 
     //判断是否具备操作权限
     function hasOperation(operationCode) {
+        if (isDevelopment) {
+            return true;
+        }
         var flag = false;
         $.each(operationCodes, function (idx, obj) {
             if (obj === operationCode) {

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
+using Newtonsoft.Json;
 
 namespace BugChang.DES.Application.Departments
 {
@@ -15,13 +15,11 @@ namespace BugChang.DES.Application.Departments
         private readonly UnitOfWork _unitOfWork;
         private readonly DepartmentManager _departmentManager;
         private readonly IDepartmentRepository _departmentRepository;
-        private readonly LogManager _logManager;
-        public DepartmentAppService(UnitOfWork unitOfWork, DepartmentManager departmentManager, IDepartmentRepository departmentRepository, LogManager logManager)
+        public DepartmentAppService(UnitOfWork unitOfWork, DepartmentManager departmentManager, IDepartmentRepository departmentRepository)
         {
             _unitOfWork = unitOfWork;
             _departmentManager = departmentManager;
             _departmentRepository = departmentRepository;
-            _logManager = logManager;
         }
 
         /// <summary>
@@ -37,13 +35,12 @@ namespace BugChang.DES.Application.Departments
             {
                 await _unitOfWork.CommitAsync();
             }
-            
             return result;
         }
 
-        public async Task<ResultEntity> DeleteByIdAsync(int id)
+        public async Task<ResultEntity> DeleteByIdAsync(int id, int userId)
         {
-            var result = await _departmentManager.DeleteAsync(id);
+            var result = await _departmentManager.DeleteAsync(id, userId);
             if (result.Success)
             {
                 await _unitOfWork.CommitAsync();
@@ -79,6 +76,11 @@ namespace BugChang.DES.Application.Departments
             return Mapper.Map<IList<DepartmentListDto>>(departments);
         }
 
+        /// <summary>
+        /// 分页获取机构列表
+        /// </summary>
+        /// <param name="pageSearchDto"></param>
+        /// <returns></returns>
         public async Task<PageResultModel<DepartmentListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
         {
             var pageResult = await _departmentRepository.GetPagingAysnc(pageSearchDto);

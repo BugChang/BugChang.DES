@@ -6,19 +6,28 @@ namespace BugChang.DES.Core.Logs
     {
 
         [Description("调试")]
-        Debug,
+        Debug = 0,
 
         [Description("信息")]
-        Information,
+        Information = 1,
 
         [Description("警告")]
-        Warnning,
+        Warnning = 2,
 
         [Description("错误")]
-        Error,
-
+        Error = 3,
 
         [Description("致命")]
-        Fatal
+        Fatal = 4
+    }
+
+    public enum EnumLogType
+    {
+
+        [Description("系统日志")]
+        System = 0,
+
+        [Description("审计日志")]
+        Audit = 1
     }
 }

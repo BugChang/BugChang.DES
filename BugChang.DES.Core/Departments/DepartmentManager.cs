@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Logs;
+using Newtonsoft.Json;
 
 namespace BugChang.DES.Core.Departments
 {
@@ -9,11 +11,13 @@ namespace BugChang.DES.Core.Departments
     {
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IUserRepository _userRepository;
+        private readonly LogManager _logManager;
 
-        public DepartmentManager(IDepartmentRepository departmentRepository, IUserRepository userRepository)
+        public DepartmentManager(IDepartmentRepository departmentRepository, IUserRepository userRepository, LogManager logManager)
         {
             _departmentRepository = departmentRepository;
             _userRepository = userRepository;
+            _logManager = logManager;
         }
 
         public async Task<ResultEntity> AddOrUpdateAsync(Department department)
@@ -45,10 +49,12 @@ namespace BugChang.DES.Core.Departments
             if (department.Id > 0)
             {
                 _departmentRepository.Update(department);
+                await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.DepartmentEdit, $"{department.FullName}", JsonConvert.SerializeObject(department), department.UpdateBy);
             }
             else
             {
                 await _departmentRepository.AddAsync(department);
+                await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.DepartmentAdd, $"{department.FullName}", JsonConvert.SerializeObject(department), department.CreateBy);
             }
 
             result.Success = true;
@@ -56,7 +62,7 @@ namespace BugChang.DES.Core.Departments
         }
 
 
-        public async Task<ResultEntity> DeleteAsync(int id)
+        public async Task<ResultEntity> DeleteAsync(int id, int userId)
         {
             var resultEntity = new ResultEntity();
 
@@ -83,6 +89,9 @@ namespace BugChang.DES.Core.Departments
                 return resultEntity;
             }
             resultEntity.Success = department.IsDeleted = true;
+
+            await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.DepartmentDelete, $"{department.FullName}", id.ToString(), userId);
+
             return resultEntity;
         }
 

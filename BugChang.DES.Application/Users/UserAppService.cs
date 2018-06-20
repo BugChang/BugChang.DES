@@ -39,7 +39,7 @@ namespace BugChang.DES.Application.Users
             return result;
         }
 
-        public async Task<ResultEntity> DeleteByIdAsync(int id)
+        public async Task<ResultEntity> DeleteByIdAsync(int id, int userId)
         {
             var result = await _userManager.DeleteByIdAsync(id);
             if (result.Success)

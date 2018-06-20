@@ -32,7 +32,7 @@ namespace BugChang.DES.Application.Roles
             return result;
         }
 
-        public async Task<ResultEntity> DeleteByIdAsync(int id)
+        public async Task<ResultEntity> DeleteByIdAsync(int id, int userId)
         {
             var result = await _roleManager.DeleteByIdAsync(id);
             if (result.Success)

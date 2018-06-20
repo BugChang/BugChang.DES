@@ -12,7 +12,7 @@ namespace BugChang.DES.Core.Logs
             _logRepository = logRepository;
         }
 
-        public async Task LogDebugAsync(string title, string content, string data = "")
+        public async Task LogDebugAsync(EnumLogType logType, string title, string content, string data = "", int? operatorId = null)
         {
             var log = new Log
             {
@@ -20,12 +20,13 @@ namespace BugChang.DES.Core.Logs
                 Content = content,
                 CreateTime = DateTime.Now,
                 Data = data,
-                LogLevel = EnumLogLevel.Debug
+                LogLevel = EnumLogLevel.Debug,
+                OperatorId = operatorId
             };
             await _logRepository.AddAsync(log);
         }
 
-        public async Task LogInfomationAsync(string title, string content, string data = "")
+        public async Task LogInfomationAsync(EnumLogType logType, string title, string content, string data = "", int? operatorId = null)
         {
             var log = new Log
             {
@@ -34,11 +35,12 @@ namespace BugChang.DES.Core.Logs
                 CreateTime = DateTime.Now,
                 Data = data,
                 LogLevel = EnumLogLevel.Information,
+                OperatorId = operatorId
             };
             await _logRepository.AddAsync(log);
         }
 
-        public async Task LogWarningAsync(string title, string content, string data = "")
+        public async Task LogWarningAsync(EnumLogType logType, string title, string content, string data = "", int? operatorId = null)
         {
             var log = new Log
             {
@@ -47,11 +49,12 @@ namespace BugChang.DES.Core.Logs
                 CreateTime = DateTime.Now,
                 Data = data,
                 LogLevel = EnumLogLevel.Warnning,
+                OperatorId = operatorId
             };
             await _logRepository.AddAsync(log);
         }
 
-        public async Task LogErrorAsync(string title, string content, string data = "")
+        public async Task LogErrorAsync(EnumLogType logType, string title, string content, string data = "", int? operatorId = null)
         {
             var log = new Log
             {
@@ -59,12 +62,13 @@ namespace BugChang.DES.Core.Logs
                 Content = content,
                 CreateTime = DateTime.Now,
                 Data = data,
-                LogLevel = EnumLogLevel.Error
+                LogLevel = EnumLogLevel.Error,
+                OperatorId = operatorId
             };
             await _logRepository.AddAsync(log);
         }
 
-        public async Task LogFatalAsync(string title, string content, string data = "")
+        public async Task LogFatalAsync(EnumLogType logType, string title, string content, string data = "", int? operatorId = null)
         {
             var log = new Log
             {
@@ -72,7 +76,8 @@ namespace BugChang.DES.Core.Logs
                 Content = content,
                 CreateTime = DateTime.Now,
                 Data = data,
-                LogLevel = EnumLogLevel.Fatal
+                LogLevel = EnumLogLevel.Fatal,
+                OperatorId = operatorId
             };
             await _logRepository.AddAsync(log);
         }

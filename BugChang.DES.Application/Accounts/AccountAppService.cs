@@ -25,12 +25,12 @@ namespace BugChang.DES.Application.Accounts
             if (loginResult.Result == EnumLoginResult.登录成功)
             {
                 var content = $"【{userName}】登录系统";
-                await _logManager.LogInfomationAsync(LogTitleConstString.LoginSuccess, content);
+                await _logManager.LogInfomationAsync(EnumLogType.System,LogTitleConstString.LoginSuccess, content);
             }
             else
             {
                 var content = $"【{userName}】{loginResult.Message}";
-                await _logManager.LogInfomationAsync(LogTitleConstString.LoginFail, content);
+                await _logManager.LogInfomationAsync(EnumLogType.System, LogTitleConstString.LoginFail, content);
             }
             await _mainUnitOfWork.CommitAsync();
             return loginResult;

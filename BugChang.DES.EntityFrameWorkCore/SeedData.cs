@@ -19,7 +19,7 @@ namespace BugChang.DES.EntityFrameWorkCore
                 var dbContext = serviceScope.ServiceProvider.GetService<DesDbContext>();
 
 
-                //dbContext.Database.EnsureDeleted();
+                dbContext.Database.EnsureDeleted();
 
                 dbContext.Database.EnsureCreated();
 
@@ -126,6 +126,11 @@ namespace BugChang.DES.EntityFrameWorkCore
                             {
                                 Name = "菜单管理",
                                 Url = "/Menu/Index"
+                            },
+                            new Menu
+                            {
+                                Name = "角色管理",
+                                Url = "/Role/Index"
                             }
                         }
                     };

@@ -9,7 +9,8 @@ namespace BugChang.DES.Core.Logs
         public const string LoginSuccess = "登录成功";
         public const string LoginFail = "登录失败";
 
-        public const string DepartmentAddSuccess = "新增机构成功";
-        public const string DepartmentAddFail = "新增机构失败";
+        public const string DepartmentAdd = "新增机构";
+        public const string DepartmentEdit = "修改机构";
+        public const string DepartmentDelete = "删除机构";
     }
 }

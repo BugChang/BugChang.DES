@@ -114,7 +114,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _roleAppService.DeleteByIdAsync(id);
+            var result = await _roleAppService.DeleteByIdAsync(id, CurrentUserId);
             return Json(result);
         }
 

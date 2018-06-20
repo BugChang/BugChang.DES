@@ -67,7 +67,7 @@ namespace BugChang.DES.Application.Menus
             return result;
         }
 
-        public async Task<ResultEntity> DeleteByIdAsync(int id)
+        public async Task<ResultEntity> DeleteByIdAsync(int id, int userId)
         {
             var result = await _menuManager.DeleteAsync(id);
             if (result.Success)

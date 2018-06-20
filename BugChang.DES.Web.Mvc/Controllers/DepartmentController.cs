@@ -2,9 +2,6 @@
 using System.Threading.Tasks;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Departments.Dtos;
-using BugChang.DES.Application.Operations;
-using BugChang.DES.Application.Roles;
-using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
@@ -17,12 +14,10 @@ namespace BugChang.DES.Web.Mvc.Controllers
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentAppService _departmentAppService;
-        private readonly IRoleAppService _roleAppService;
 
-        public DepartmentController(IDepartmentAppService departmentAppService, IRoleAppService roleAppService)
+        public DepartmentController(IDepartmentAppService departmentAppService)
         {
             _departmentAppService = departmentAppService;
-            _roleAppService = roleAppService;
         }
 
         [ServiceFilter(typeof(MenuFilter))]
@@ -123,7 +118,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _departmentAppService.DeleteByIdAsync(id);
+            var result = await _departmentAppService.DeleteByIdAsync(id, CurrentUserId);
             return Json(result);
         }
 

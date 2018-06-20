@@ -6,6 +6,12 @@
         //toastr提示2s自动关闭
         window.toastr.options.timeOut = 2000;
 
+        //初始化操作代码
+        Common.initOperations('Role');
+
+        //初始化页面元素
+        initPageElement();
+
         //初始化table
         initTable();
 
@@ -125,12 +131,23 @@
                 {
                     targets: 7,
                     render: function (data, type, row) {
-                        var strHtml =
-                            '<button class="btn btn-primary btn-xs edit-menu" data-role-id=' + row.id + '>菜单分配</button>&nbsp;' +
-                            '<button class="btn btn-primary btn-xs edit-operation" data-role-id=' + row.id + '>操作权限</button>&nbsp;' +
-                            '<button class="btn btn-primary btn-xs edit-data" data-role-id=' + row.id + '>数据权限</button>&nbsp;' +
-                            '<button class="btn btn-info btn-xs edit-role" data-role-id=' + row.id + '>修改</button>&nbsp;' +
-                            '<button class="btn btn-danger btn-xs delete-role" data-role-id=' + row.id + ' data-role-name=' + row.name + '>删除</button>';
+                        var strHtml = '';
+                        if (Common.hasOperation('Role.AssignmentsMenus')) {
+                            strHtml += '<button class="btn btn-primary btn-xs edit-menu" data-role-id=' + row.id + '>菜单分配</button>&nbsp;';
+                        }
+                        if (Common.hasOperation('Role.AssignmentsOperations')) {
+                            strHtml += '<button class="btn btn-primary btn-xs edit-operation" data-role-id=' + row.id + '>操作权限</button>&nbsp;';
+                        }
+                        if (Common.hasOperation('Role.DataPermissions')) {
+                            strHtml += '<button class="btn btn-primary btn-xs edit-data" data-role-id=' + row.id + '>数据权限</button>&nbsp;';
+                        }
+                        if (Common.hasOperation('Role.Edit')) {
+                            strHtml += '<button class="btn btn-info btn-xs edit-role" data-role-id=' + row.id + '>修改</button>&nbsp;';
+                        }
+                        if (Common.hasOperation('Role.Delete')) {
+                            strHtml += '<button class="btn btn-danger btn-xs delete-role" data-role-id=' + row.id + ' data-role-name=' + row.name + '>删除</button>';
+                        }
+
                         return strHtml;
                     }
                 }
@@ -213,6 +230,13 @@
     //重新加载页面
     function reload() {
         window.location.reload();
+    }
+
+    //初始化页面元素
+    function initPageElement() {
+        if (!Common.hasOperation('Role.Create')) {
+            $('#btnAddRole').hide();
+        }
     }
 
     //向外暴露方法

@@ -6,6 +6,12 @@
         //toastr提示2s自动关闭
         window.toastr.options.timeOut = 2000;
 
+        //初始化操作代码
+        Common.initOperations('User');
+
+        //初始化页面元素
+        initPageElement();
+
         //初始化table
         initTable();
 
@@ -47,7 +53,7 @@
                 deleteUser(userId, userName);
             });
 
-        $('#btnRefresh').click(function() {
+        $('#btnRefresh').click(function () {
             reload();
         });
     });
@@ -124,15 +130,6 @@
             ],
             columnDefs: [
                 {
-                    targets: 13,
-                    render: function (data, type, row) {
-                        var strHtml =
-                            '<button class="btn btn-info btn-xs edit-user" data-user-id=' + row.id + '>修改</button>&nbsp;' +
-                            '<button class="btn btn-danger btn-xs delete-user" data-user-id=' + row.id + ' data-user-name=' + row.displayName + '>删除</button>';
-                        return strHtml;
-                    }
-                },
-                {
                     targets: 4,
                     render: function (data, type, row) {
                         var strHtml =
@@ -143,39 +140,51 @@
                 {
                     targets: 5,
                     render: function (data, type, row) {
-                        var strHtml = '';
+                        var strHtml;
                         if (row.locked) {
                             strHtml = '<label class="label label-danger"><i class="fa fa-lock"></i> 已锁定</label>&nbsp;';
                         } else {
                             strHtml = '<label class="label label-success"><i class="fa fa-unlock"></i> 未锁定</label>&nbsp;';
                         }
-                       
+
                         return strHtml;
                     }
                 },
                 {
                     targets: 6,
                     render: function (data, type, row) {
-                        var strHtml = '';
+                        var strHtml;
                         if (row.enabled) {
                             strHtml = '<label class="label label-success">已启用</label>';
                         } else {
                             strHtml = '<label class="label label-danger">已停用</label>';
                         }
-
                         return strHtml;
                     }
                 },
                 {
                     targets: 9,
                     render: function (data, type, row) {
-                        var strHtml = '';
+                        var strHtml;
                         if (!row.createUserName) {
                             strHtml = '系统';
                         } else {
                             strHtml = row.createUserName;
                         }
 
+                        return strHtml;
+                    }
+                },
+                {
+                    targets: 13,
+                    render: function (data, type, row) {
+                        var strHtml = '';
+                        if (Common.hasOperation('User.Edit')) {
+                            strHtml += '<button class="btn btn-info btn-xs edit-user" data-user-id=' + row.id + '>修改</button>&nbsp;';
+                        }
+                        if (Common.hasOperation('User.Delete')) {
+                            strHtml += '<button class="btn btn-danger btn-xs delete-user" data-user-id=' + row.id + ' data-user-name=' + row.displayName + '>删除</button>';
+                        }
                         return strHtml;
                     }
                 }
@@ -245,6 +254,13 @@
     //重新加载页面
     function reload() {
         window.location.reload();
+    }
+
+    //初始化页面元素
+    function initPageElement() {
+        if (!Common.hasOperation('Role.Create')) {
+            $('#btnAddUser').hide();
+        }
     }
 
     //向外暴露方法

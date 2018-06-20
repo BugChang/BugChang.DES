@@ -20,6 +20,12 @@
         //toastr提示2s自动关闭
         window.toastr.options.timeOut = 2000;
 
+        //初始化操作代码
+        Common.initOperations('Menu');
+
+        //初始化页面元素
+        initPageElement();
+
         //初始化zTree
         zTreeObj = $.fn.zTree.init($('#menuTree'), setting);
 
@@ -69,11 +75,14 @@
     //zTree节点单击回调函数
     function zTreeBeforeClick(treeId, treeNode) {
         currentNode = treeNode;
-        if (!currentNode.customData) {
-            showAddButton(true);
-        } else {
-            showAddButton(false);
+        if (Common.hasOperation('Menu.Create')) {
+            if (!currentNode.customData) {
+                showAddButton(true);
+            } else {
+                showAddButton(false);
+            }
         }
+
         table.ajax.reload();
         $('.select2').val(treeNode.id).trigger('change');
     }
@@ -125,9 +134,13 @@
                 {
                     targets: 5,
                     render: function (data, type, row) {
-                        var strHtml =
-                            '<button class="btn btn-info btn-xs edit-menu" data-menu-id=' + row.id + '>修改</button>&nbsp;' +
-                            '<button class="btn btn-danger btn-xs delete-menu" data-menu-id=' + row.id + ' data-menu-name=' + row.name + '>删除</button>';
+                        var strHtml = '';
+                        if (Common.hasOperation('Menu.Edit')) {
+                            strHtml += '<button class="btn btn-info btn-xs edit-menu" data-menu-id=' + row.id + '>修改</button>&nbsp;';
+                        }
+                        if (Common.hasOperation('Menu.Delete')) {
+                            strHtml += '<button class="btn btn-danger btn-xs delete-menu" data-menu-id=' + row.id + ' data-menu-name=' + row.name + '>删除</button>';
+                        }
                         return strHtml;
                     }
                 }
@@ -148,11 +161,6 @@
                     allowClear: true
                 });
             });
-    }
-
-    //查看菜单详情
-    function viewMenu(id) {
-        alert('查看' + id);
     }
 
     //编辑菜单信息
@@ -209,6 +217,13 @@
         table.ajax.reload();
         //刷新菜单树
         zTreeObj.reAsyncChildNodes(currentNode, 'refresh');
+    }
+
+    //初始化页面元素
+    function initPageElement() {
+        if (!Common.hasOperation('Menu.Create')) {
+            $('#btnAddMenu').hide();
+        }
     }
 
     //向外暴露方法
