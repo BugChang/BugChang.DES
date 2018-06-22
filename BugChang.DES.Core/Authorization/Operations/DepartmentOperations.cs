@@ -4,7 +4,6 @@
     {
         public const string Module = "Department";
 
-
         public Operation DepartmentCreate => new Operation
         {
             Name = Operation.CreateName,

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Departments.Dtos;
+using BugChang.DES.Core.Authorization.Operations;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
@@ -33,7 +34,30 @@ namespace BugChang.DES.Web.Mvc.Controllers
         }
 
         [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "Department.Create" })]
+        public async Task<IActionResult> Create(DepartmentEditDto department)
+        {
+            if (department.Id > 0)
+            {
+                return Json(new ResultEntity { Message = "请求数据有误，新增数据非0主键" });
+            }
+            return await CreateOrUpdate(department);
+        }
+
+        [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "Department.Edit" })]
         public async Task<IActionResult> Edit(DepartmentEditDto department)
+        {
+            if (department.Id <= 0)
+            {
+                return Json(new ResultEntity { Message = "请求数据有误，修改数据空主键" });
+            }
+            return await CreateOrUpdate(department);
+        }
+
+        private async Task<IActionResult> CreateOrUpdate(DepartmentEditDto department)
         {
             var result = new ResultEntity();
             if (ModelState.IsValid)
@@ -49,6 +73,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
             return Json(result);
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> GetTreeData(int? parentId)
@@ -116,6 +142,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
         }
 
         [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "Department.Delete" })]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _departmentAppService.DeleteByIdAsync(id, CurrentUserId);
