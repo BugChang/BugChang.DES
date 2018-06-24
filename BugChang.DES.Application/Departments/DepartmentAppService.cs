@@ -15,11 +15,13 @@ namespace BugChang.DES.Application.Departments
         private readonly UnitOfWork _unitOfWork;
         private readonly DepartmentManager _departmentManager;
         private readonly IDepartmentRepository _departmentRepository;
-        public DepartmentAppService(UnitOfWork unitOfWork, DepartmentManager departmentManager, IDepartmentRepository departmentRepository)
+        private readonly LogManager _logManager;
+        public DepartmentAppService(UnitOfWork unitOfWork, DepartmentManager departmentManager, IDepartmentRepository departmentRepository, LogManager logManager)
         {
             _unitOfWork = unitOfWork;
             _departmentManager = departmentManager;
             _departmentRepository = departmentRepository;
+            _logManager = logManager;
         }
 
         /// <summary>
@@ -34,6 +36,11 @@ namespace BugChang.DES.Application.Departments
             if (result.Success)
             {
                 await _unitOfWork.CommitAsync();
+                if (model.Id > 0)
+                    await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.DepartmentEdit, $"{department.FullName}", JsonConvert.SerializeObject(department), department.UpdateBy);
+                else
+                    await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.DepartmentAdd, $"{department.FullName}", JsonConvert.SerializeObject(department), department.CreateBy);
+
             }
             return result;
         }

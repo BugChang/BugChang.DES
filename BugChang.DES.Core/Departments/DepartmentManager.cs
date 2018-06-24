@@ -49,12 +49,10 @@ namespace BugChang.DES.Core.Departments
             if (department.Id > 0)
             {
                 _departmentRepository.Update(department);
-                await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.DepartmentEdit, $"{department.FullName}", JsonConvert.SerializeObject(department), department.UpdateBy);
             }
             else
             {
                 await _departmentRepository.AddAsync(department);
-                await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.DepartmentAdd, $"{department.FullName}", JsonConvert.SerializeObject(department), department.CreateBy);
             }
 
             result.Success = true;

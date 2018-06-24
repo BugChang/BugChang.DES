@@ -63,10 +63,10 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             {
                 query = query.Where(a => a.DisplayName.Contains(pageSearchModel.Keywords) || a.UserName.Contains(pageSearchModel.Keywords));
             }
-            var pageResult = new PageResultModel<User>()
+            var pageResult = new PageResultModel<User>
             {
                 Total = await query.CountAsync(),
-                Rows = await query.ToListAsync()
+                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync()
             };
             return pageResult;
         }

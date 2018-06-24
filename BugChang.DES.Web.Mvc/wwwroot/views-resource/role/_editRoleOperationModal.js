@@ -35,7 +35,12 @@
     function initTree() {
         $.get('/Role/GetTreeForRoleOperation/' + roleId,
             function (nodes) {
-                zTreeObj = $.fn.zTree.init($('#roleOperationTree'), setting, nodes);
+                if (nodes.length === 0) {
+                    $('#RoleOperationEditModal').modal('hide');
+                    window.swal('警告', '没有相关数据，请先分配菜单！', 'warning');
+                } else {
+                    zTreeObj = $.fn.zTree.init($('#roleOperationTree'), setting, nodes);
+                }
             });
     }
 

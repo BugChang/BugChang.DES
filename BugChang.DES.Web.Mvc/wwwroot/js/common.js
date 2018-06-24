@@ -9,13 +9,25 @@
         error: function (jqXhr, textStatus, errorThrown) {
             switch (jqXhr.status) {
                 case (500):
-                    window.toastr.error("服务器出现了一个错误，请联系管理员进行维护！");
+                    window.toastr.error("服务器错误，请联系相关负责人处理！");
                     break;
                 case (401):
-                    window.toastr.error("登录已过期，请重新登录！");
+                    window.swal({
+                        title: '您太久没有进行操作了，请重新登录',
+                        //text: '删除后无法恢复数据!',
+                        icon: 'info',
+                        buttons: ['取消', '确定']
+                    }).then((relogin) => {
+                        if (relogin) {
+                            location.href = '/Account/Login';
+                        }
+                    });
                     break;
                 case (403):
-                    window.toastr.error("无权限执行此操作！");
+                    window.toastr.error("权限不足！");
+                    break;
+                case (404):
+                    window.toastr.error("请求地址不存在！");
                     break;
                 case (408):
                     window.toastr.error("请求超时！");
@@ -55,8 +67,16 @@
         return flag;
     }
 
+    function alert(text) {
+        window.swal({
+            text: text,
+            button: '关闭'
+        });
+    }
+
     //向外暴露方法
     return {
+        alert: alert,
         initOperations: initOperations,
         hasOperation: hasOperation
     };

@@ -8,9 +8,9 @@ namespace BugChang.DES.Core.Logs
     {
         public int Id { get; set; }
 
-        public EnumLogType LogType { get; set; }
+        public EnumLogType Type { get; set; }
 
-        public EnumLogLevel LogLevel { get; set; }
+        public EnumLogLevel Level { get; set; }
 
         public string Title { get; set; }
 

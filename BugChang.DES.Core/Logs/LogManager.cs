@@ -16,11 +16,12 @@ namespace BugChang.DES.Core.Logs
         {
             var log = new Log
             {
+                Type = logType,
                 Title = title,
                 Content = content,
                 CreateTime = DateTime.Now,
                 Data = data,
-                LogLevel = EnumLogLevel.Debug,
+                Level = EnumLogLevel.Debug,
                 OperatorId = operatorId
             };
             await _logRepository.AddAsync(log);
@@ -30,11 +31,12 @@ namespace BugChang.DES.Core.Logs
         {
             var log = new Log
             {
+                Type = logType,
                 Title = title,
                 Content = content,
                 CreateTime = DateTime.Now,
                 Data = data,
-                LogLevel = EnumLogLevel.Information,
+                Level = EnumLogLevel.Information,
                 OperatorId = operatorId
             };
             await _logRepository.AddAsync(log);
@@ -44,11 +46,12 @@ namespace BugChang.DES.Core.Logs
         {
             var log = new Log
             {
+                Type = logType,
                 Title = title,
                 Content = content,
                 CreateTime = DateTime.Now,
                 Data = data,
-                LogLevel = EnumLogLevel.Warnning,
+                Level = EnumLogLevel.Warnning,
                 OperatorId = operatorId
             };
             await _logRepository.AddAsync(log);
@@ -58,11 +61,12 @@ namespace BugChang.DES.Core.Logs
         {
             var log = new Log
             {
+                Type = logType,
                 Title = title,
                 Content = content,
                 CreateTime = DateTime.Now,
                 Data = data,
-                LogLevel = EnumLogLevel.Error,
+                Level = EnumLogLevel.Error,
                 OperatorId = operatorId
             };
             await _logRepository.AddAsync(log);
@@ -72,15 +76,17 @@ namespace BugChang.DES.Core.Logs
         {
             var log = new Log
             {
+                Type = logType,
                 Title = title,
                 Content = content,
                 CreateTime = DateTime.Now,
                 Data = data,
-                LogLevel = EnumLogLevel.Fatal,
+                Level = EnumLogLevel.Fatal,
                 OperatorId = operatorId
             };
             await _logRepository.AddAsync(log);
         }
+        
 
     }
 }

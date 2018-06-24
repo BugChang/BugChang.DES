@@ -40,7 +40,7 @@
         $('#DepartmentCreateForm').submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            $.post('/Department/Edit', data,
+            $.post('/Department/Create', data,
                 function (result) {
                     if (result.success) {
                         resetForm();

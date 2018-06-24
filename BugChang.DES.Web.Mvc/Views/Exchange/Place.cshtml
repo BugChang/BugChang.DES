@@ -1,0 +1,50 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="btn-group">
+            <button id="btnAddPlace" type="button" class="btn btn-primary" data-toggle="modal" data-target="#PlaceCreateModal" data-backdrop="static" data-keyboard="false"><i class="fa  fa-plus-circle"></i> 新增</button>
+            <button id="btnRefresh" type="button" class="btn btn-primary"><i class="fa  fa-refresh"></i> 刷新</button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table id="table" class="table table-bordered table-hover text-nowrap"></table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="PlaceCreateModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="PlaceCreateForm" method="post" asp-controller="Exchange" asp-action="PlaceCreate">
+                @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("新增交换场所"))
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>名称</label>
+                        <input type="text" class="form-control" name="Name">
+                    </div>
+                    <div class="form-group">
+                        <label>所属机构</label>
+                        <select class="form-control department-select" name="DepartmentId" style="width: 100%"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>上级交换场地</label>
+                        <select class="form-control parent-select" name="ParentId" style="width: 100%"></select>
+                    </div>
+                    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="PlaceEditModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/views-resource/exchange/place.js" asp-append-version="true"></script>
+}

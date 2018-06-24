@@ -3,9 +3,12 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
+using Newtonsoft.Json;
 
 namespace BugChang.DES.Core.Departments
 {
+
+    [JsonObject(MemberSerialization.OptOut)]
     public class Department : BaseEntity, ISoftDelete
     {
         [Required]
@@ -25,10 +28,13 @@ namespace BugChang.DES.Core.Departments
 
         public bool IsDeleted { get; set; }
 
+        [JsonIgnore]
         public virtual IList<User> Users { get; set; }
 
+        [JsonIgnore]
         public virtual IList<Department> Children { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("ParentId")]
         public virtual Department Parent { get; set; }
 

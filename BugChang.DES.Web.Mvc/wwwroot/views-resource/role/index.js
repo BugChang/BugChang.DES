@@ -213,7 +213,8 @@
 
     //数据权限分配
     function editData(roleId) {
-        alert('数据权限');
+        window.swal('信息', '此功能尚未开发完成，请耐心等待！', 'info');
+
     }
 
     //清空表单

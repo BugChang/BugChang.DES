@@ -1,0 +1,26 @@
+﻿@model BugChang.DES.Application.Places.Dtos.PlaceEditDto
+@using BugChang.DES.Web.Mvc.Models.Common
+<form id="UserEditForm" method="post" asp-controller="Exchange" asp-action="PlaceEdit">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("修改交换场所"))
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <input type="hidden" asp-for="CreateBy" value="@Model.CreateBy" />
+        <input type="hidden" asp-for="CreateTime" value="@Model.CreateTime" />
+        <input type="hidden" asp-for="UpdateBy" value="@Model.UpdateBy" />
+        <input type="hidden" asp-for="UpdateTime" value="@Model.UpdateTime" />
+        <div class="form-group">
+            <label>名称</label>
+            <input type="text" class="form-control" asp-for="Name">
+        </div>
+        <div class="form-group">
+            <label>所属机构</label>
+            <select class="form-control department-select" asp-for="DepartmentId" style="width: 100%" value="@Model.DepartmentId"></select>
+        </div>
+        <div class="form-group">
+            <label>上级交换场所</label>
+            <select class="form-control parent-select" asp-for="ParentId" style="width: 100%" value="@Model.ParentId"></select>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/exchange/_editPlaceModal.js" asp-append-version="true"></script>

@@ -12,5 +12,9 @@ namespace BugChang.DES.Core.Logs
         public const string DepartmentAdd = "新增机构";
         public const string DepartmentEdit = "修改机构";
         public const string DepartmentDelete = "删除机构";
+
+        public const string PlaceAdd = "新增交换场所";
+        public const string PlaceEdit = "修改交换场所";
+        public const string PlaceDelete = "删除交换场所";
     }
 }

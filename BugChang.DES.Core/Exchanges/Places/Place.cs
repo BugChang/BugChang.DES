@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
 
@@ -22,9 +20,15 @@ namespace BugChang.DES.Core.Exchanges.Places
         /// <summary>
         /// 上级交换场所
         /// </summary>
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
 
 
         public bool IsDeleted { get; set; }
+
+        [ForeignKey("DepartmentId")]
+        public virtual Department Department { get; set; }
+
+        [ForeignKey("ParentId")]
+        public virtual Place Parent { get; set; }
     }
 }

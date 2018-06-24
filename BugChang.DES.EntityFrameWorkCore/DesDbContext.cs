@@ -7,6 +7,7 @@ using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Logs;
 using Microsoft.EntityFrameworkCore;
 
@@ -59,6 +60,8 @@ namespace BugChang.DES.EntityFrameWorkCore
         public DbSet<RoleOperation> RoleOperations { get; set; }
 
         public DbSet<Log> Logs { get; set; }
+
+        public DbSet<Place> Places { get; set; }
 
     }
 }

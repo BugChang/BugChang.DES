@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Roles;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -28,11 +29,14 @@ namespace BugChang.DES.Web.Mvc.Filters
             {
                 lstRoleId.Add(Convert.ToInt32(roleClaim.Value));
             }
-
             var userOperationCodes = _roleAppService.GetRoleOperationCodes(String.Empty, lstRoleId);
             if (!userOperationCodes.Contains(_operationCode))
             {
-                context.Result = new ForbidResult();
+                context.HttpContext.ForbidAsync();
+                context.Result = new ContentResult()
+                {
+                    Content = "权限不足！"
+                };
             }
         }
 
