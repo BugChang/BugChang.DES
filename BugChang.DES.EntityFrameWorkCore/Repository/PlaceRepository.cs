@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Commons;
-using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Places;
 using Microsoft.EntityFrameworkCore;
 

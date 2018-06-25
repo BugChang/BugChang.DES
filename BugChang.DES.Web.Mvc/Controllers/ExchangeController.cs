@@ -33,7 +33,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
-        public async  Task<IActionResult> EditPlaceModal(int id)
+        public async Task<IActionResult> EditPlaceModal(int id)
         {
             var model = await _placeAppService.GetForEditByIdAsync(id);
             return PartialView("_EditPlaceModal", model);
@@ -63,6 +63,17 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return await CreateOrUpdate(place);
         }
 
+
+        [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "Place.Delete" })]
+        public async Task<IActionResult> PlaceDelete(int id)
+        {
+            var result = await _placeAppService.DeleteByIdAsync(id, CurrentUserId);
+            return Json(result);
+
+        }
+
         private async Task<IActionResult> CreateOrUpdate(PlaceEditDto place)
         {
             var result = new ResultEntity();
@@ -89,7 +100,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             });
             return Json(json);
         }
-        
+
         public async Task<IActionResult> GetPlacesForSelect()
         {
             var places = await _placeAppService.GetAllAsync();

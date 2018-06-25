@@ -4,5 +4,6 @@ namespace BugChang.DES.Core.Exchanges.Places
 {
     public interface IPlaceRepository : IBasePageSearchRepository<Place>
     {
+        
     }
 }

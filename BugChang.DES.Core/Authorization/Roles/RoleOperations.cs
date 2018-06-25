@@ -1,4 +1,6 @@
-﻿namespace BugChang.DES.Core.Authorization.Operations
+﻿using BugChang.DES.Core.Authorization.Operations;
+
+namespace BugChang.DES.Core.Authorization.Roles
 {
     public class RoleOperations : IOperations
     {

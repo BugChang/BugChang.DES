@@ -25,12 +25,13 @@
     function initDepartmentSelect() {
         $.get('/Exchange/GetDepartmentsForSelect',
             function (data) {
-                $('.department-select').select2({
+                $('.edit-department-select').select2({
                     data: data,
                     placeholder: '请选择机构',
                     allowClear: false
                 });
-                $('.department-select').val($('.department-select').val()).trigger("change");
+                var departmentId = $('#DefaultValue').attr('data-department-id');
+                $('.edit-department-select').val(departmentId).trigger("change");
             });
     }
 
@@ -38,14 +39,13 @@
     function initParentPlaceSelect() {
         $.get('/Exchange/GetPlacesForSelect',
             function (data) {
-                $('.parent-select').select2({
+                $('.edit-parent-select').select2({
                     data: data,
                     placeholder: '请选择上级交换场所',
                     allowClear: false
                 });
-                console.log($('.parent-select').val());
-                console.log($('#ParentId').val());
-                $(".parent-select").val($(".parent-select").val()).trigger("change");
+                var parentId = $('#DefaultValue').attr('data-parent-id');
+                $(".edit-parent-select").val(parentId).trigger("change");
             });
     }
 })();

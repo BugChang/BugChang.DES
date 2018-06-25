@@ -7,10 +7,10 @@
         window.toastr.options.timeOut = 2000;
 
         //初始化操作代码
-        //Common.initOperations('Place');
+        Common.initOperations('Place');
 
         //初始化页面元素
-        //initPageElement();
+        initPageElement();
 
         //初始化table
         initTable();
@@ -165,19 +165,19 @@
     }
 
     //删除菜单
-    function deletePlace(userId, userName) {
+    function deletePlace(placeId, placeName) {
         window.swal({
-            title: '确定删除' + userName + '?',
+            title: '确定删除' + placeName + '?',
             //text: '删除后无法恢复数据!',
             icon: 'warning',
             buttons: ['取消', '确定'],
             dangerMode: true
         }).then((willDelete) => {
             if (willDelete) {
-                $.post('/Place/Delete/' + userId,
+                $.post('/Exchange/PlaceDelete/' + placeId,
                     function (result) {
                         if (result.success) {
-                            window.swal('操作成功', userName + '已被删除!', 'success');
+                            window.swal('操作成功', placeName + '已被删除!', 'success');
                             refresh();
                         } else {
                             window.swal('操作失败', result.message, 'error');
@@ -205,7 +205,7 @@
 
     //初始化页面元素
     function initPageElement() {
-        if (!Common.hasOperation('Role.Create')) {
+        if (!Common.hasOperation('Place.Create')) {
             $('#btnAddPlace').hide();
         }
     }

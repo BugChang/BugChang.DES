@@ -39,9 +39,17 @@ namespace BugChang.DES.Application.Places
             return result;
         }
 
-        public Task<ResultEntity> DeleteByIdAsync(int id, int userId)
+        public async Task<ResultEntity> DeleteByIdAsync(int id, int userId)
         {
-            throw new NotImplementedException();
+            var result = await _placeManager.DeleteAsync(id);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+                await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.PlaceDelete, result.Message,
+                    id.ToString(), userId);
+            }
+
+            return result;
         }
 
         public async Task<PlaceEditDto> GetForEditByIdAsync(int id)
