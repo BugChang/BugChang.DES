@@ -53,6 +53,13 @@
                 deleteUser(userId, userName);
             });
 
+        $('table').delegate('.edit-user-role',
+            'click',
+            function () {
+                var userId = $(this).attr('data-user-id');
+                editUserRole(userId);
+            });
+
         $('#btnRefresh').click(function () {
             reload();
         });
@@ -179,6 +186,9 @@
                     targets: 13,
                     render: function (data, type, row) {
                         var strHtml = '';
+                        if (Common.hasOperation('User.AssigningRoles')) {
+                            strHtml += '<button class="btn btn-primary btn-xs edit-user-role" data-user-id=' + row.id + '>分配角色</button>&nbsp;';
+                        }
                         if (Common.hasOperation('User.Edit')) {
                             strHtml += '<button class="btn btn-info btn-xs edit-user" data-user-id=' + row.id + '>修改</button>&nbsp;';
                         }
@@ -207,7 +217,7 @@
             });
     }
 
-    //编辑菜单信息
+    //修改用户
     function editUser(id) {
         $('#UserEditModal .modal-content').load('/User/EditUserModal/' + id);
         $('#UserEditModal').modal({
@@ -217,7 +227,7 @@
         });
     }
 
-    //删除菜单
+    //删除用户
     function deleteUser(userId, userName) {
         window.swal({
             title: '确定删除' + userName + '?',
@@ -237,6 +247,16 @@
                         }
                     });
             }
+        });
+    }
+
+    //修改用户
+    function editUserRole(userId) {
+        $('#UserRoleEditModal .modal-content').load('/User/EditUserRoleModal/' + userId);
+        $('#UserRoleEditModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
         });
     }
 

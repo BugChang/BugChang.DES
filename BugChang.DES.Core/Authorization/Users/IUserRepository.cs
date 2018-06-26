@@ -9,7 +9,14 @@ namespace BugChang.DES.Core.Authorization.Users
         Task<User> GetAsync(string userName, string password);
 
         Task<User> GetAsync(string userName);
-        
+
         Task<int> GetCountAsync(int departmentId);
     }
+
+    public interface IUserRoleRepository : IBaseRepository<UserRole>
+    {
+    }
+
+
+
 }

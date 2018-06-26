@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using Microsoft.EntityFrameworkCore;
@@ -70,5 +71,15 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             };
             return pageResult;
         }
+    }
+
+    public class UserRoleRepository : BaseRepository<UserRole>, IUserRoleRepository
+    {
+        private readonly DesDbContext _dbContext;
+        public UserRoleRepository(DesDbContext dbContext) : base(dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
     }
 }

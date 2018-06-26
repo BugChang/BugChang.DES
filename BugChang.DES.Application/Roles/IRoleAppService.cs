@@ -16,5 +16,7 @@ namespace BugChang.DES.Application.Roles
         Task<ResultEntity> AddRoleOperation(int roleId, string operationCode);
 
         Task<ResultEntity> DeleteRoleOperation(int roleId, string operationCode);
+
+        Task<IList<RoleListDto>> GetAllRoles();
     }
 }

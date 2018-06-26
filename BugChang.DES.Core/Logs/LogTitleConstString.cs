@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BugChang.DES.Core.Logs
+﻿namespace BugChang.DES.Core.Logs
 {
     public class LogTitleConstString
     {
@@ -16,5 +12,10 @@ namespace BugChang.DES.Core.Logs
         public const string PlaceAdd = "新增交换场所";
         public const string PlaceEdit = "修改交换场所";
         public const string PlaceDelete = "删除交换场所";
+
+        public const string UserRoleDelete = "新增用户角色";
+        public const string UserRoleAdd = "删除用户角色";
+
+
     }
 }

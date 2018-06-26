@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace BugChang.DES.Core.Commons
 {
-    public interface IBaseRepository<TEntity> where TEntity : BaseEntity
+    public interface IBaseRepository<TEntity> where TEntity : BaseEntity<int>
     {
         Task<TEntity> GetByIdAsync(int id);
 

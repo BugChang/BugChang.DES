@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Departments;
+using BugChang.DES.Application.Roles;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Application.Users.Dtos;
 using BugChang.DES.Core.Commons;
@@ -16,14 +17,15 @@ namespace BugChang.DES.Web.Mvc.Controllers
     public class UserController : BaseController
     {
         private readonly IUserAppService _userAppService;
+        private readonly IRoleAppService _roleAppService;
         private readonly IDepartmentAppService _departmentAppService;
 
 
-        public UserController(IUserAppService userAppService, IDepartmentAppService departmentAppService)
+        public UserController(IUserAppService userAppService, IDepartmentAppService departmentAppService, IRoleAppService roleAppService)
         {
             _userAppService = userAppService;
             _departmentAppService = departmentAppService;
-
+            _roleAppService = roleAppService;
         }
 
         [ServiceFilter(typeof(MenuFilter))]
@@ -37,6 +39,12 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             var model = await _userAppService.GetForEditByIdAsync(id);
             return PartialView("_EditUserModal", model);
+        }
+
+        public IActionResult EditUserRoleModal(int id)
+        {
+            ViewBag.UserId = id;
+            return PartialView("_EditUserRoleModal");
         }
 
         [HttpPost]
@@ -92,6 +100,45 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _userAppService.DeleteByIdAsync(id, CurrentUserId);
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetRolesForSelect()
+        {
+            var roles = await _roleAppService.GetAllRoles();
+            var json = roles.Select(a => new SelectViewModel
+            {
+                Id = a.Id,
+                Text = a.Name
+            });
+            return Json(json);
+        }
+
+        public async Task<IActionResult> GetUserRoles(int draw, int id)
+        {
+
+            var userRoles = await _userAppService.GetUserRoles(id);
+            var json = new
+            {
+                draw,
+                recordsTotal = userRoles.Count,
+                recordsFiltered = userRoles.Count,
+                data = userRoles
+            };
+            return Json(json);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUserRole(int userId, int roleId)
+        {
+            var result = await _userAppService.AddUserRole(userId, roleId, CurrentUserId);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUserRole(int userId, int roleId)
+        {
+            var result = await _userAppService.DeleteUserRole(userId, roleId, CurrentUserId);
             return Json(result);
         }
     }

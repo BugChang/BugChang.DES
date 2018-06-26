@@ -25,8 +25,6 @@ namespace BugChang.DES.EntityFrameWorkCore
             modelBuilder.Entity<Department>().HasMany(a => a.Users).WithOne(a => a.Department);
             modelBuilder.Entity<User>().HasOne(a => a.CreateUser);
             modelBuilder.Entity<User>().HasOne(a => a.UpdateUser);
-            modelBuilder.Entity<UserRole>().HasOne(a => a.CreateUser);
-            modelBuilder.Entity<UserRole>().HasOne(a => a.UpdateUser);
             modelBuilder.Entity<Department>().HasOne(a => a.CreateUser);
             modelBuilder.Entity<Department>().HasOne(a => a.UpdateUser);
 

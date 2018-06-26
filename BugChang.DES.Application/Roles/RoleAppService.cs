@@ -73,7 +73,7 @@ namespace BugChang.DES.Application.Roles
 
         public async Task<ResultEntity> AddRoleOperation(int roleId, string operationCode)
         {
-            var result =await  _roleManager.AddRoleOperation(roleId, operationCode);
+            var result = await _roleManager.AddRoleOperation(roleId, operationCode);
             if (result.Success)
             {
                 await _unitOfWork.CommitAsync();
@@ -84,13 +84,19 @@ namespace BugChang.DES.Application.Roles
 
         public async Task<ResultEntity> DeleteRoleOperation(int roleId, string operationCode)
         {
-            var result =  _roleManager.DeleteRoleOperation(roleId, operationCode);
+            var result = _roleManager.DeleteRoleOperation(roleId, operationCode);
             if (result.Success)
             {
                 await _unitOfWork.CommitAsync();
             }
 
             return result;
+        }
+
+        public async Task<IList<RoleListDto>> GetAllRoles()
+        {
+            var roles = await _roleRepository.GetAllAsync();
+            return Mapper.Map<IList<RoleListDto>>(roles);
         }
     }
 }

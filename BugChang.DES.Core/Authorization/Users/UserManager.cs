@@ -1,5 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Commons;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using NETCore.Encrypt.Extensions;
 
 namespace BugChang.DES.Core.Authorization.Users
@@ -7,10 +12,12 @@ namespace BugChang.DES.Core.Authorization.Users
     public class UserManager
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
 
-        public UserManager(IUserRepository userRepository)
+        public UserManager(IUserRepository userRepository, IUserRoleRepository userRoleRepository)
         {
             _userRepository = userRepository;
+            _userRoleRepository = userRoleRepository;
         }
 
         public async Task<ResultEntity> AddOrUpdateAsync(User user)
@@ -70,5 +77,51 @@ namespace BugChang.DES.Core.Authorization.Users
             result.Success = true;
             return result;
         }
+
+        public async Task<IList<Role>> GetUserRoles(int userId)
+        {
+            return await _userRoleRepository.GetQueryable().Where(a => a.User.Id == userId).Select(a => a.Role).ToListAsync();
+        }
+
+        public async Task<ResultEntity> AddUserRole(UserRole userRole)
+        {
+            var resultEntity = new ResultEntity();
+            if (await ExistUserRole(userRole))
+            {
+                resultEntity.Message = "已经存在的角色，请勿重复添加！";
+            }
+            else
+            {
+                await _userRoleRepository.AddAsync(userRole);
+                resultEntity.Success = true;
+            }
+
+            return resultEntity;
+        }
+
+        public async Task<ResultEntity> DeleteUserRole(UserRole userRole)
+        {
+            var resultEntity = new ResultEntity();
+            var dataBaseUserRole = await _userRoleRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == userRole.UserId && a.RoleId == userRole.RoleId);
+            if (dataBaseUserRole == null)
+            {
+                resultEntity.Message = "该用户无此角色！";
+            }
+            else
+            {
+                dataBaseUserRole.IsDeleted = true;
+                resultEntity.Success = true;
+            }
+
+            return resultEntity;
+        }
+
+        public async Task<bool> ExistUserRole(UserRole userRole)
+        {
+            var existUserRole = await _userRoleRepository.GetQueryable()
+                                    .CountAsync(a => a.UserId == userRole.UserId && a.RoleId == userRole.RoleId) > 0;
+            return existUserRole;
+        }
+
     }
 }
