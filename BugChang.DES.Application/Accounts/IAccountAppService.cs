@@ -5,6 +5,6 @@ namespace BugChang.DES.Application.Accounts
 {
     public interface IAccountAppService
     {
-        Task<LoginResult> LoginAsync(string userName, string password);
+        Task<LoginResult> LoginAsync(string userName, string password); 
     }
 }
