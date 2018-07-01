@@ -1,6 +1,6 @@
 ﻿@model BugChang.DES.Application.Places.Dtos.PlaceEditDto
 @using BugChang.DES.Web.Mvc.Models.Common
-<form id="PlaceEditForm" method="post" asp-controller="Exchange" asp-action="PlaceEdit">
+<form id="PlaceEditForm" method="post" asp-controller="Place" asp-action="Edit">
     @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("修改交换场所"))
     <div class="modal-body">
         <input type="hidden" asp-for="Id" value="@Model.Id" />
@@ -24,4 +24,4 @@
     </div>
     @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
 </form>
-<script src="~/views-resource/exchange/_editPlaceModal.js" asp-append-version="true"></script>
+<script src="~/views-resource/place/_editPlaceModal.js" asp-append-version="true"></script>

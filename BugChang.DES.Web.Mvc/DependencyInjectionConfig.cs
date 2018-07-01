@@ -1,5 +1,8 @@
 ﻿using BugChang.DES.Application.Accounts;
+using BugChang.DES.Application.Boxs;
+using BugChang.DES.Application.Channels;
 using BugChang.DES.Application.Departments;
+using BugChang.DES.Application.ExchangeObjects;
 using BugChang.DES.Application.Logs;
 using BugChang.DES.Application.Menus;
 using BugChang.DES.Application.Operations;
@@ -12,6 +15,7 @@ using BugChang.DES.Core.Authorization.Operations;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
@@ -53,6 +57,9 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IOperationAppService, OperationAppService>();
             services.AddScoped<ILogAppService, LogAppService>();
             services.AddScoped<IPlaceAppService, PlaceAppService>();
+            services.AddScoped<IBoxAppService, BoxAppService>();
+            services.AddScoped<IChannelAppService, ChannelAppService>();
+            services.AddScoped<IExchangeObjectAppService, ExchangeObjectAppService>();
 
             #endregion
 
@@ -83,6 +90,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<ILogRepository, LogRepository>();
             services.AddScoped<IPlaceRepository, PlaceRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IBoxRepository, BoxRepository>();
 
             #endregion
 

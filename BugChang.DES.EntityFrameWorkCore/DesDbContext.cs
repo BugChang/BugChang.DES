@@ -7,6 +7,8 @@ using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Exchanges.Boxs;
+using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Logs;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +62,10 @@ namespace BugChang.DES.EntityFrameWorkCore
         public DbSet<Log> Logs { get; set; }
 
         public DbSet<Place> Places { get; set; }
+
+        public DbSet<Box> Boxs { get; set; }
+
+        public DbSet<ExchangeObject> Objects { get; set; }  
 
     }
 }

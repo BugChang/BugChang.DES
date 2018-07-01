@@ -23,7 +23,7 @@
         $('#PlaceCreateForm').submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            $.post('/Exchange/PlaceCreate',
+            $.post('/Place/Create',
                 data,
                 function (result) {
                     if (result.success) {
@@ -67,7 +67,7 @@
             serverSide: true,
             autoWith: true,
             ajax: {
-                url: '/Exchange/GetPlaces'
+                url: '/Place/GetPlaces'
             },
             stateSave: true,
             columns: [
@@ -132,7 +132,7 @@
 
     //初始化机构列表
     function initDepartmentSelect() {
-        $.get('/Exchange/GetDepartmentsForSelect',
+        $.get('/Place/GetDepartmentsForSelect',
             function (data) {
                 $('.department-select').select2({
                     data: data,
@@ -144,7 +144,7 @@
 
     //初始化上级交换场所列表
     function initParentPlaceSelect() {
-        $.get('/Exchange/GetPlacesForSelect',
+        $.get('/Place/GetPlacesForSelect',
             function (data) {
                 $('.parent-select').select2({
                     data: data,
@@ -156,7 +156,7 @@
 
     //编辑交换场所
     function editPlace(id) {
-        $('#PlaceEditModal .modal-content').load('/Exchange/EditPlaceModal/' + id);
+        $('#PlaceEditModal .modal-content').load('/Place/EditPlaceModal/' + id);
         $('#PlaceEditModal').modal({
             backdrop: 'static',
             keyboard: false,
@@ -174,7 +174,7 @@
             dangerMode: true
         }).then((willDelete) => {
             if (willDelete) {
-                $.post('/Exchange/PlaceDelete/' + placeId,
+                $.post('/Place/Delete/' + placeId,
                     function (result) {
                         if (result.success) {
                             window.swal('操作成功', placeName + '已被删除!', 'success');
@@ -196,6 +196,8 @@
     function refresh() {
         //刷新表格
         table.ajax.reload();
+
+        initParentPlaceSelect();
     }
 
     //重新加载页面

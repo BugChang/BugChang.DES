@@ -11,24 +11,19 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
-    public class ExchangeController : BaseController
+    public class PlaceController : BaseController
     {
 
         private readonly IPlaceAppService _placeAppService;
         private readonly IDepartmentAppService _departmentAppService;
 
-        public ExchangeController(IPlaceAppService placeAppService, IDepartmentAppService departmentAppService)
+        public PlaceController(IPlaceAppService placeAppService, IDepartmentAppService departmentAppService)
         {
             _placeAppService = placeAppService;
             _departmentAppService = departmentAppService;
         }
 
-        public IActionResult Box()
-        {
-            return View();
-        }
-
-        public IActionResult Place()
+        public IActionResult Index()
         {
             return View();
         }
@@ -42,7 +37,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         [TypeFilter(typeof(OperationFilter),
             Arguments = new object[] { "Place.Create" })]
-        public async Task<IActionResult> PlaceCreate(PlaceEditDto place)
+        public async Task<IActionResult> Create(PlaceEditDto place)
         {
             if (place.Id > 0)
             {
@@ -54,7 +49,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         [TypeFilter(typeof(OperationFilter),
             Arguments = new object[] { "Place.Edit" })]
-        public async Task<IActionResult> PlaceEdit(PlaceEditDto place)
+        public async Task<IActionResult> Edit(PlaceEditDto place)
         {
             if (place.Id <= 0)
             {
@@ -67,7 +62,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         [TypeFilter(typeof(OperationFilter),
             Arguments = new object[] { "Place.Delete" })]
-        public async Task<IActionResult> PlaceDelete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var result = await _placeAppService.DeleteByIdAsync(id, CurrentUserId);
             return Json(result);

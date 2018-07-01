@@ -6,7 +6,7 @@ namespace BugChang.DES.Core.Exchanges.Places
     {
         public string GetMenuUrl()
         {
-            return "/Exchange/Place";
+            return "/Place/Index";
         }
 
         public string GetModuleName()

@@ -1,0 +1,62 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="btn-group">
+            <button id="btnAddBox" type="button" class="btn btn-primary" data-toggle="modal" data-target="#BoxCreateModal" data-backdrop="static" data-keyboard="false"><i class="fa  fa-plus-circle"></i> 新增</button>
+            <button id="btnRefresh" type="button" class="btn btn-primary"><i class="fa  fa-refresh"></i> 刷新</button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table id="table" class="table table-bordered table-hover text-nowrap"></table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="BoxCreateModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="BoxCreateForm" method="post" asp-controller="Box" asp-action="Create">
+                @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("新增箱格"))
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>设备编码</label>
+                        <input type="text" class="form-control" name="DeviceCode">
+                    </div>
+                    <div class="form-group">
+                        <label>名称</label>
+                        <input type="text" class="form-control" name="Title">
+                    </div>
+                    <div class="form-group">
+                        <label>提示信息</label>
+                        <input type="text" class="form-control" name="Tips">
+                    </div>
+                    <div class="form-group">
+                        <label>交换场所</label>
+                        <select name="PlaceId" class="place-select form-control" style="width: 100%"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>流转对象</label>
+                        <select name="ObjectId" class="object-select form-control" style="width: 100%"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>优先级</label>
+                        <input type="text" class="form-control" name="Order">
+                    </div>
+                    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="BoxEditModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/views-resource/box/index.js" asp-append-version="true"></script>
+}

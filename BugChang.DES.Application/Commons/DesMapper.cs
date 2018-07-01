@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using BugChang.DES.Application.Boxs.Dtos;
+using BugChang.DES.Application.Channels.Dtos;
 using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Application.Logs.Dtos;
 using BugChang.DES.Application.Menus.Dtos;
@@ -9,6 +11,8 @@ using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Exchanges.Boxs;
+using BugChang.DES.Core.Exchanges.Channel;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.Tools;
@@ -76,6 +80,14 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
                     .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
 
+                cfg.CreateMap<Box, BoxListDto>()
+                    .ForMember(a => a.PlaceName, b => b.MapFrom(c => c.Place.Name))
+                    .ForMember(a => a.ObjectName, b => b.MapFrom(c => c.Object.Name))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.UpdateUserName, b => b.MapFrom(c => c.UpdateUser.DisplayName))
+                    .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
+                    .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
             });
         }
 

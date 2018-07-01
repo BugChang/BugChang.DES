@@ -5,7 +5,7 @@
         $("#PlaceEditForm").submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            $.post('/Exchange/PlaceEdit',
+            $.post('/Place/Edit',
                 data,
                 function (result) {
                     if (result.success) {
@@ -23,7 +23,7 @@
 
     //初始化机构列表
     function initDepartmentSelect() {
-        $.get('/Exchange/GetDepartmentsForSelect',
+        $.get('/Place/GetDepartmentsForSelect',
             function (data) {
                 $('.edit-department-select').select2({
                     data: data,
@@ -37,7 +37,7 @@
 
     //初始化上级交换场所列表
     function initParentPlaceSelect() {
-        $.get('/Exchange/GetPlacesForSelect',
+        $.get('/Place/GetPlacesForSelect',
             function (data) {
                 $('.edit-parent-select').select2({
                     data: data,

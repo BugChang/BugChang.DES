@@ -1,11 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using BugChang.DES.Core.Commons;
-using BugChang.DES.Core.Exchanges.ExchangeObjects;
-using BugChang.DES.Core.Exchanges.Places;
+﻿using BugChang.DES.Application.Commons;
 
-namespace BugChang.DES.Core.Exchanges.Boxs
+namespace BugChang.DES.Application.Boxs.Dtos
 {
-    public class Box : BaseEntity, ISoftDelete
+    public class BoxListDto : BaseDto
     {
         /// <summary>
         /// 设备码
@@ -33,27 +30,18 @@ namespace BugChang.DES.Core.Exchanges.Boxs
         public string Tips { get; set; }
 
         /// <summary>
-        /// 场所ID
+        /// 场所
         /// </summary>
-        public int PlaceId { get; set; }
+        public int PlaceName { get; set; }
 
         /// <summary>
-        /// 流转对象ID
+        /// 流转对象
         /// </summary>
-        public int ObjectId { get; set; }
+        public int ObjectName { get; set; }
 
         /// <summary>
         /// 优先级
         /// </summary>
         public int Order { get; set; }
-
-        public bool IsDeleted { get; set; }
-
-
-        [ForeignKey("PlaceId")]
-        public virtual Place Place { get; set; }
-
-        [ForeignKey("ObjectId")]
-        public virtual ExchangeObject Object { get; set; }
     }
 }

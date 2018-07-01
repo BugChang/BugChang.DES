@@ -35,7 +35,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         /// <returns></returns>
         public async Task<User> GetAsync(string userName)
         {
-            var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u =>
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u =>
                 u.UserName.Equals(userName.Trim()));
             return user;
         }
