@@ -65,7 +65,7 @@ namespace BugChang.DES.EntityFrameWorkCore
 
         public DbSet<Box> Boxs { get; set; }
 
-        public DbSet<ExchangeObject> Objects { get; set; }  
+        public DbSet<ExchangeObject> ExchangeObjects { get; set; }  
 
     }
 }

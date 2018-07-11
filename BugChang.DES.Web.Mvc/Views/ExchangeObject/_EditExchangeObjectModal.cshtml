@@ -1,0 +1,28 @@
+﻿@model BugChang.DES.Application.ExchangeObjects.Dtos.ExchangeObjectEditDto
+@using BugChang.DES.Web.Mvc.Models.Common
+<form id="ExchangeObjectEditForm" method="post" asp-controller="ExchangeObject" asp-action="Edit">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("修改流转对象"))
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <input type="hidden" asp-for="CreateBy" value="@Model.CreateBy" />
+        <input type="hidden" asp-for="CreateTime" value="@Model.CreateTime" />
+        <input type="hidden" asp-for="UpdateBy" value="@Model.UpdateBy" />
+        <input type="hidden" asp-for="UpdateTime" value="@Model.UpdateTime" />
+        <input type="hidden" id="DefaultValue" data-object-type="@Model.ObjectType" data-object-value="@Model.Value" />
+        <div class="form-group">
+            <label>名称</label>
+            <input type="text" class="form-control" asp-for="Name" value="@Model.Name">
+        </div>
+        <div class="form-group">
+            <label>类型</label>
+            <select class="form-control edit-object-type-select" style="width: 100%" asp-for="ObjectType"></select>
+        </div>
+        <div class="form-group">
+            <label>值</label>
+            <select class="form-control edit-object-value-select" style="width: 100%" asp-for="Value"></select>
+        </div>
+        <input type="hidden" asp-for="ValueText" value="@Model.ValueText" />
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/exchangeObject/_editExchangeObjectModal.js" asp-append-version="true"></script>

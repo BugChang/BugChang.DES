@@ -2,11 +2,16 @@
 using System.Threading.Tasks;
 using BugChang.DES.Application.Channels;
 using BugChang.DES.Application.Departments;
+using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Application.ExchangeObjects;
+using BugChang.DES.Application.ExchangeObjects.Dtos;
 using BugChang.DES.Application.Users;
+using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
+using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
@@ -18,7 +23,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
         private readonly IDepartmentAppService _departmentAppService;
         private readonly IUserAppService _userAppService;
 
-        public ExchangeObjectController(IChannelAppService channelAppService, IExchangeObjectAppService exchangeObjectAppService, IDepartmentAppService departmentAppService, IUserAppService userAppService)
+        public ExchangeObjectController(IChannelAppService channelAppService, IExchangeObjectAppService exchangeObjectAppService, IDepartmentAppService departmentAppService,
+            IUserAppService userAppService)
         {
             _channelAppService = channelAppService;
             _exchangeObjectAppService = exchangeObjectAppService;
@@ -111,6 +117,72 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 default:
                     return new JsonResult(null);
             }
+        }
+
+        public async Task<IActionResult> GetExchangeObjects(int draw, int start, int length)
+        {
+            var keywords = Request.Query["search[value]"];
+            var pageSearchDto = new PageSearchModel
+            {
+                Keywords = keywords,
+                Take = length,
+                Skip = start
+            };
+            var pagereslut = await _exchangeObjectAppService.GetPagingAysnc(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
+        }
+
+        [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "ExchangeObject.Create" })]
+        public async Task<IActionResult> Create(ExchangeObjectEditDto exchangeObject)
+        {
+            if (exchangeObject.Id > 0)
+            {
+                return Json(new ResultEntity { Message = "请求数据有误，新增数据非0主键" });
+            }
+            return await CreateOrUpdate(exchangeObject);
+        }
+
+        [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "ExchangeObject.Edit" })]
+        public async Task<IActionResult> Edit(ExchangeObjectEditDto exchangeObject)
+        {
+            if (exchangeObject.Id <= 0)
+            {
+                return Json(new ResultEntity { Message = "请求数据有误，修改数据空主键" });
+            }
+            return await CreateOrUpdate(exchangeObject);
+        }
+
+        private async Task<IActionResult> CreateOrUpdate(ExchangeObjectEditDto exchangeObject)
+        {
+            var result = new ResultEntity();
+            if (ModelState.IsValid)
+            {
+                exchangeObject.SetCreateOrUpdateInfo(CurrentUserId);
+                result = await _exchangeObjectAppService.AddOrUpdateAsync(exchangeObject);
+                return Json(result);
+            }
+            result.Message = ModelState.Values
+                .FirstOrDefault(a => a.ValidationState == ModelValidationState.Invalid)?.Errors.FirstOrDefault()
+                ?.ErrorMessage;
+
+            return Json(result);
+        }
+
+        public async Task<IActionResult> EditExchangeObjectModal(int id)
+        {
+            var model = await _exchangeObjectAppService.GetForEditByIdAsync(id);
+            return PartialView("_EditExchangeObjectModal", model);
         }
     }
 }

@@ -15,18 +15,17 @@
         //初始化table
         initTable();
 
-        //初始化渠道
-        initChannes();
-
         //初始化流转对象类型
         initObjectTypes();
 
         //新增角色表单提交
         $('#ExchangeObjectCreateForm').submit(function (e) {
             e.preventDefault();
+            var valueText = $('.object-value-select').select2("data")[0].text;
+            $('#createValueText').val(valueText);
             var data = $(this).serialize();
             try {
-                $.post('/ExchangeObject/Edit',
+                $.post('/ExchangeObject/Create',
                     data,
                     function (result) {
                         if (result.success) {
@@ -46,35 +45,14 @@
 
         });
 
-        $('table').delegate('.edit-role',
+        $('table').delegate('.edit-exchange-object',
             'click',
             function () {
-                var roleId = $(this).attr('data-role-id');
-                editExchangeObject(roleId);
+                var objectId = $(this).attr('data-object-id');
+                editExchangeObject(objectId);
             });
 
-        $('table').delegate('.edit-menu',
-            'click',
-            function () {
-                var roleId = $(this).attr('data-role-id');
-                editMenu(roleId);
-            });
-
-        $('table').delegate('.edit-operation',
-            'click',
-            function () {
-                var roleId = $(this).attr('data-role-id');
-                editOperation(roleId);
-            });
-
-        $('table').delegate('.edit-data',
-            'click',
-            function () {
-                var roleId = $(this).attr('data-role-id');
-                editData(roleId);
-            });
-
-        $('table').delegate('.delete-role',
+        $('table').delegate('.delete-exchange-object',
             'click',
             function () {
                 var roleId = $(this).attr('data-role-id');
@@ -85,6 +63,11 @@
         $('#btnRefresh').click(function () {
             reload();
         });
+
+        $(".object-type-select").on("select2:select",
+            function () {
+                initValues();
+            });
     });
 
     //初始化table
@@ -109,32 +92,12 @@
                     title: '名称'
                 },
                 {
-                    data: 'deviceCode',
-                    title: '角色描述'
+                    data: 'objectType',
+                    title: '对象类型'
                 },
                 {
-                    data: 'fileCount',
-                    title: '文件数量'
-                },
-                {
-                    data: 'hasUrgentFile',
-                    title: '紧急文件'
-                },
-                {
-                    data: 'tips',
-                    title: '提示信息'
-                },
-                {
-                    data: 'placeName',
-                    title: '交换场所'
-                },
-                {
-                    data: 'objectName',
-                    title: '流转对象'
-                },
-                {
-                    data: 'order',
-                    title: '优先级'
+                    data: 'valueText',
+                    title: '值'
                 },
                 {
                     data: 'createUserName',
@@ -159,25 +122,15 @@
             ],
             columnDefs: [
                 {
-                    targets: 7,
+                    targets: 8,
                     render: function (data, type, row) {
                         var strHtml = '';
-                        if (Common.hasOperation('ExchangeObject.AssignmentsMenus')) {
-                            strHtml += '<button class="btn btn-primary btn-xs edit-menu" data-role-id=' + row.id + '>菜单分配</button>&nbsp;';
-                        }
-                        if (Common.hasOperation('ExchangeObject.AssignmentsOperations')) {
-                            strHtml += '<button class="btn btn-primary btn-xs edit-operation" data-role-id=' + row.id + '>操作权限</button>&nbsp;';
-                        }
-                        if (Common.hasOperation('ExchangeObject.DataPermissions')) {
-                            strHtml += '<button class="btn btn-primary btn-xs edit-data" data-role-id=' + row.id + '>数据权限</button>&nbsp;';
-                        }
                         if (Common.hasOperation('ExchangeObject.Edit')) {
-                            strHtml += '<button class="btn btn-info btn-xs edit-role" data-role-id=' + row.id + '>修改</button>&nbsp;';
+                            strHtml += '<button class="btn btn-info btn-xs edit-exchange-object" data-object-id=' + row.id + '>修改</button>&nbsp;';
                         }
                         if (Common.hasOperation('ExchangeObject.Delete')) {
-                            strHtml += '<button class="btn btn-danger btn-xs delete-role" data-role-id=' + row.id + ' data-role-name=' + row.name + '>删除</button>';
+                            strHtml += '<button class="btn btn-danger btn-xs delete-exchange-object" data-object-id=' + row.id + ' data-object-name=' + row.name + '>删除</button>';
                         }
-
                         return strHtml;
                     }
                 }
@@ -188,11 +141,14 @@
         });
     }
 
-    //初始化渠道
-    function initChannes() {
-        $.get('/ExchangeObject/GetChannels',
+    //初始化流转对象值
+    function initValues() {
+        var objectType = $('.object-type-select').val();
+        $.get('/ExchangeObject/GetValuesByObjectType',
+            { objectType: objectType },
             function (data) {
-                $('.value-select').select2({
+                $('.object-value-select').html("");
+                $('.object-value-select').select2({
                     data: data,
                     allowClear: false
                 });
@@ -207,11 +163,12 @@
                     data: data,
                     allowClear: false
                 });
+                initValues();
             });
     }
 
 
-    //编辑角色信息
+    //编辑流转对象
     function editExchangeObject(id) {
         $('#ExchangeObjectEditModal .modal-content').load('/ExchangeObject/EditExchangeObjectModal/' + id);
         $('#ExchangeObjectEditModal').modal({
@@ -242,32 +199,6 @@
                     });
             }
         });
-    }
-
-    //菜单分配
-    function editMenu(roleId) {
-        $('#ExchangeObjectMenuEditModal .modal-content').load('/ExchangeObject/EditExchangeObjectMenuModal/' + roleId);
-        $('#ExchangeObjectMenuEditModal').modal({
-            backdrop: 'static',
-            keyboard: false,
-            show: true
-        });
-    }
-
-    //操作权限分配
-    function editOperation(roleId) {
-        $('#ExchangeObjectOperationEditModal .modal-content').load('/ExchangeObject/EditExchangeObjectOperationModal/' + roleId);
-        $('#ExchangeObjectOperationEditModal').modal({
-            backdrop: 'static',
-            keyboard: false,
-            show: true
-        });
-    }
-
-    //数据权限分配
-    function editData(roleId) {
-        window.swal('信息', '此功能尚未开发完成，请耐心等待！', 'info');
-
     }
 
     //清空表单

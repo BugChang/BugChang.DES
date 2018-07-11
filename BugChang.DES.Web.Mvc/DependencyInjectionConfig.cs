@@ -16,6 +16,7 @@ using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Boxs;
+using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
@@ -74,6 +75,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<OperationManager>();
             services.AddScoped<LogManager>();
             services.AddScoped<PlaceManager>();
+            services.AddScoped<ExchangeObjectManager>();
 
             #endregion
 
@@ -91,6 +93,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IPlaceRepository, PlaceRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IBoxRepository, BoxRepository>();
+            services.AddScoped<IExchangeObjectRepository, ExchangeObjectRepository>();
 
             #endregion
 

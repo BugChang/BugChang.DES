@@ -2,17 +2,37 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using BugChang.DES.Application.ExchangeObjects.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
+using BugChang.DES.EntityFrameWorkCore;
 
 namespace BugChang.DES.Application.ExchangeObjects
 {
     public class ExchangeObjectAppService : IExchangeObjectAppService
     {
-        public Task<ResultEntity> AddOrUpdateAsync(ExchangeObjectEditDto editDto)
+        private readonly IExchangeObjectRepository _exchangeObjectRepository;
+        private readonly ExchangeObjectManager _exchangeObjectManager;
+        private readonly UnitOfWork _unitOfWork;
+
+        public ExchangeObjectAppService(IExchangeObjectRepository exchangeObjectRepository, ExchangeObjectManager exchangeObjectManager, UnitOfWork unitOfWork)
         {
-            throw new NotImplementedException();
+            _exchangeObjectRepository = exchangeObjectRepository;
+            _exchangeObjectManager = exchangeObjectManager;
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task<ResultEntity> AddOrUpdateAsync(ExchangeObjectEditDto editDto)
+        {
+            var exchangeObject = Mapper.Map<ExchangeObject>(editDto);
+            var result = await _exchangeObjectManager.AddOrUpdateAsync(exchangeObject);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+
+            return result;
         }
 
         public Task<ResultEntity> DeleteByIdAsync(int id, int userId)
@@ -20,14 +40,16 @@ namespace BugChang.DES.Application.ExchangeObjects
             throw new NotImplementedException();
         }
 
-        public Task<ExchangeObjectEditDto> GetForEditByIdAsync(int id)
+        public async Task<ExchangeObjectEditDto> GetForEditByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var exchangeObject = await _exchangeObjectRepository.GetByIdAsync(id);
+            return Mapper.Map<ExchangeObjectEditDto>(exchangeObject);
         }
 
-        public Task<PageResultModel<ExchangeObjectListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<ExchangeObjectListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
         {
-            throw new NotImplementedException();
+            var exchangeObjects = await _exchangeObjectRepository.GetPagingAysnc(pageSearchDto);
+            return Mapper.Map<PageResultModel<ExchangeObjectListDto>>(exchangeObjects);
         }
 
         public IList<ObjectTypeListDto> GetObjectTypes()

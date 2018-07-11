@@ -28,8 +28,9 @@
                     </div>
                     <div class="form-group">
                         <label>值</label>
-                        <select name="Value" class="value-select form-control" style="width: 100%"></select>
+                        <select name="Value" class="object-value-select form-control" style="width: 100%"></select>
                     </div>
+                    <input type="hidden" id="createValueText" name="ValueText" value="" />
                     @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
                 </div>
             </form>
