@@ -8,36 +8,24 @@ namespace BugChang.DES.Application.Boxs.Dtos
         /// <summary>
         /// 设备码
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "设备编码不能为空")]
         public string DeviceCode { get; set; }
 
         /// <summary>
         /// 名称
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "箱格名称不能为空")]
         public string Name { get; set; }
 
         /// <summary>
         /// 提示信息
         /// </summary>
-        [MaxLength(150, ErrorMessage = "提示信息最多150字")]
-        public string Tips { get; set; }
+        [MaxLength(150, ErrorMessage = "常驻提示信息最多150字")]
+        public string PermanentMessage { get; set; }
 
         /// <summary>
         /// 场所ID
         /// </summary>
-        [Required]
         public int PlaceId { get; set; }
-
-        /// <summary>
-        /// 流转对象ID
-        /// </summary>
-        [Required]
-        public int ObjectId { get; set; }
-
-        /// <summary>
-        /// 优先级
-        /// </summary>
-        public int Order { get; set; }
     }
 }

@@ -43,5 +43,14 @@ namespace BugChang.DES.Core.Exchanges.ExchangeObjects
 
             return resultEntity;
         }
+
+        public async Task<ResultEntity> DeleteByIdAsync(int id)
+        {
+            var resultEntity = new ResultEntity();
+            var exchangeObject = await _exchangeObjectRepository.GetByIdAsync(id);
+            exchangeObject.IsDeleted = true;
+            resultEntity.Success = true;
+            return resultEntity;
+        }
     }
 }

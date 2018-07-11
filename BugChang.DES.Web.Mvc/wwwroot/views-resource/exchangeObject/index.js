@@ -55,9 +55,9 @@
         $('table').delegate('.delete-exchange-object',
             'click',
             function () {
-                var roleId = $(this).attr('data-role-id');
-                var roleName = $(this).attr('data-role-name');
-                deleteExchangeObject(roleId, roleName);
+                var objectId = $(this).attr('data-object-id');
+                var objectName = $(this).attr('data-object-name');
+                deleteExchangeObject(objectId, objectName);
             });
 
         $('#btnRefresh').click(function () {
@@ -179,19 +179,19 @@
     }
 
     //删除角色
-    function deleteExchangeObject(roleId, roleName) {
+    function deleteExchangeObject(objectId, objectName) {
         window.swal({
-            title: '确定删除' + roleName + '?',
+            title: '确定删除' + objectName + '?',
             //text: '删除后无法恢复数据!',
             icon: 'warning',
             buttons: ['取消', '确定'],
             dangerMode: true
         }).then((willDelete) => {
             if (willDelete) {
-                $.post('/ExchangeObject/Delete/' + roleId,
+                $.post('/ExchangeObject/Delete/' + objectId,
                     function (result) {
                         if (result.success) {
-                            window.swal('操作成功', roleName + '已被删除!', 'success');
+                            window.swal('操作成功', objectName + '已被删除!', 'success');
                             refresh();
                         } else {
                             window.swal('操作失败', result.message, 'error');
@@ -204,6 +204,8 @@
     //清空表单
     function resetForm() {
         $('#ExchangeObjectCreateForm')[0].reset();
+        $('.object-type-select').trigger("change");
+        initValues();
     }
 
     //刷新页面

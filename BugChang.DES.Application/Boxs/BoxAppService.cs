@@ -4,37 +4,53 @@ using AutoMapper;
 using BugChang.DES.Application.Boxs.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Boxs;
+using BugChang.DES.EntityFrameWorkCore;
 
 namespace BugChang.DES.Application.Boxs
 {
     public class BoxAppService : IBoxAppService
     {
         private readonly IBoxRepository _boxRepository;
+        private readonly BoxManager _boxManager;
+        private readonly UnitOfWork _unitOfWork;
 
-        public BoxAppService(IBoxRepository boxRepository)
+        public BoxAppService(IBoxRepository boxRepository, BoxManager boxManager, UnitOfWork unitOfWork)
         {
             _boxRepository = boxRepository;
+            _boxManager = boxManager;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<ResultEntity> AddOrUpdateAsync(BoxEditDto editDto)
+        public async Task<ResultEntity> AddOrUpdateAsync(BoxEditDto editDto)
         {
-            throw new NotImplementedException();
+            var result = await _boxManager.AddOrUpdateAsync(Mapper.Map<Box>(editDto));
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+            return result;
         }
 
-        public Task<ResultEntity> DeleteByIdAsync(int id, int userId)
+        public async Task<ResultEntity> DeleteByIdAsync(int id, int userId)
         {
-            throw new NotImplementedException();
+            var result = await _boxManager.DeleteAsync(id);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+            return result;
         }
 
-        public Task<BoxEditDto> GetForEditByIdAsync(int id)
+        public async Task<BoxEditDto> GetForEditByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var box = await _boxRepository.GetByIdAsync(id);
+            return Mapper.Map<BoxEditDto>(box);
         }
 
         public async Task<PageResultModel<BoxListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
         {
-            var boxs = await _boxRepository.GetPagingAysnc(pageSearchDto);
-            return Mapper.Map<PageResultModel<BoxListDto>>(boxs);
+            var pageResult = await _boxRepository.GetPagingAysnc(pageSearchDto);
+            return Mapper.Map<PageResultModel<BoxListDto>>(pageResult);
         }
     }
 }

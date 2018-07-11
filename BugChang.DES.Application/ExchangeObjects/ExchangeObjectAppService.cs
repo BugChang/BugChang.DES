@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BugChang.DES.Application.ExchangeObjects.Dtos;
@@ -35,9 +34,15 @@ namespace BugChang.DES.Application.ExchangeObjects
             return result;
         }
 
-        public Task<ResultEntity> DeleteByIdAsync(int id, int userId)
+        public async Task<ResultEntity> DeleteByIdAsync(int id, int userId)
         {
-            throw new NotImplementedException();
+            var result = await _exchangeObjectManager.DeleteByIdAsync(id);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+
+            return result;
         }
 
         public async Task<ExchangeObjectEditDto> GetForEditByIdAsync(int id)
@@ -66,6 +71,12 @@ namespace BugChang.DES.Application.ExchangeObjects
             }
 
             return objectTypeList;
+        }
+
+        public async Task<IList<ExchangeObjectListDto>> GetAlListAsync()
+        {
+            var exchangeObjects= await _exchangeObjectRepository.GetAllAsync();
+            return Mapper.Map<IList<ExchangeObjectListDto>>(exchangeObjects);
         }
     }
 }

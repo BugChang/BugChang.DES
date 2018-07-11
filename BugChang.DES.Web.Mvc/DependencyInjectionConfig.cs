@@ -76,6 +76,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<LogManager>();
             services.AddScoped<PlaceManager>();
             services.AddScoped<ExchangeObjectManager>();
+            services.AddScoped<BoxManager>();
 
             #endregion
 

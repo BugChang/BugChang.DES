@@ -131,6 +131,31 @@ namespace BugChang.DES.EntityFrameWorkCore
                             {
                                 Name = "角色管理",
                                 Url = "/Role/Index"
+                            },
+                            new Menu
+                            {
+                                Name = "流转对象管理",
+                                Url = "/ExchangeObject/Index"
+                            },
+                            new Menu
+                            {
+                                Name = "系统日志",
+                                Url = "/Log/System"
+                            },
+                            new Menu
+                            {
+                                Name = "审计日志",
+                                Url = "/Log/Audit"
+                            },
+                            new Menu
+                            {
+                                Name = "交换场所管理",
+                                Url = "/Place/Index"
+                            },
+                            new Menu
+                            {
+                                Name = "箱格管理",
+                                Url = "/Box/Index"
                             }
                         }
                     };

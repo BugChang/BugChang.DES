@@ -184,5 +184,12 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var model = await _exchangeObjectAppService.GetForEditByIdAsync(id);
             return PartialView("_EditExchangeObjectModal", model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _exchangeObjectAppService.DeleteByIdAsync(id, CurrentUserId);
+            return Json(result);
+        }
     }
 }

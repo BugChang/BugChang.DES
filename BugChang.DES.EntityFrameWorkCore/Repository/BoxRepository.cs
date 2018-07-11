@@ -16,7 +16,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<PageResultModel<Box>> GetPagingAysnc(PageSearchModel pageSearchModel)
         {
-            var query = _dbContext.Boxs.Include(a => a.Place).Include(a => a.Object).Where(a => true);
+            var query = _dbContext.Boxs.Include(a => a.Place).Include(a => a.CreateUser).Include(a => a.UpdateUser).Where(a => true);
             if (!string.IsNullOrWhiteSpace(pageSearchModel.Keywords))
             {
                 query = query.Where(a =>

@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using Microsoft.EntityFrameworkCore;

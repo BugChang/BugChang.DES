@@ -24,23 +24,15 @@
                     </div>
                     <div class="form-group">
                         <label>名称</label>
-                        <input type="text" class="form-control" name="Title">
+                        <input type="text" class="form-control" name="Name">
                     </div>
                     <div class="form-group">
-                        <label>提示信息</label>
-                        <input type="text" class="form-control" name="Tips">
+                        <label>常驻提示信息</label>
+                        <textarea rows="3" class="form-control" name="PermanentMessage" placeholder="最多150字"></textarea>
                     </div>
                     <div class="form-group">
                         <label>交换场所</label>
                         <select name="PlaceId" class="place-select form-control" style="width: 100%"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>流转对象</label>
-                        <select name="ObjectId" class="object-select form-control" style="width: 100%"></select>
-                    </div>
-                    <div class="form-group">
-                        <label>优先级</label>
-                        <input type="text" class="form-control" name="Order">
                     </div>
                     @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
                 </div>

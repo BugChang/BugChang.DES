@@ -5,6 +5,8 @@
 
         $("#ExchangeObjectEditForm").submit(function (e) {
             e.preventDefault();
+            var valueText = $('.edit-object-value-select').select2("data")[0].text;
+            $("#ValueText").val(valueText);
             var data = $(this).serialize();
             $.post('/ExchangeObject/Edit',
                 data,

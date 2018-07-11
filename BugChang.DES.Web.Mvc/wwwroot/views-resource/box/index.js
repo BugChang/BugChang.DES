@@ -18,12 +18,12 @@
         //初始化交换场所
         initPlace();
 
-        //新增角色表单提交
+        //新增箱格表单提交
         $('#BoxCreateForm').submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
             try {
-                $.post('/Box/Edit',
+                $.post('/Box/Create',
                     data,
                     function (result) {
                         if (result.success) {
@@ -43,40 +43,19 @@
 
         });
 
-        $('table').delegate('.edit-role',
+        $('table').delegate('.edit-box',
             'click',
             function () {
-                var roleId = $(this).attr('data-role-id');
-                editBox(roleId);
+                var boxId = $(this).attr('data-box-id');
+                editBox(boxId);
             });
 
-        $('table').delegate('.edit-menu',
+        $('table').delegate('.delete-box',
             'click',
             function () {
-                var roleId = $(this).attr('data-role-id');
-                editMenu(roleId);
-            });
-
-        $('table').delegate('.edit-operation',
-            'click',
-            function () {
-                var roleId = $(this).attr('data-role-id');
-                editOperation(roleId);
-            });
-
-        $('table').delegate('.edit-data',
-            'click',
-            function () {
-                var roleId = $(this).attr('data-role-id');
-                editData(roleId);
-            });
-
-        $('table').delegate('.delete-role',
-            'click',
-            function () {
-                var roleId = $(this).attr('data-role-id');
-                var roleName = $(this).attr('data-role-name');
-                deleteBox(roleId, roleName);
+                var boxId = $(this).attr('data-box-id');
+                var boxName = $(this).attr('data-box-name');
+                deleteBox(boxId, boxName);
             });
 
         $('#btnRefresh').click(function () {
@@ -110,28 +89,12 @@
                     title: '角色描述'
                 },
                 {
-                    data: 'fileCount',
-                    title: '文件数量'
-                },
-                {
-                    data: 'hasUrgentFile',
-                    title: '紧急文件'
-                },
-                {
-                    data: 'tips',
+                    data: 'permanentMessage',
                     title: '提示信息'
                 },
                 {
                     data: 'placeName',
                     title: '交换场所'
-                },
-                {
-                    data: 'objectName',
-                    title: '流转对象'
-                },
-                {
-                    data: 'order',
-                    title: '优先级'
                 },
                 {
                     data: 'createUserName',
@@ -156,20 +119,14 @@
             ],
             columnDefs: [
                 {
-                    targets: 7,
+                    targets: 9,
                     render: function (data, type, row) {
                         var strHtml = '';
-                        if (Common.hasOperation('Box.AssignmentsMenus')) {
-                            strHtml += '<button class="btn btn-primary btn-xs edit-menu" data-role-id=' + row.id + '>菜单分配</button>&nbsp;';
-                        }
-                        if (Common.hasOperation('Box.AssignmentsOperations')) {
-                            strHtml += '<button class="btn btn-primary btn-xs edit-operation" data-role-id=' + row.id + '>操作权限</button>&nbsp;';
-                        }
-                        if (Common.hasOperation('Box.DataPermissions')) {
-                            strHtml += '<button class="btn btn-primary btn-xs edit-data" data-role-id=' + row.id + '>数据权限</button>&nbsp;';
+                        if (Common.hasOperation('Box.AssignObject')) {
+                            strHtml += '<button class="btn btn-primary btn-xs assign-object" data-role-id=' + row.id + '>分配流转对象</button>&nbsp;';
                         }
                         if (Common.hasOperation('Box.Edit')) {
-                            strHtml += '<button class="btn btn-info btn-xs edit-role" data-role-id=' + row.id + '>修改</button>&nbsp;';
+                            strHtml += '<button class="btn btn-info btn-xs edit-box" data-box-id=' + row.id + '>修改</button>&nbsp;';
                         }
                         if (Common.hasOperation('Box.Delete')) {
                             strHtml += '<button class="btn btn-danger btn-xs delete-role" data-role-id=' + row.id + ' data-role-name=' + row.name + '>删除</button>';
@@ -185,6 +142,7 @@
         });
     }
 
+    //初始化交换场所
     function initPlace() {
         $.get('/Box/GetPlaces',
             function (data) {
@@ -195,7 +153,7 @@
             });
     }
 
-    //编辑角色信息
+    //编辑箱格信息
     function editBox(id) {
         $('#BoxEditModal .modal-content').load('/Box/EditBoxModal/' + id);
         $('#BoxEditModal').modal({
@@ -205,20 +163,20 @@
         });
     }
 
-    //删除角色
-    function deleteBox(roleId, roleName) {
+    //删除箱格
+    function deleteBox(boxId, boxName) {
         window.swal({
-            title: '确定删除' + roleName + '?',
+            title: '确定删除' + boxName + '?',
             //text: '删除后无法恢复数据!',
             icon: 'warning',
             buttons: ['取消', '确定'],
             dangerMode: true
         }).then((willDelete) => {
             if (willDelete) {
-                $.post('/Box/Delete/' + roleId,
+                $.post('/Box/Delete/' + boxId,
                     function (result) {
                         if (result.success) {
-                            window.swal('操作成功', roleName + '已被删除!', 'success');
+                            window.swal('操作成功', boxName + '已被删除!', 'success');
                             refresh();
                         } else {
                             window.swal('操作失败', result.message, 'error');
@@ -226,32 +184,6 @@
                     });
             }
         });
-    }
-
-    //菜单分配
-    function editMenu(roleId) {
-        $('#BoxMenuEditModal .modal-content').load('/Box/EditBoxMenuModal/' + roleId);
-        $('#BoxMenuEditModal').modal({
-            backdrop: 'static',
-            keyboard: false,
-            show: true
-        });
-    }
-
-    //操作权限分配
-    function editOperation(roleId) {
-        $('#BoxOperationEditModal .modal-content').load('/Box/EditBoxOperationModal/' + roleId);
-        $('#BoxOperationEditModal').modal({
-            backdrop: 'static',
-            keyboard: false,
-            show: true
-        });
-    }
-
-    //数据权限分配
-    function editData(roleId) {
-        window.swal('信息', '此功能尚未开发完成，请耐心等待！', 'info');
-
     }
 
     //清空表单
