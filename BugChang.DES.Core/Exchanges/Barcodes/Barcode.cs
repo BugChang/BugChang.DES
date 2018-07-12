@@ -17,7 +17,12 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         /// <summary>
         /// 条码状态
         /// </summary>
-        public EnumBarcodeStatus BarcodeStatus { get; set; }
+        public EnumBarcodeStatus Status { get; set; }
+
+        /// <summary>
+        /// 条码子状态
+        /// </summary>
+        public EnumBarcodeSubStatus SubStatus { get; set; }
 
         /// <summary>
         /// 是否退件
@@ -28,7 +33,17 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         /// 是否取消
         /// </summary>
         public bool IsCancel { get; set; }
-        
+
+        public int? FromDepartmentId { get; set; }
+
+        public string FromDepartmentName { get; set; }
+
+        public int? ToDepartmentId { get; set; }
+
+        public string ToDepartmentName { get; set; }
+
+        public EnumBarcodeSouce Souce { get; set; }
+
         public bool IsDeleted { get; set; }
 
         /// <summary>

@@ -2,14 +2,17 @@
 {
     public enum EnumBarcodeStatus
     {
-        生成成功,
-        准备投递,
+        已就绪,
         已投递,
-        等待签收,
         已签收,
-        申请退回,
-        已退回,
-        申请勘误,
-        已勘误
+        已勘误,
+        已退回
+    }
+
+    public enum EnumBarcodeSubStatus
+    {
+        正常,
+        勘误,
+        退回
     }
 }

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Exchanges.Channel;
 using Newtonsoft.Json;
 
 namespace BugChang.DES.Core.Departments
@@ -19,10 +20,17 @@ namespace BugChang.DES.Core.Departments
         [MaxLength(150)]
         public string FullName { get; set; }
 
+        /// <summary>
+        /// 单位代码
+        /// </summary>
         [Required]
         [StringLength(3)]
         public string Code { get; set; }
 
+        /// <summary>
+        /// 收件渠道
+        /// </summary>
+        public EnumChannel ReceiveChannel { get; set; }
 
         public int? ParentId { get; set; }
 

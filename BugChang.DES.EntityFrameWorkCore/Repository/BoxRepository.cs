@@ -29,4 +29,13 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             };
         }
     }
+
+    public class BoxObjectRepository : BaseRepository<BoxObject>, IBoxObjectRepository
+    {
+        private readonly DesDbContext _dbContext;
+        public BoxObjectRepository(DesDbContext dbContext) : base(dbContext)
+        {
+            _dbContext = dbContext;
+        }
+    }
 }
