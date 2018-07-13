@@ -28,6 +28,10 @@ namespace BugChang.DES.Core.Exchanges.Boxs
 
         public bool IsDeleted { get; set; }
 
+        /// <summary>
+        /// 启用状态
+        /// </summary>
+        public bool Enabled { get; set; }
 
         [ForeignKey("PlaceId")]
         public virtual Place Place { get; set; }

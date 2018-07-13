@@ -1,6 +1,7 @@
 ﻿using System;
 using BugChang.DES.Application.Commons;
 using BugChang.DES.Core.Authentication;
+using BugChang.DES.Core.Commons;
 using BugChang.DES.EntityFrameWorkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -57,6 +58,7 @@ namespace BugChang.DES.Web.Mvc
 
             services.AddOptions();
             services.Configure<LoginSettings>(Configuration.GetSection("LoginSettings"));
+            services.Configure<CommonSettings>(Configuration.GetSection("CommonSettings"));
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {

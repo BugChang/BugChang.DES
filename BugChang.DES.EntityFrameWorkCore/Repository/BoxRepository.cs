@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Boxs;
@@ -36,6 +37,11 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         public BoxObjectRepository(DesDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public Task<IList<Box>> GetBoxsByObjectId(int objectId)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

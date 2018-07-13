@@ -5,6 +5,7 @@ using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.ExchangeObjects;
 using BugChang.DES.Application.Logs;
 using BugChang.DES.Application.Menus;
+using BugChang.DES.Application.Monitor;
 using BugChang.DES.Application.Operations;
 using BugChang.DES.Application.Places;
 using BugChang.DES.Application.Roles;
@@ -15,10 +16,12 @@ using BugChang.DES.Core.Authorization.Operations;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Logs;
+using BugChang.DES.Core.Monitor;
 using BugChang.DES.EntityFrameWorkCore;
 using BugChang.DES.EntityFrameWorkCore.Repository;
 using BugChang.DES.Web.Mvc.Filters;
@@ -61,6 +64,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IBoxAppService, BoxAppService>();
             services.AddScoped<IChannelAppService, ChannelAppService>();
             services.AddScoped<IExchangeObjectAppService, ExchangeObjectAppService>();
+            services.AddScoped<IMonitorAppService, MonitorAppService>();
 
             #endregion
 
@@ -77,6 +81,8 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<PlaceManager>();
             services.AddScoped<ExchangeObjectManager>();
             services.AddScoped<BoxManager>();
+            services.AddScoped<MonitorManager>();
+            services.AddScoped<BarcodeManager>();
 
             #endregion
 

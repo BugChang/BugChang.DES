@@ -16,6 +16,6 @@
         public const string UserRoleDelete = "新增用户角色";
         public const string UserRoleAdd = "删除用户角色";
 
-
+        public const string BarcodeSendFail = "条码投箱失败";
     }
 }
