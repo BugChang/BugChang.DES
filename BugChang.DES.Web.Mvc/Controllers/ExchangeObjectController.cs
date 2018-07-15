@@ -191,5 +191,21 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = await _exchangeObjectAppService.DeleteByIdAsync(id, CurrentUserId);
             return Json(result);
         }
+
+        public async Task<IActionResult> GetParents()
+        {
+            var objects = await _exchangeObjectAppService.GetAlListAsync();
+            var json = objects.Select(a => new SelectViewModel
+            {
+                Id = a.Id,
+                Text = a.Name
+            }).ToList();
+            json.Insert(0, new SelectViewModel
+            {
+                Id = 0,
+                Text = "无"
+            });
+            return Json(json);
+        }
     }
 }

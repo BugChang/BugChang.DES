@@ -8,9 +8,10 @@
         <input type="hidden" asp-for="CreateTime" value="@Model.CreateTime" />
         <input type="hidden" asp-for="UpdateBy" value="@Model.UpdateBy" />
         <input type="hidden" asp-for="UpdateTime" value="@Model.UpdateTime" />
+        <input type="hidden" id="DefaultValue" data-channel="@Model.ReceiveChannel" data-parent-id="@Model.ParentId" />
         <div class="form-group">
             <label>上级机构</label>
-            <select class="form-control select2" asp-for="ParentId" style="width: 100%" value="@Model.ParentId"></select>
+            <select class="form-control edit-parent-select" asp-for="ParentId" style="width: 100%"></select>
         </div>
         <div class="form-group">
             <label>名称</label>
@@ -23,6 +24,10 @@
         <div class="form-group">
             <label>机构代码</label>
             <input type="text" class="form-control" asp-for="Code" value="@Model.Code">
+        </div>
+        <div class="form-group">
+            <label>默认收件渠道</label>
+            <select class="form-control edit-channel-select" asp-for="ReceiveChannel" style="width: 100%"></select>
         </div>
     </div>
     @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")

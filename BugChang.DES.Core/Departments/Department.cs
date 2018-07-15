@@ -28,7 +28,7 @@ namespace BugChang.DES.Core.Departments
         public string Code { get; set; }
 
         /// <summary>
-        /// 收件渠道
+        /// 默认收件渠道
         /// </summary>
         public EnumChannel ReceiveChannel { get; set; }
 

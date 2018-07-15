@@ -23,5 +23,7 @@ namespace BugChang.DES.Application.Boxs.Dtos
         /// 场所
         /// </summary>
         public string PlaceName { get; set; }
+
+        public bool Enabled { get; set; }
     }
 }

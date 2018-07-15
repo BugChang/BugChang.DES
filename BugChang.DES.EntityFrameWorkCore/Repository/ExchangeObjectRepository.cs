@@ -17,10 +17,10 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         public async Task<PageResultModel<ExchangeObject>> GetPagingAysnc(PageSearchModel pageSearchModel)
         {
 
-            var queryable = _dbContext.ExchangeObjects.Include(a => a.CreateUser).Include(a => a.UpdateUser).Where(a => true);
+            var queryable = _dbContext.ExchangeObjects.Include(a => a.CreateUser).Include(a => a.UpdateUser).Include(a => a.Parent).Where(a => true);
             if (!string.IsNullOrWhiteSpace(pageSearchModel.Keywords))
             {
-                queryable = queryable.Where(a => a.Name.Contains(pageSearchModel.Keywords));
+                queryable = queryable.Where(a => a.Name.Contains(pageSearchModel.Keywords) || a.ValueText.Contains(pageSearchModel.Keywords) || a.Parent.Name.Contains(pageSearchModel.Keywords));
             }
             return new PageResultModel<ExchangeObject>
             {

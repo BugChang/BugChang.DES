@@ -1,0 +1,13 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+<form id="AssignObjectForm" method="post">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("分配流转对象"))
+    <div class="modal-body">
+        <input type="hidden" id="AssignObjectDefaultValue" data-box-id="@ViewBag.BoxId" />
+        <div class="form-group">
+            <label>流转对象</label>
+            <select id="boxObject" class="box-object-select form-control" style="width: 100%" multiple="multiple"></select>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/box/_assignObjectModal.js" asp-append-version="true"></script>

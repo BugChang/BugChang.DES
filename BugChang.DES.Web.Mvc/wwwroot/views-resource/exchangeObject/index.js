@@ -12,6 +12,9 @@
         //初始化页面元素
         initPageElement();
 
+        //初始化上级流转对象
+        initParent();
+
         //初始化table
         initTable();
 
@@ -100,6 +103,10 @@
                     title: '值'
                 },
                 {
+                    data: 'parentName',
+                    title: '上级流转对象'
+                },
+                {
                     data: 'createUserName',
                     title: '创建人'
                 },
@@ -122,7 +129,7 @@
             ],
             columnDefs: [
                 {
-                    targets: 8,
+                    targets: 9,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (Common.hasOperation('ExchangeObject.Edit')) {
@@ -167,6 +174,15 @@
             });
     }
 
+    function initParent() {
+        $.get('/ExchangeObject/GetParents',
+            function (data) {
+                $('.object-parent-select').select2({
+                    data: data,
+                    allowClear: false
+                });
+            });
+    }
 
     //编辑流转对象
     function editExchangeObject(id) {
@@ -178,7 +194,7 @@
         });
     }
 
-    //删除角色
+    //删除
     function deleteExchangeObject(objectId, objectName) {
         window.swal({
             title: '确定删除' + objectName + '?',
@@ -212,6 +228,8 @@
     function refresh() {
         //刷新表格
         table.ajax.reload();
+        //刷新上级
+        initParent();
     }
 
     //重新加载页面

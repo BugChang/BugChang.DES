@@ -125,6 +125,7 @@ namespace BugChang.DES.Application.Commons
 
                 cfg.CreateMap<ExchangeObject, ExchangeObjectListDto>()
                     .ForMember(a => a.ObjectType, b => b.MapFrom(c => c.ObjectType.ToString()))
+                    .ForMember(a => a.ParentName, b => b.MapFrom(c => c.Parent.Name))
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
                     .ForMember(a => a.UpdateUserName, b => b.MapFrom(c => c.UpdateUser.DisplayName))
@@ -132,7 +133,9 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
 
                 cfg.CreateMap<ExchangeObjectEditDto, ExchangeObject>()
-                    .ForMember(a => a.ObjectType, b => b.MapFrom(c => (EnumObjectType)c.ObjectType));
+                    .ForMember(a => a.ParentId, b => b.MapFrom(c => c.ParentId == 0 ? null : c.ParentId));
+                cfg.CreateMap<ExchangeObject, ExchangeObjectEditDto>()
+                    .ForMember(a => a.ParentId, b => b.MapFrom(c => c.ParentId ?? 0));
 
                 #endregion
 

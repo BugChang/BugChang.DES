@@ -1,17 +1,15 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Boxs;
 using BugChang.DES.Application.Boxs.Dtos;
 using BugChang.DES.Application.ExchangeObjects;
-using BugChang.DES.Application.ExchangeObjects.Dtos;
 using BugChang.DES.Application.Places;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
@@ -20,6 +18,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         private readonly IPlaceAppService _placeAppService;
         private readonly IBoxAppService _boxAppService;
         private readonly IExchangeObjectAppService _exchangeObjectAppService;
+
 
         public BoxController(IPlaceAppService placeAppService, IBoxAppService boxAppService, IExchangeObjectAppService exchangeObjectAppService)
         {
@@ -138,6 +137,34 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _boxAppService.DeleteByIdAsync(id, CurrentUserId);
+            return Json(result);
+        }
+
+        public IActionResult AssignObjectModal(int id)
+        {
+            ViewBag.BoxId = id;
+            return PartialView("_AssignObjectModal");
+        }
+
+        public async Task<IActionResult> GetBoxObjects(int id)
+        {
+            var objects = await _exchangeObjectAppService.GetAlListAsync();
+            var boxObjectIds = await _boxAppService.GetBoxObjectIds(id);
+            var json = objects.Select(a => new SelectViewModel
+            {
+                Id = a.Id,
+                Text = a.Name,
+                Selected = boxObjectIds.Any(b => b == a.Id)
+            });
+            return Json(json);
+        }
+
+        [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "Box.AssignObject" })]
+        public async Task<IActionResult> AssignObject(int boxId, List<int> objectIds)
+        {
+            var result = await _boxAppService.AssignObject(boxId, objectIds, CurrentUserId);
             return Json(result);
         }
     }

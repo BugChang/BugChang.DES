@@ -27,6 +27,8 @@
         //初始化页面元素
         initPageElement();
 
+        initChannel();
+
         //初始化zTree
         zTreeObj = $.fn.zTree.init($('#departmentTree'), setting);
 
@@ -89,7 +91,7 @@
     function zTreeBeforeClick(treeId, treeNode) {
         currentNode = treeNode;
         table.ajax.reload();
-        $('.select2').val(treeNode.id).trigger('change');
+        $('.parent-select').val(treeNode.id).trigger('change');
     }
 
 
@@ -127,6 +129,10 @@
                     title: '代码'
                 },
                 {
+                    data: 'receiveChannel',
+                    title: '默认收件渠道'
+                },
+                {
                     data: 'createUserName',
                     title: '创建人'
                 },
@@ -149,7 +155,7 @@
             ],
             columnDefs: [
                 {
-                    targets: 8,
+                    targets: 9,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (Common.hasOperation("Department.Edit")) {
@@ -172,7 +178,7 @@
     function initSelect() {
         $.get('/Department/GetListForSelect',
             function (data) {
-                $('.select2').select2({
+                $('.parent-select').select2({
                     data: data,
                     placeholder: '请选择上级机构',
                     allowClear: true
@@ -221,6 +227,18 @@
                     });
             }
         });
+    }
+
+    //初始化渠道
+    function initChannel() {
+        $.get('/Department/GetChannels',
+            function (data) {
+                $('.channel-select').select2({
+                    data: data,
+                    placeholder: '请选择默认收件渠道',
+                    allowClear: false
+                });
+            });
     }
 
     //清空表单

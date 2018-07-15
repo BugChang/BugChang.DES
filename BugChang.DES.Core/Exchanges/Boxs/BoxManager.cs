@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Commons;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +9,12 @@ namespace BugChang.DES.Core.Exchanges.Boxs
     public class BoxManager
     {
         private readonly IBoxRepository _boxRepository;
+        private readonly IBoxObjectRepository _boxObjectRepository;
 
-        public BoxManager(IBoxRepository boxRepository)
+        public BoxManager(IBoxRepository boxRepository, IBoxObjectRepository boxObjectRepository)
         {
             _boxRepository = boxRepository;
+            _boxObjectRepository = boxObjectRepository;
         }
 
         public async Task<ResultEntity> AddOrUpdateAsync(Box box)
@@ -45,6 +48,51 @@ namespace BugChang.DES.Core.Exchanges.Boxs
             var box = await _boxRepository.GetByIdAsync(boxId);
             box.IsDeleted = true;
             result.Success = true;
+            return result;
+        }
+
+        public async Task<IList<int>> GetBoxObjectIds(int boxId)
+        {
+            var lstObjectId = await _boxObjectRepository.GetQueryable().Where(a => a.BoxId == boxId)
+                .Select(a => a.ExchangeObjectId).ToListAsync();
+            return lstObjectId;
+        }
+
+        public async Task<ResultEntity> AssignObject(int boxId, List<int> objectIds)
+        {
+            var result = new ResultEntity();
+            var box = await _boxRepository.GetByIdAsync(boxId);
+            var boxObjects = await _boxObjectRepository.GetQueryable().Include(a => a.Box).Include(a => a.ExchangeObject).Where(a => a.BoxId == boxId).ToListAsync();
+
+            //记录原有数据
+            result.Data = new
+            {
+                OldData = boxObjects.Select(a => a.ExchangeObject).Select(a => new { a.Id, a.Name, a.ValueText }),
+                NewData = objectIds
+            };
+
+            if (boxObjects.Count > 0)
+            {
+                //删除原数据
+                foreach (var boxObject in boxObjects)
+                {
+                    await _boxObjectRepository.DeleteByIdAsync(boxObject.Id);
+                }
+            }
+
+            //添加新数据
+            foreach (var objectId in objectIds)
+            {
+                var boxObject = new BoxObject
+                {
+                    BoxId = boxId,
+                    ExchangeObjectId = objectId
+                };
+                await _boxObjectRepository.AddAsync(boxObject);
+            }
+
+            result.Success = true;
+            result.Message = $"箱格【{box.Name}】已成功分配流转对象";
             return result;
         }
     }

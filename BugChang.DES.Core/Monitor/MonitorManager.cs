@@ -104,17 +104,29 @@ namespace BugChang.DES.Core.Monitor
             }
             else
             {
-                //数据库不存在记录,分配路由
-                var result = await _barcodeManager.AssignBarcodeRoute(barcodeNo);
-                if (result.Success)
+                //数据库不存在记录
+
+                //登记条码
+                var registerResult = await _barcodeManager.RegisterBarcode(barcodeNo);
+                if (registerResult.Success)
                 {
-                    //分配路由成功
-                    await CheckBarcodeType(barcodeNo, placeId);
+                    //分配路由
+                    var result = await _barcodeManager.AssignBarcodeRoute(barcodeNo);
+                    if (result.Success)
+                    {
+                        //分配路由成功
+                        await CheckBarcodeType(barcodeNo, placeId);
+                    }
+                    else
+                    {
+                        //分配路由失败
+                        await _logManager.LogErrorAsync(EnumLogType.System, LogTitleConstString.BarcodeSendFail, $"条码号【{barcodeNo}】投箱失败，错误原因【分配路由失败】,交换场所【{place.Name}】");
+                    }
                 }
                 else
                 {
                     //分配路由失败
-                    await _logManager.LogErrorAsync(EnumLogType.System, LogTitleConstString.BarcodeSendFail, $"条码号【{barcodeNo}】投箱失败，错误原因【分配路由失败】,交换场所【{place.Name}】");
+                    await _logManager.LogErrorAsync(EnumLogType.System, LogTitleConstString.BarcodeSendFail, $"条码号【{barcodeNo}】投箱失败，错误原因【{registerResult.Message}】,交换场所【{place.Name}】");
                 }
             }
             return checkBarcodeModel;

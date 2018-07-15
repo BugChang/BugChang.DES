@@ -38,7 +38,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>上级机构</label>
-                        <select class="form-control select2" name="ParentId" style="width: 100%"></select>
+                        <select class="form-control parent-select" name="ParentId" style="width: 100%"></select>
                     </div>
                     <div class="form-group">
                         <label>名称</label>
@@ -51,6 +51,10 @@
                     <div class="form-group">
                         <label>机构代码</label>
                         <input type="text" class="form-control" name="Code">
+                    </div>
+                    <div class="form-group">
+                        <label>默认收件渠道</label>
+                        <select class="form-control channel-select" name="ReceiveChannel" style="width: 100%"></select>
                     </div>
                 </div>
                 @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")

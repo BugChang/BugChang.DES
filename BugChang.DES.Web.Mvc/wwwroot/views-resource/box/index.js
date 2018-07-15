@@ -58,6 +58,15 @@
                 deleteBox(boxId, boxName);
             });
 
+        $('table').delegate('.assign-object',
+            'click',
+            function () {
+                var boxId = $(this).attr('data-box-id');
+                assignObject(boxId);
+            });
+
+
+
         $('#btnRefresh').click(function () {
             reload();
         });
@@ -86,15 +95,19 @@
                 },
                 {
                     data: 'deviceCode',
-                    title: '角色描述'
+                    title: '设备编码'
                 },
                 {
                     data: 'permanentMessage',
-                    title: '提示信息'
+                    title: '常驻提示信息'
                 },
                 {
                     data: 'placeName',
                     title: '交换场所'
+                },
+                {
+                    data: 'enabled',
+                    title: '状态'
                 },
                 {
                     data: 'createUserName',
@@ -119,17 +132,29 @@
             ],
             columnDefs: [
                 {
-                    targets: 9,
+                    targets: 5,
+                    render: function (data, type, row) {
+                        var strHtml = '';
+                        if (row.enabled) {
+                            strHtml = '<label class="label label-success">已启用</label>&nbsp;';
+                        } else {
+                            strHtml = '<label class="label label-danger">已禁用</label>&nbsp;';
+                        }
+                        return strHtml;
+                    }
+                },
+                {
+                    targets: 10,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (Common.hasOperation('Box.AssignObject')) {
-                            strHtml += '<button class="btn btn-primary btn-xs assign-object" data-role-id=' + row.id + '>分配流转对象</button>&nbsp;';
+                            strHtml += '<button class="btn btn-primary btn-xs assign-object" data-box-id=' + row.id + '>分配流转对象</button>&nbsp;';
                         }
                         if (Common.hasOperation('Box.Edit')) {
                             strHtml += '<button class="btn btn-info btn-xs edit-box" data-box-id=' + row.id + '>修改</button>&nbsp;';
                         }
                         if (Common.hasOperation('Box.Delete')) {
-                            strHtml += '<button class="btn btn-danger btn-xs delete-role" data-role-id=' + row.id + ' data-role-name=' + row.name + '>删除</button>';
+                            strHtml += '<button class="btn btn-danger btn-xs delete-box" data-box-id=' + row.id + ' data-box-name=' + row.name + '>删除</button>';
                         }
 
                         return strHtml;
@@ -151,6 +176,16 @@
                     allowClear: false
                 });
             });
+    }
+
+    //分配流转对象
+    function assignObject(id) {
+        $('#AssignObjectModal .modal-content').load('/Box/AssignObjectModal/' + id);
+        $('#AssignObjectModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
     }
 
     //编辑箱格信息

@@ -1,6 +1,7 @@
 ﻿(function () {
     $(function () {
         initSelect();
+        initChannel();
         $("#DepartmentEditForm").submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
@@ -23,12 +24,27 @@
     function initSelect() {
         $.get("/Department/GetListForSelect",
             function (data) {
-                $(".select2").select2({
+                $(".edit-parent-select").select2({
                     data: data,
                     placeholder: "请选择上级机构",
                     allowClear: true
                 });
-                $(".select2").val($(".select2").val()).trigger("change");
+                var parentId = $("#DefaultValue").attr("data-parent-id");
+                $(".edit-parent-select").val(parentId).trigger("change");
+            });
+    }
+
+    //初始化渠道
+    function initChannel() {
+        $.get('/Department/GetChannels',
+            function (data) {
+                $('.edit-channel-select').select2({
+                    data: data,
+                    placeholder: '请选择默认收件渠道',
+                    allowClear: false
+                });
+                var channel = $("#DefaultValue").attr("data-channel");
+                $(".edit-channel-select").val(channel).trigger("change");
             });
     }
 })();

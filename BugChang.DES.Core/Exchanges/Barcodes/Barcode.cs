@@ -7,7 +7,7 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         /// <summary>
         /// 条码号
         /// </summary>
-        public string BarcodeNumber { get; set; }
+        public string BarcodeNo { get; set; }
 
         /// <summary>
         /// 条码类型
@@ -25,47 +25,62 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         public EnumBarcodeSubStatus SubStatus { get; set; }
 
         /// <summary>
-        /// 是否退件
+        /// 条码来源
         /// </summary>
-        public bool IsBack { get; set; }
+        public EnumBarcodeSouce Souce { get; set; }
 
         /// <summary>
-        /// 是否取消
+        /// 条码实体
         /// </summary>
-        public bool IsCancel { get; set; }
+        public EnumBarcodeEntity Entity { get; set; }
 
-        public int? FromDepartmentId { get; set; }
-
-        public string FromDepartmentName { get; set; }
-
-        public int? ToDepartmentId { get; set; }
-
-        public string ToDepartmentName { get; set; }
-
-        public EnumBarcodeSouce Souce { get; set; }
+        /// <summary>
+        /// 附加数据
+        /// </summary>
+        public string CustomData { get; set; }
 
         public bool IsDeleted { get; set; }
 
         /// <summary>
         /// 解析条码类型
         /// </summary>
-        public void AnalysisBarcodeType()
+        public EnumBarcodeType AnalysisBarcodeType(string barcodeNo)
         {
-            switch (BarcodeNumber.Length)
+            switch (barcodeNo.Length)
             {
                 case 12:
-                    BarcodeType = EnumBarcodeType.机要通信12位;
-                    break;
+                    return EnumBarcodeType.机要通信12位;
+
                 case 26:
-                    BarcodeType = EnumBarcodeType.国办26位;
-                    break;
+                    return EnumBarcodeType.国办26位;
+
                 case 33:
-                    BarcodeType = EnumBarcodeType.安全部33位;
-                    break;
+                    return EnumBarcodeType.安全部33位;
+
                 default:
-                    BarcodeType = EnumBarcodeType.未知条码;
-                    break;
+                    return EnumBarcodeType.未知条码;
             }
+
+        }
+
+        /// <summary>
+        /// 解析条码实体
+        /// </summary>
+        /// <param name="barcodeType"></param>
+        /// <returns></returns>
+        public EnumBarcodeEntity AnalysisBarcodeEntity(EnumBarcodeType barcodeType)
+        {
+            switch (barcodeType)
+            {
+                case EnumBarcodeType.未知条码:
+                    break;
+                case EnumBarcodeType.国办26位:
+                case EnumBarcodeType.安全部33位:
+                case EnumBarcodeType.机要通信12位:
+                    return EnumBarcodeEntity.信件;
+            }
+
+            return EnumBarcodeEntity.未知;
         }
     }
 }

@@ -15,6 +15,8 @@ namespace BugChang.DES.Application.Departments.Dtos
 
         public bool IsDeleted { get; set; }
 
+        public string ReceiveChannel { get; set; }
+
         public IList<DepartmentListDto> Children { get; set; }
 
         public string ParentName { get; set; }

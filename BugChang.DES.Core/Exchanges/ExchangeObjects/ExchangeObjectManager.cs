@@ -47,9 +47,17 @@ namespace BugChang.DES.Core.Exchanges.ExchangeObjects
         public async Task<ResultEntity> DeleteByIdAsync(int id)
         {
             var resultEntity = new ResultEntity();
-            var exchangeObject = await _exchangeObjectRepository.GetByIdAsync(id);
-            exchangeObject.IsDeleted = true;
-            resultEntity.Success = true;
+            var childrenCount = await _exchangeObjectRepository.GetQueryable().CountAsync(a => a.ParentId == id);
+            if (childrenCount > 0)
+            {
+                resultEntity.Message = "请先删除该流转对象的所有子级";
+            }
+            else
+            {
+                var exchangeObject = await _exchangeObjectRepository.GetByIdAsync(id);
+                exchangeObject.IsDeleted = true;
+                resultEntity.Success = true;
+            }
             return resultEntity;
         }
     }

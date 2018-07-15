@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using BugChang.DES.Application.Channels;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Departments.Dtos;
-using BugChang.DES.Core.Authorization.Operations;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
@@ -15,10 +15,12 @@ namespace BugChang.DES.Web.Mvc.Controllers
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentAppService _departmentAppService;
+        private readonly IChannelAppService _channelAppService;
 
-        public DepartmentController(IDepartmentAppService departmentAppService)
+        public DepartmentController(IDepartmentAppService departmentAppService, IChannelAppService channelAppService)
         {
             _departmentAppService = departmentAppService;
+            _channelAppService = channelAppService;
         }
 
         [ServiceFilter(typeof(MenuFilter))]
@@ -148,6 +150,17 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             var result = await _departmentAppService.DeleteByIdAsync(id, CurrentUserId);
             return Json(result);
+        }
+
+        public IActionResult GetChannels()
+        {
+            var channels = _channelAppService.GetChannels();
+            var json = channels.Select(a => new SelectViewModel
+            {
+                Id = a.Id,
+                Text = a.Name
+            });
+            return Json(json);
         }
 
     }

@@ -1,6 +1,8 @@
 ﻿(function () {
     $(function () {
 
+        initParent();
+
         initObjectTypeSelect();
 
         $("#ExchangeObjectEditForm").submit(function (e) {
@@ -56,6 +58,19 @@
                 });
                 var objectValue = $('#DefaultValue').attr('data-object-value');
                 $('.edit-object-value-select').val(objectValue).trigger("change");
+            });
+    }
+
+    //初始化上级
+    function initParent() {
+        $.get('/ExchangeObject/GetParents',
+            function (data) {
+                $('.edit-object-parent-select').select2({
+                    data: data,
+                    allowClear: false
+                });
+                var parentId = $("#DefaultValue").attr("data-parent-id");
+                $('.edit-object-parent-select').val(parentId).trigger("change");
             });
     }
 })();

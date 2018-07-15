@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BugChang.DES.Web.Mvc.Controllers.API
 {
-    [Route("/Api/{controller}/{action}{id?}")]
+    [Route("Api/[controller]/[action]")]
     public class MonitorController : Controller
     {
         private readonly IMonitorAppService _monitorAppService;

@@ -2,7 +2,8 @@
 {
     public enum EnumBarcodeSouce
     {
-        信件,
-        文件
+        本系统,
+        对接,
+        外部
     }
 }

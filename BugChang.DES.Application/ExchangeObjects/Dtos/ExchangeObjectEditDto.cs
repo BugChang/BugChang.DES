@@ -11,5 +11,7 @@ namespace BugChang.DES.Application.ExchangeObjects.Dtos
         public int Value { get; set; }
 
         public string ValueText { get; set; }
+
+        public int? ParentId { get; set; }
     }
 }

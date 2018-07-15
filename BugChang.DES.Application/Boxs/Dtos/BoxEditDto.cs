@@ -27,5 +27,7 @@ namespace BugChang.DES.Application.Boxs.Dtos
         /// 场所ID
         /// </summary>
         public int PlaceId { get; set; }
+
+        public bool Enabled { get; set; }
     }
 }
