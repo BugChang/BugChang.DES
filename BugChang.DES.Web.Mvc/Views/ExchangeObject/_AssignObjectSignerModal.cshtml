@@ -1,0 +1,13 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+<form id="AssignObjectSignerForm" method="post">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("分配流转对象签收人"))
+    <div class="modal-body">
+        <input type="hidden" id="AssignObjectSignerDefaultValue" data-object-id="@ViewBag.ObjectId" />
+        <div class="form-group">
+            <label>签收人</label>
+            <select class="object-signer-select form-control" style="width: 100%" multiple="multiple"></select>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/exchangeObject/_assignObjectSignerModal.js" asp-append-version="true"></script>

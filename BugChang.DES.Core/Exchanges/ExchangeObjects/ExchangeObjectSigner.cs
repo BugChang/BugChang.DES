@@ -1,4 +1,6 @@
-﻿using BugChang.DES.Core.Commons;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Core.Exchanges.ExchangeObjects
 {
@@ -8,6 +10,11 @@ namespace BugChang.DES.Core.Exchanges.ExchangeObjects
 
         public int UserId { get; set; }
 
+        [ForeignKey("ExchangeObjectId")]
+        public virtual ExchangeObject ExchangeObject { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
 
     }
 }

@@ -29,4 +29,13 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             return pageResultEntity;
         }
     }
+
+    public class PlaceWardenRepository : BaseRepository<PlaceWarden>, IPlaceWardenRepository
+    {
+        private readonly DesDbContext _dbContext;
+        public PlaceWardenRepository(DesDbContext dbContext) : base(dbContext)
+        {
+            _dbContext = dbContext;
+        }
+    }
 }

@@ -5,4 +5,9 @@ namespace BugChang.DES.Core.Exchanges.ExchangeObjects
     public interface IExchangeObjectRepository : IBasePageSearchRepository<ExchangeObject>
     {
     }
+
+    public interface IExchangeObjectSignerRepository : IBaseRepository<ExchangeObjectSigner>
+    {
+
+    }
 }

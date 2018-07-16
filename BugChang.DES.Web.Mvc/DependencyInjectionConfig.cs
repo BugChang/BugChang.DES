@@ -102,6 +102,8 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IBoxRepository, BoxRepository>();
             services.AddScoped<IExchangeObjectRepository, ExchangeObjectRepository>();
             services.AddScoped<IBoxObjectRepository, BoxObjectRepository>();
+            services.AddScoped<IPlaceWardenRepository, PlaceWardenRepository>();
+            services.AddScoped<IExchangeObjectSignerRepository, ExchangeObjectSignerRepository>();
 
             #endregion
 

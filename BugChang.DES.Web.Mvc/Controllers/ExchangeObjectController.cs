@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Channels;
 using BugChang.DES.Application.Departments;
@@ -204,6 +205,34 @@ namespace BugChang.DES.Web.Mvc.Controllers
             {
                 Id = 0,
                 Text = "无"
+            });
+            return Json(json);
+        }
+
+        public IActionResult AssignObjectSignerModal(int id)
+        {
+            ViewBag.ObjectId = id;
+            return PartialView("_AssignObjectSignerModal");
+        }
+
+        [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "ExchangeObject.AssignObjectSigner" })]
+        public async Task<IActionResult> AssignObjectSigner(int objectId, List<int> userIds)
+        {
+            var result = await _exchangeObjectAppService.AssignObjectSigner(objectId, userIds, CurrentUserId);
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetObjectSigners(int id)
+        {
+            var objectSignerIds = await _exchangeObjectAppService.GetObjectSignerIds(id);
+            var users = await _userAppService.GetUsersAsync();
+            var json = users.Select(a => new SelectViewModel
+            {
+                Id = a.Id,
+                Text = a.DisplayName,
+                Selected = objectSignerIds.Any(b => b == a.Id)
             });
             return Json(json);
         }

@@ -29,4 +29,11 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             };
         }
     }
+
+    public class ExchangeObjectSignerRepository : BaseRepository<ExchangeObjectSigner>, IExchangeObjectSignerRepository
+    {
+        public ExchangeObjectSignerRepository(DesDbContext dbContext) : base(dbContext)
+        {
+        }
+    }
 }

@@ -1,0 +1,13 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+<form id="AssignWardenForm" method="post">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("分配场所管理员"))
+    <div class="modal-body">
+        <input type="hidden" id="AssignWardenDefaultValue" data-place-id="@ViewBag.PlaceId" />
+        <div class="form-group">
+            <label>管理员</label>
+            <select id="boxObject" class="warden-select form-control" style="width: 100%" multiple="multiple"></select>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/place/_assignWardenModal.js" asp-append-version="true"></script>

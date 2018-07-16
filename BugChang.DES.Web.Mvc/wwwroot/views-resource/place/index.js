@@ -53,6 +53,12 @@
                 var name = $(this).attr('data-place-name');
                 deletePlace(placeId, name);
             });
+        $('table').delegate('.assign-warden',
+            'click',
+            function () {
+                var placeId = $(this).attr('data-place-id');
+                assignWarden(placeId);
+            });
 
         $('#btnRefresh').click(function () {
             reload();
@@ -114,6 +120,9 @@
                     targets: 8,
                     render: function (data, type, row) {
                         var strHtml = '';
+                        if (Common.hasOperation('Place.AssignWarden')) {
+                            strHtml += '<button class="btn btn-primary btn-xs assign-warden" data-place-id=' + row.id + '>分配管理员</button>&nbsp;';
+                        }
                         if (Common.hasOperation('Place.Edit')) {
                             strHtml += '<button class="btn btn-info btn-xs edit-place" data-place-id=' + row.id + '>修改</button>&nbsp;';
                         }
@@ -152,6 +161,16 @@
                     allowClear: false
                 });
             });
+    }
+
+    //分配场所管理员
+    function assignWarden(placeId) {
+        $('#AssignWardenModal .modal-content').load('/Place/AssignWardenModal/' + placeId);
+        $('#AssignWardenModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
     }
 
     //编辑交换场所

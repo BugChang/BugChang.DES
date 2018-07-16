@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Places;
 using BugChang.DES.Application.Places.Dtos;
+using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
@@ -16,11 +18,13 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         private readonly IPlaceAppService _placeAppService;
         private readonly IDepartmentAppService _departmentAppService;
+        private readonly IUserAppService _userAppService;
 
-        public PlaceController(IPlaceAppService placeAppService, IDepartmentAppService departmentAppService)
+        public PlaceController(IPlaceAppService placeAppService, IDepartmentAppService departmentAppService, IUserAppService userAppService)
         {
             _placeAppService = placeAppService;
             _departmentAppService = departmentAppService;
+            _userAppService = userAppService;
         }
 
         public IActionResult Index()
@@ -132,6 +136,33 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(json);
         }
 
+        public IActionResult AssignWardenModal(int id)
+        {
+            ViewBag.PlaceId = id;
+            return PartialView("_AssignWardenModal");
+        }
+
+        public async Task<IActionResult> GetWardens(int id)
+        {
+            var placeWardens = await _placeAppService.GetPlaceWardenIds(id);
+            var wardens = await _userAppService.GetUsersAsync();
+            var json = wardens.Select(a => new SelectViewModel
+            {
+                Id = a.Id,
+                Text = a.DisplayName,
+                Selected = placeWardens.Any(b => b == a.Id)
+            });
+            return Json(json);
+        }
+
+        [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "Box.AssignWarden" })]
+        public async Task<IActionResult> AssignWarden(int placeId, List<int> wardenIds)
+        {
+            var result = await _placeAppService.AssignWarden(placeId, wardenIds, CurrentUserId);
+            return Json(result);
+        }
 
     }
 }

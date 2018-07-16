@@ -49,8 +49,6 @@ namespace BugChang.DES.EntityFrameWorkCore
 
         public DbSet<UserRole> UserRoles { get; set; }
 
-        public DbSet<Power> Powers { get; set; }
-
         public DbSet<RoleMenu> RoleMenus { get; set; }
 
         public DbSet<Menu> Menus { get; set; }
@@ -69,5 +67,8 @@ namespace BugChang.DES.EntityFrameWorkCore
 
         public DbSet<BoxObject> BoxObjects { get; set; }
 
+        public DbSet<PlaceWarden> PlaceWardens { get; set; }
+
+        public DbSet<ExchangeObjectSigner> ObjectSigners { get; set; }
     }
 }

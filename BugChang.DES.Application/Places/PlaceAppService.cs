@@ -68,5 +68,23 @@ namespace BugChang.DES.Application.Places
             var places = await _placeRepository.GetAllAsync();
             return Mapper.Map<IList<PlaceListDto>>(places);
         }
+
+        public async Task<IList<int>> GetPlaceWardenIds(int placeId)
+        {
+            var placeWardens = await _placeManager.GetPlaceWardenIds(placeId);
+            return placeWardens;
+        }
+
+        public async Task<ResultEntity> AssignWarden(int placeId, List<int> wardenIds, int operatorId)
+        {
+            var result = await _placeManager.AssignWarden(placeId, wardenIds);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+                await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.PlaceWardenAssign, result.Message,
+                    JsonConvert.SerializeObject(result.Data), operatorId);
+            }
+            return result;
+        }
     }
 }

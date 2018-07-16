@@ -63,6 +63,13 @@
                 deleteExchangeObject(objectId, objectName);
             });
 
+        $('table').delegate('.assign-object-signer',
+            'click',
+            function () {
+                var objectId = $(this).attr('data-object-id');
+                assignObjectSigner(objectId);
+            });
+
         $('#btnRefresh').click(function () {
             reload();
         });
@@ -132,6 +139,9 @@
                     targets: 9,
                     render: function (data, type, row) {
                         var strHtml = '';
+                        if (Common.hasOperation('ExchangeObject.AssignObjectSigner')) {
+                            strHtml += '<button class="btn btn-primary btn-xs assign-object-signer" data-object-id=' + row.id + '>分配签收人</button>&nbsp;';
+                        }
                         if (Common.hasOperation('ExchangeObject.Edit')) {
                             strHtml += '<button class="btn btn-info btn-xs edit-exchange-object" data-object-id=' + row.id + '>修改</button>&nbsp;';
                         }
@@ -182,6 +192,17 @@
                     allowClear: false
                 });
             });
+    }
+
+    //分配流转对象签收人
+    function assignObjectSigner(objectId) {
+
+        $('#AssignObjectSignerModal .modal-content').load('/ExchangeObject/AssignObjectSignerModal/' + objectId);
+        $('#AssignObjectSignerModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
     }
 
     //编辑流转对象

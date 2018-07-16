@@ -5,7 +5,9 @@ using AutoMapper;
 using BugChang.DES.Application.ExchangeObjects.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
+using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
+using Newtonsoft.Json;
 
 namespace BugChang.DES.Application.ExchangeObjects
 {
@@ -13,13 +15,15 @@ namespace BugChang.DES.Application.ExchangeObjects
     {
         private readonly IExchangeObjectRepository _exchangeObjectRepository;
         private readonly ExchangeObjectManager _exchangeObjectManager;
+        private readonly LogManager _logManager;
         private readonly UnitOfWork _unitOfWork;
 
-        public ExchangeObjectAppService(IExchangeObjectRepository exchangeObjectRepository, ExchangeObjectManager exchangeObjectManager, UnitOfWork unitOfWork)
+        public ExchangeObjectAppService(IExchangeObjectRepository exchangeObjectRepository, ExchangeObjectManager exchangeObjectManager, UnitOfWork unitOfWork, LogManager logManager)
         {
             _exchangeObjectRepository = exchangeObjectRepository;
             _exchangeObjectManager = exchangeObjectManager;
             _unitOfWork = unitOfWork;
+            _logManager = logManager;
         }
 
         public async Task<ResultEntity> AddOrUpdateAsync(ExchangeObjectEditDto editDto)
@@ -75,8 +79,25 @@ namespace BugChang.DES.Application.ExchangeObjects
 
         public async Task<IList<ExchangeObjectListDto>> GetAlListAsync()
         {
-            var exchangeObjects= await _exchangeObjectRepository.GetAllAsync();
+            var exchangeObjects = await _exchangeObjectRepository.GetAllAsync();
             return Mapper.Map<IList<ExchangeObjectListDto>>(exchangeObjects);
+        }
+
+        public async Task<ResultEntity> AssignObjectSigner(int objectId, List<int> userIds, int operatorId)
+        {
+            var result = await _exchangeObjectManager.AssignObjectSigner(objectId, userIds);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+                await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.ObjectSignerAssign, result.Message,
+                    JsonConvert.SerializeObject(result.Data), operatorId);
+            }
+            return result;
+        }
+
+        public async Task<IList<int>> GetObjectSignerIds(int objectId)
+        {
+            return await _exchangeObjectManager.GetObjectSignerIds(objectId);
         }
     }
 }

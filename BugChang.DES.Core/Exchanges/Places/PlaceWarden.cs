@@ -1,4 +1,6 @@
-﻿using BugChang.DES.Core.Commons;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Core.Exchanges.Places
 {
@@ -18,5 +20,11 @@ namespace BugChang.DES.Core.Exchanges.Places
         public int UserId { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        [ForeignKey("PlaceId")]
+        public virtual Place Place { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
     }
 }
