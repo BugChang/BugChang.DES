@@ -52,7 +52,6 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
             {
                 result.Message = "未知的条码类型";
             }
-
             return result;
         }
 

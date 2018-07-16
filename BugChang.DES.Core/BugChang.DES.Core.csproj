@@ -21,4 +21,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authentication\FingerVein\" />
+  </ItemGroup>
+
 </Project>
