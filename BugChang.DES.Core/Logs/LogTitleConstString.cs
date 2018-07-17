@@ -21,5 +21,7 @@
         public const string BoxObjectAssign = "箱格流转对象分配";
         public const string PlaceWardenAssign = "交换场所管理员分配";
         public const string ObjectSignerAssign = "流转对象签收人分配";
+
+        public const string BarcodeRuleAdd = "新增条码规则";
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BugChang.DES.Application.BarcodeRules.Dtos;
 using BugChang.DES.Application.Boxs.Dtos;
 using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Application.ExchangeObjects.Dtos;
@@ -11,6 +12,7 @@ using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
@@ -136,6 +138,25 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.ParentId, b => b.MapFrom(c => c.ParentId == 0 ? null : c.ParentId));
                 cfg.CreateMap<ExchangeObject, ExchangeObjectEditDto>()
                     .ForMember(a => a.ParentId, b => b.MapFrom(c => c.ParentId ?? 0));
+
+                #endregion
+
+
+                #region BarcodeRule
+
+                cfg.CreateMap<BarcodeRule, BarcodeRuleListDto>()
+                    .ForMember(a => a.BarcodeType, b => b.MapFrom(c => c.BarcodeType.ToString()))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.UpdateUserName, b => b.MapFrom(c => c.UpdateUser.DisplayName))
+                    .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
+                    .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+
+                cfg.CreateMap<BarcodeRuleEditDto, BarcodeRule>()
+                    .ForMember(a => a.BarcodeType, b => b.MapFrom(c => (EnumBarcodeType)c.BarcodeType));
+
+                cfg.CreateMap<BarcodeRule, BarcodeRuleEditDto>()
+                    .ForMember(a => a.BarcodeType, b => b.MapFrom(c => (int)c.BarcodeType));
 
                 #endregion
 

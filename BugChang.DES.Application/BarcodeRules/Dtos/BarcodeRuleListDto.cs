@@ -12,7 +12,7 @@ namespace BugChang.DES.Application.BarcodeRules.Dtos
         /// <summary>
         /// 条码类型
         /// </summary>
-        public string EnumBarcodeType { get; set; }
+        public string BarcodeType { get; set; }
 
         /// <summary>
         /// 不登记投箱

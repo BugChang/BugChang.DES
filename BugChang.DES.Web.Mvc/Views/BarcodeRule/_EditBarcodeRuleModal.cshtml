@@ -8,14 +8,14 @@
         <input type="hidden" asp-for="CreateTime" value="@Model.CreateTime" />
         <input type="hidden" asp-for="UpdateBy" value="@Model.UpdateBy" />
         <input type="hidden" asp-for="UpdateTime" value="@Model.UpdateTime" />
-        <input type="hidden" id="DefaultValue" data-barcode-type="@Model.EnumBarcodeType" />
+        <input type="hidden" id="DefaultValue" data-barcode-type="@Model.BarcodeType" />
         <div class="form-group">
             <label>名称</label>
             <input type="text" class="form-control" name="Name" value="@Model.Name">
         </div>
         <div class="form-group">
             <label>条码类型</label>
-            <select name="EnumBarcodeType" class="barcode-type-select form-control" style="width: 100%"></select>
+            <select name="EnumBarcodeType" class="edit-barcode-type-select form-control" style="width: 100%"></select>
         </div>
         <div class="form-group">
             <label>不登记投箱</label>

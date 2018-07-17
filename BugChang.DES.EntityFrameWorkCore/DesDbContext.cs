@@ -7,6 +7,7 @@ using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
@@ -70,5 +71,7 @@ namespace BugChang.DES.EntityFrameWorkCore
         public DbSet<PlaceWarden> PlaceWardens { get; set; }
 
         public DbSet<ExchangeObjectSigner> ObjectSigners { get; set; }
+
+        public DbSet<BarcodeRule> BarcodeRules { get; set; }
     }
 }

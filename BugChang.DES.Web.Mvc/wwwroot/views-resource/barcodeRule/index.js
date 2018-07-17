@@ -1,4 +1,4 @@
-﻿var BoxIndex = function () {
+﻿var BarcodeRuleIndex = function () {
     var table;
 
     $(function () {
@@ -15,21 +15,21 @@
         //初始化table
         initTable();
 
-        //初始化交换场所
-        initPlace();
+        //初始化条码类型
+        initBarcodeTypes();
 
-        //新增箱格表单提交
-        $('#BoxCreateForm').submit(function (e) {
+        //新增
+        $('#BarcodeRuleCreateForm').submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
             try {
-                $.post('/Box/Create',
+                $.post('/BarcodeRule/Create',
                     data,
                     function (result) {
                         if (result.success) {
                             resetForm();
                             //关闭模态
-                            $('#BoxCreateModal').modal('hide');
+                            $('#BarcodeRuleCreateModal').modal('hide');
                             //刷新页面
                             refresh();
                             window.toastr.success('操作成功');
@@ -43,28 +43,20 @@
 
         });
 
-        $('table').delegate('.edit-box',
+        $('table').delegate('.edit-barcode-rule',
             'click',
             function () {
-                var boxId = $(this).attr('data-box-id');
-                editBox(boxId);
+                var ruleId = $(this).attr('data-rule-id');
+                editBarcodeRule(ruleId);
             });
 
         $('table').delegate('.delete-box',
             'click',
             function () {
-                var boxId = $(this).attr('data-box-id');
-                var boxName = $(this).attr('data-box-name');
-                deleteBox(boxId, boxName);
+                var boxId = $(this).attr('data-rule-id');
+                var boxName = $(this).attr('data-rule-name');
+                deleteBarcodeRule(boxId, boxName);
             });
-
-        $('table').delegate('.assign-object',
-            'click',
-            function () {
-                var boxId = $(this).attr('data-box-id');
-                assignObject(boxId);
-            });
-
 
 
         $('#btnRefresh').click(function () {
@@ -92,6 +84,10 @@
                 {
                     data: 'name',
                     title: '名称'
+                },
+                {
+                    data: 'barcodeType',
+                    title: '条码类型'
                 },
                 {
                     data: 'noRegisterSend',
@@ -128,7 +124,7 @@
             ],
             columnDefs: [
                 {
-                    targets: 2,
+                    targets: 3,
                     render: function (data, type, row) {
                         var strHtml;
                         if (row.noRegisterSend) {
@@ -140,7 +136,7 @@
                     }
                 },
                 {
-                    targets: 3,
+                    targets: 4,
                     render: function (data, type, row) {
                         var strHtml;
                         if (row.isAnalysisDepartment) {
@@ -152,14 +148,14 @@
                     }
                 },
                 {
-                    targets: 9,
+                    targets: 10,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (Common.hasOperation('BarcodeRule.Edit')) {
-                            strHtml += '<button class="btn btn-info btn-xs edit-barcode-rule" data-box-id=' + row.id + '>修改</button>&nbsp;';
+                            strHtml += '<button class="btn btn-info btn-xs edit-barcode-rule" data-rule-id=' + row.id + '>修改</button>&nbsp;';
                         }
                         if (Common.hasOperation('BarcodeRule.Delete')) {
-                            strHtml += '<button class="btn btn-danger btn-xs delete-barcode-rule" data-box-id=' + row.id + ' data-box-name=' + row.name + '>删除</button>';
+                            strHtml += '<button class="btn btn-danger btn-xs delete-barcode-rule" data-rule-id=' + row.id + ' data-rule-name=' + row.name + '>删除</button>';
                         }
 
                         return strHtml;
@@ -172,51 +168,42 @@
         });
     }
 
-    //初始化交换场所
-    function initPlace() {
-        $.get('/Box/GetPlaces',
+    //初始化条码类型
+    function initBarcodeTypes() {
+        $.get('/BarcodeRule/GetBarcodeTypes',
             function (data) {
-                $('.place-select').select2({
+                $('.barcode-type-select').select2({
                     data: data,
                     allowClear: false
                 });
             });
     }
 
-    //分配流转对象
-    function assignObject(id) {
-        $('#AssignObjectModal .modal-content').load('/Box/AssignObjectModal/' + id);
-        $('#AssignObjectModal').modal({
+
+    //编辑
+    function editBarcodeRule(id) {
+        $('#BarcodeRuleEditModal .modal-content').load('/BarcodeRule/EditBarcodeRuleModal/' + id);
+        $('#BarcodeRuleEditModal').modal({
             backdrop: 'static',
             keyboard: false,
             show: true
         });
     }
 
-    //编辑箱格信息
-    function editBox(id) {
-        $('#BoxEditModal .modal-content').load('/Box/EditBoxModal/' + id);
-        $('#BoxEditModal').modal({
-            backdrop: 'static',
-            keyboard: false,
-            show: true
-        });
-    }
-
-    //删除箱格
-    function deleteBox(boxId, boxName) {
+    //删除
+    function deleteBarcodeRule(ruleId, ruleName) {
         window.swal({
-            title: '确定删除' + boxName + '?',
+            title: '确定删除' + ruleName + '?',
             //text: '删除后无法恢复数据!',
             icon: 'warning',
             buttons: ['取消', '确定'],
             dangerMode: true
         }).then((willDelete) => {
             if (willDelete) {
-                $.post('/Box/Delete/' + boxId,
+                $.post('/BarcodeRule/Delete/' + ruleId,
                     function (result) {
                         if (result.success) {
-                            window.swal('操作成功', boxName + '已被删除!', 'success');
+                            window.swal('操作成功', ruleName + '已被删除!', 'success');
                             refresh();
                         } else {
                             window.swal('操作失败', result.message, 'error');
@@ -228,7 +215,7 @@
 
     //清空表单
     function resetForm() {
-        $('#BoxCreateForm')[0].reset();
+        $('#BarcodeRuleCreateForm')[0].reset();
     }
 
     //刷新页面

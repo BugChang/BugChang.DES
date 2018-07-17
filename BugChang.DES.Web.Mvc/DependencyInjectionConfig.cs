@@ -1,4 +1,6 @@
 ﻿using BugChang.DES.Application.Accounts;
+using BugChang.DES.Application.BarcodeRules;
+using BugChang.DES.Application.Barcodes;
 using BugChang.DES.Application.Boxs;
 using BugChang.DES.Application.Channels;
 using BugChang.DES.Application.Departments;
@@ -65,6 +67,8 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IChannelAppService, ChannelAppService>();
             services.AddScoped<IExchangeObjectAppService, ExchangeObjectAppService>();
             services.AddScoped<IMonitorAppService, MonitorAppService>();
+            services.AddScoped<IBarcodeRuleAppService, BarcodeRuleAppSercvice>();
+            services.AddScoped<IBarcodeAppService, BarcodeAppService>();
 
             #endregion
 
@@ -83,6 +87,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<BoxManager>();
             services.AddScoped<MonitorManager>();
             services.AddScoped<BarcodeManager>();
+            services.AddScoped<BarcodeRuleManager>();
 
             #endregion
 
@@ -104,6 +109,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IBoxObjectRepository, BoxObjectRepository>();
             services.AddScoped<IPlaceWardenRepository, PlaceWardenRepository>();
             services.AddScoped<IExchangeObjectSignerRepository, ExchangeObjectSignerRepository>();
+            services.AddScoped<IBarcodeRuleRepository, BarcodeRuleRepository>();
 
             #endregion
 
