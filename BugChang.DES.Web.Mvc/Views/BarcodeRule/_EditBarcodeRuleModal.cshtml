@@ -1,0 +1,41 @@
+﻿@model BugChang.DES.Application.BarcodeRules.Dtos.BarcodeRuleEditDto
+@using BugChang.DES.Web.Mvc.Models.Common
+<form id="BoxEditForm" method="post" asp-controller="Box" asp-action="Edit">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("修改条码规则"))
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <input type="hidden" asp-for="CreateBy" value="@Model.CreateBy" />
+        <input type="hidden" asp-for="CreateTime" value="@Model.CreateTime" />
+        <input type="hidden" asp-for="UpdateBy" value="@Model.UpdateBy" />
+        <input type="hidden" asp-for="UpdateTime" value="@Model.UpdateTime" />
+        <input type="hidden" id="DefaultValue" data-barcode-type="@Model.EnumBarcodeType" />
+        <div class="form-group">
+            <label>名称</label>
+            <input type="text" class="form-control" name="Name" value="@Model.Name">
+        </div>
+        <div class="form-group">
+            <label>条码类型</label>
+            <select name="EnumBarcodeType" class="barcode-type-select form-control" style="width: 100%"></select>
+        </div>
+        <div class="form-group">
+            <label>不登记投箱</label>
+            <select name="NoRegisterSend" class="form-control" style="width: 100%">
+                <option value="true" @(Model.NoRegisterSend?"selected=\"selected\"")>是</option>
+                <option value="false" @(!Model.NoRegisterSend?"selected=\"selected\"")>否</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>解析条码单位</label>
+            <select name="IsAnalysisDepartment" class="form-control" style="width: 100%">
+                <option value="true" @(Model.IsAnalysisDepartment?"selected=\"selected\"")>是</option>
+                <option value="false" @(!Model.IsAnalysisDepartment?"selected=\"selected\"")>否</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>解析单位级别</label>
+            <input type="number" name="AnalysisDepartmentLevel" class="form-control" value="@Model.AnalysisDepartmentLevel" />
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/barcodeRule/_editBarcodeRuleModal.js" asp-append-version="true"></script>

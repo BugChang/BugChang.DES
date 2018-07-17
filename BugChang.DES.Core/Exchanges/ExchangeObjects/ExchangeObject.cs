@@ -38,6 +38,12 @@ namespace BugChang.DES.Core.Exchanges.ExchangeObjects
         /// </summary>
         public int? ParentId { get; set; }
 
+        /// <summary>
+        /// 虚拟流转对象
+        /// （无实质性流转介质）
+        /// </summary>
+        public bool IsVirtual { get; set; }
+
         public bool IsDeleted { get; set; }
 
         [ForeignKey("ParentId")]

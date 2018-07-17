@@ -1,6 +1,8 @@
-﻿namespace BugChang.DES.Core.Exchanges.Barcodes
+﻿using BugChang.DES.Application.Commons;
+
+namespace BugChang.DES.Application.BarcodeRules.Dtos
 {
-    public class BarcodeRule
+    public class BarcodeRuleListDto : BaseDto
     {
         /// <summary>
         /// 规则名称
@@ -10,7 +12,7 @@
         /// <summary>
         /// 条码类型
         /// </summary>
-        public EnumBarcodeType EnumBarcodeType { get; set; }
+        public string EnumBarcodeType { get; set; }
 
         /// <summary>
         /// 不登记投箱

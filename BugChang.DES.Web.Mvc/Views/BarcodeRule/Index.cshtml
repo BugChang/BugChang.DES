@@ -1,0 +1,65 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="btn-group">
+            <button id="btnAddBarcodeRule" type="button" class="btn btn-primary" data-toggle="modal" data-target="#BarcodeRuleCreateModal" data-backdrop="static" data-keyboard="false"><i class="fa  fa-plus-circle"></i> 新增</button>
+            <button id="btnRefresh" type="button" class="btn btn-primary"><i class="fa  fa-refresh"></i> 刷新</button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table id="table" class="table table-bordered table-hover text-nowrap"></table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="BarcodeRuleCreateModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="BarcodeRuleCreateForm" method="post" asp-controller="BarcodeRule" asp-action="Create">
+                @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("新增条码规则"))
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>名称</label>
+                        <input type="text" class="form-control" name="Name">
+                    </div>
+                    <div class="form-group">
+                        <label>条码类型</label>
+                        <select name="EnumBarcodeType" class="barcode-type-select form-control" style="width: 100%"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>不登记投箱</label>
+                        <select name="NoRegisterSend" class="form-control" style="width: 100%">
+                            <option value="true">是</option>
+                            <option value="false">否</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>解析条码单位</label>
+                        <select name="IsAnalysisDepartment" class="form-control" style="width: 100%">
+                            <option value="true">是</option>
+                            <option value="false">否</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>解析单位级别</label>
+                        <input type="number" name="AnalysisDepartmentLevel" class="form-control" value="0" />
+                    </div>
+
+                    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="BarcodeRuleEditModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/views-resource/barcodeRule/index.js" asp-append-version="true"></script>
+}

@@ -12,6 +12,8 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
 
         public bool Completed { get; set; }
 
+        public EnumBarcodeRouteType RouteType { get; set; }
+
         public bool IsDeleted { get; set; }
     }
 }
