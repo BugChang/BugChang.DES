@@ -13,5 +13,7 @@ namespace BugChang.DES.Application.ExchangeObjects.Dtos
         public string ValueText { get; set; }
 
         public int? ParentId { get; set; }
+
+        public bool IsVirtual { get; set; }
     }
 }

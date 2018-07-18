@@ -114,6 +114,10 @@
                     title: '上级流转对象'
                 },
                 {
+                    data: 'isVirtual',
+                    title: '虚拟流转'
+                },
+                {
                     data: 'createUserName',
                     title: '创建人'
                 },
@@ -136,7 +140,19 @@
             ],
             columnDefs: [
                 {
-                    targets: 9,
+                    targets: 5,
+                    render: function (data, type, row) {
+                        var strHtml = '';
+                        if (row.isVirtual) {
+                            strHtml = '<label class="label label-warning">是</label>&nbsp;';
+                        } else {
+                            strHtml = '<label class="label label-default">否</label>&nbsp;';
+                        }
+                        return strHtml;
+                    }
+                },
+                {
+                    targets: 10,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (Common.hasOperation('ExchangeObject.AssignObjectSigner')) {

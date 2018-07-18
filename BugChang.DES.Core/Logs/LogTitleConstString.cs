@@ -23,5 +23,13 @@
         public const string ObjectSignerAssign = "流转对象签收人分配";
 
         public const string BarcodeRuleAdd = "新增条码规则";
+        public const string BarcodeRuleEdit = "修改条码规则";
+        public const string BarcodeRuleDelete = "删除条码规则";
+
+        public const string GroupAdd = "新增单位分组";
+        public const string GroupEdit = "修改单位分组";
+        public const string GroupDelete = "删除单位分组";
+
+
     }
 }

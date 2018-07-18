@@ -12,9 +12,4 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
     {
 
     }
-
-    public interface IBarcodeRouteRepository : IBaseRepository<BarcodeRoute>
-    {
-
-    }
 }

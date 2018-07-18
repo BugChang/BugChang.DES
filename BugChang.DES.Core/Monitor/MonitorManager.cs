@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.Places;
+using BugChang.DES.Core.Exchanges.Rules;
 using BugChang.DES.Core.Logs;
 
 namespace BugChang.DES.Core.Monitor
@@ -11,16 +12,16 @@ namespace BugChang.DES.Core.Monitor
     {
         private readonly IPlaceRepository _placeRepository;
         private readonly IBarcodeRepository _barcodeRepository;
-        private readonly IBarcodeRouteRepository _barcodeRouteRepository;
+        private readonly IRouteRepository _routeRepository;
         private readonly IBoxObjectRepository _boxObjectRepository;
         private readonly LogManager _logManager;
         private readonly BarcodeManager _barcodeManager;
 
-        public MonitorManager(IPlaceRepository placeRepository, IBarcodeRepository barcodeRepository, IBarcodeRouteRepository barcodeRouteRepository, IBoxObjectRepository boxObjectRepository, LogManager logManager, BarcodeManager barcodeManager)
+        public MonitorManager(IPlaceRepository placeRepository, IBarcodeRepository barcodeRepository, IRouteRepository routeRepository, IBoxObjectRepository boxObjectRepository, LogManager logManager, BarcodeManager barcodeManager)
         {
             _placeRepository = placeRepository;
             _barcodeRepository = barcodeRepository;
-            _barcodeRouteRepository = barcodeRouteRepository;
+            _routeRepository = routeRepository;
             _boxObjectRepository = boxObjectRepository;
             _logManager = logManager;
             _barcodeManager = barcodeManager;
@@ -39,7 +40,7 @@ namespace BugChang.DES.Core.Monitor
                 {
                     case EnumBarcodeStatus.已就绪:
                     case EnumBarcodeStatus.已签收:
-                        var nextRoute = _barcodeRouteRepository.GetQueryable().OrderBy(a => a.Order)
+                        var nextRoute = _routeRepository.GetQueryable().OrderBy(a => a.Order)
                             .FirstOrDefault(a => !a.Completed);
                         if (nextRoute != null)
                         {

@@ -1,16 +1,17 @@
 ﻿using BugChang.DES.Application.Accounts;
-using BugChang.DES.Application.BarcodeRules;
 using BugChang.DES.Application.Barcodes;
 using BugChang.DES.Application.Boxs;
 using BugChang.DES.Application.Channels;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.ExchangeObjects;
+using BugChang.DES.Application.Groups;
 using BugChang.DES.Application.Logs;
 using BugChang.DES.Application.Menus;
 using BugChang.DES.Application.Monitor;
 using BugChang.DES.Application.Operations;
 using BugChang.DES.Application.Places;
 using BugChang.DES.Application.Roles;
+using BugChang.DES.Application.Rules;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Authorization.Menus;
@@ -22,6 +23,8 @@ using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
+using BugChang.DES.Core.Exchanges.Rules;
+using BugChang.DES.Core.Groups;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.Monitor;
 using BugChang.DES.EntityFrameWorkCore;
@@ -67,8 +70,9 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IChannelAppService, ChannelAppService>();
             services.AddScoped<IExchangeObjectAppService, ExchangeObjectAppService>();
             services.AddScoped<IMonitorAppService, MonitorAppService>();
-            services.AddScoped<IBarcodeRuleAppService, BarcodeRuleAppSercvice>();
+            services.AddScoped<IRuleAppService, RuleAppSercvice>();
             services.AddScoped<IBarcodeAppService, BarcodeAppService>();
+            services.AddScoped<IGroupAppService, GroupAppService>();
 
             #endregion
 
@@ -87,7 +91,8 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<BoxManager>();
             services.AddScoped<MonitorManager>();
             services.AddScoped<BarcodeManager>();
-            services.AddScoped<BarcodeRuleManager>();
+            services.AddScoped<RuleManager>();
+            services.AddScoped<GroupManager>();
 
             #endregion
 
@@ -109,7 +114,8 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IBoxObjectRepository, BoxObjectRepository>();
             services.AddScoped<IPlaceWardenRepository, PlaceWardenRepository>();
             services.AddScoped<IExchangeObjectSignerRepository, ExchangeObjectSignerRepository>();
-            services.AddScoped<IBarcodeRuleRepository, BarcodeRuleRepository>();
+            services.AddScoped<IRuleRepository, RuleRepository>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
 
             #endregion
 

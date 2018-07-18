@@ -1,0 +1,42 @@
+﻿@model BugChang.DES.Application.Letters.Dtos.ReceiveLetterEditDto
+
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">收信登记</h3>
+    </div>
+    <div class="box-body">
+        <div class="modal-body">
+            <form id="BoxCreateForm" method="post" asp-controller="Letter" asp-action="Receive">
+                <input type="hidden" asp-for="SendDepartmentId" value="@Model.SendDepartmentId" />
+                <div class="form-group">
+                    <label>原条码号</label>
+                    <input type="text" class="form-control" asp-for="OldBarcodeNo" value="@Model.OldBarcodeNo">
+                </div>
+                <div class="form-group">
+                    <label>原发单位</label>
+                    <input type="text" class="form-control" asp-for="OldSendDepartmentName" value="@Model.OldSendDepartmentName">
+                </div>
+                <div class="form-group">
+                    <label>收件单位</label>
+                    <input type="text" class="form-control" asp-for="ReceiveDepartmentId">
+                </div>
+                <div class="form-group">
+                    <label>密级</label>
+                    <select class="form-control" asp-for="SecretLevel"></select>
+                </div>
+                <div class="form-group">
+                    <label>紧急程度</label>
+                    <select class="form-control" asp-for="UrgencyLevel"></select>
+                </div>
+                <div class="form-group">
+                    <label>限时时间</label>
+                    <select class="form-control" asp-for="UrgencyTime"></select>
+                </div>
+                <div class="form-group">
+                    <label>附加信息</label>
+                    <textarea class="form-control" asp-for="CustomData" rows="3"></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

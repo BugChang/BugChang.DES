@@ -62,7 +62,8 @@ namespace BugChang.DES.Core.Authentication
                     {
                         new Claim("Id",user.Id.ToString()),
                         new Claim("UserName",user.UserName),
-                        new Claim("DisplayName",user.DisplayName)
+                        new Claim("DisplayName",user.DisplayName),
+                        new Claim("DepartmentId",user.DepartmentId.ToString())
                     };
                     foreach (var role in user.UserRoles)
                     {

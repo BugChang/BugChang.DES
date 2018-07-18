@@ -11,6 +11,8 @@ using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
+using BugChang.DES.Core.Exchanges.Rules;
+using BugChang.DES.Core.Groups;
 using BugChang.DES.Core.Logs;
 using Microsoft.EntityFrameworkCore;
 
@@ -72,6 +74,7 @@ namespace BugChang.DES.EntityFrameWorkCore
 
         public DbSet<ExchangeObjectSigner> ObjectSigners { get; set; }
 
-        public DbSet<BarcodeRule> BarcodeRules { get; set; }
+        public DbSet<Rule> BarcodeRules { get; set; }
+        public DbSet<Group> Groups { get; set; }
     }
 }

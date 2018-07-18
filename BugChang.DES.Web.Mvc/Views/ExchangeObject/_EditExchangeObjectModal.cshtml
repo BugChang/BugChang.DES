@@ -25,6 +25,13 @@
             <label>值</label>
             <select class="form-control edit-object-value-select" style="width: 100%" asp-for="Value"></select>
         </div>
+        <div class="form-group">
+            <label>虚拟对象</label>
+            <select asp-for="IsVirtual" class="form-control">
+                <option value="false" @(!Model.IsVirtual?"selected=\"selected\"":"")>否</option>
+                <option value="true" @(Model.IsVirtual?"selected=\"selected\"":"")>是</option>
+            </select>
+        </div>
         <input type="hidden" asp-for="ValueText" value="@Model.ValueText" />
     </div>
     @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")

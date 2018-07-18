@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
-using BugChang.DES.Application.BarcodeRules.Dtos;
 using BugChang.DES.Application.Boxs.Dtos;
 using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Application.ExchangeObjects.Dtos;
+using BugChang.DES.Application.Groups.Dtos;
 using BugChang.DES.Application.Logs.Dtos;
 using BugChang.DES.Application.Menus.Dtos;
 using BugChang.DES.Application.Places.Dtos;
 using BugChang.DES.Application.Roles.Dtos;
+using BugChang.DES.Application.Rules.Dtos;
 using BugChang.DES.Application.Users.Dtos;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Roles;
@@ -16,6 +17,8 @@ using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
+using BugChang.DES.Core.Exchanges.Rules;
+using BugChang.DES.Core.Groups;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.Tools;
 
@@ -142,9 +145,9 @@ namespace BugChang.DES.Application.Commons
                 #endregion
 
 
-                #region BarcodeRule
+                #region Rule
 
-                cfg.CreateMap<BarcodeRule, BarcodeRuleListDto>()
+                cfg.CreateMap<Rule, RuleListDto>()
                     .ForMember(a => a.BarcodeType, b => b.MapFrom(c => c.BarcodeType.ToString()))
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
@@ -152,11 +155,24 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
                     .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
 
-                cfg.CreateMap<BarcodeRuleEditDto, BarcodeRule>()
+                cfg.CreateMap<RuleEditDto, Rule>()
                     .ForMember(a => a.BarcodeType, b => b.MapFrom(c => (EnumBarcodeType)c.BarcodeType));
 
-                cfg.CreateMap<BarcodeRule, BarcodeRuleEditDto>()
+                cfg.CreateMap<Rule, RuleEditDto>()
                     .ForMember(a => a.BarcodeType, b => b.MapFrom(c => (int)c.BarcodeType));
+
+                #endregion
+
+                #region Group
+
+                cfg.CreateMap<Group, GroupListDto>()
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.UpdateUserName, b => b.MapFrom(c => c.UpdateUser.DisplayName))
+                    .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
+                    .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+
+                cfg.CreateMap<GroupEditDto, Group>();
 
                 #endregion
 
