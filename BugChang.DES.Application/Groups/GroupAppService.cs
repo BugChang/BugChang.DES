@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BugChang.DES.Application.Groups.Dtos;
@@ -7,6 +8,7 @@ using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Groups;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace BugChang.DES.Application.Groups
@@ -87,6 +89,41 @@ namespace BugChang.DES.Application.Groups
             }
 
             return groupTypeList;
+        }
+
+        public async Task<IList<GroupDetailListDto>> GetGroupDetails(int groupId)
+        {
+            var groupDetails = await _groupManager.GetGroupDetails(groupId);
+            return Mapper.Map<IList<GroupDetailListDto>>(groupDetails);
+        }
+
+        public async Task<IList<GroupListDto>> GetAllGroups()
+        {
+            var groups = await _groupRepository.GetAllAsync();
+            return Mapper.Map<IList<GroupListDto>>(groups);
+        }
+
+        public async Task<IList<GroupListDto>> GetReceiveLetterGroups()
+        {
+            var groups = await _groupManager.GetReceiveLetterGroups();
+            return Mapper.Map<IList<GroupListDto>>(groups);
+        }
+
+        public async Task<IList<GroupListDto>> GetSendLetterGroups()
+        {
+            var groups = await _groupManager.GetSendLetterGroups();
+            return Mapper.Map<IList<GroupListDto>>(groups);
+        }
+
+        public async Task<ResultEntity> AssignDetail(int groupId, List<int> lstDepartmentId, int operatorId)
+        {
+            var result = await _groupManager.AssignDetail(groupId, lstDepartmentId);
+            if (result.Success)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+
+            return result;
         }
     }
 }

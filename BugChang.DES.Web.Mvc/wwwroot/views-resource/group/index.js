@@ -43,6 +43,13 @@
 
         });
 
+        $('table').delegate('.assign-detail',
+            'click',
+            function () {
+                var groupId = $(this).attr('data-group-id');
+                aassignDetail(groupId);
+            });
+
         $('table').delegate('.edit-group',
             'click',
             function () {
@@ -163,6 +170,15 @@
             });
     }
 
+    //分配单位
+    function aassignDetail(id) {
+        $('#AssignDetailModal .modal-content').load('/Group/AssignDetailModal/' + id);
+        $('#AssignDetailModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
+    }
 
     //编辑
     function editGroup(id) {

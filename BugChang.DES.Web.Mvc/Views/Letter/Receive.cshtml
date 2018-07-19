@@ -1,42 +1,85 @@
-﻿@model BugChang.DES.Application.Letters.Dtos.ReceiveLetterEditDto
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+@model BugChang.DES.Application.Letters.Dtos.ReceiveLetterEditDto
 
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">收信登记</h3>
+<div class="row">
+    <div class="col-xs-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">收信登记</h3>
+            </div>
+            <div class="box-body">
+                <div class="modal-body">
+                    <form id="BoxCreateForm" method="post" asp-controller="Letter" asp-action="Receive">
+                        <input type="hidden" asp-for="SendDepartmentId" value="@Model.SendDepartmentId" />
+                        <div class="form-group">
+                            <label>原条码号</label>
+                            <input type="text" class="form-control" asp-for="OldBarcodeNo" value="@Model.OldBarcodeNo">
+                        </div>
+                        <div class="form-group">
+                            <label>原发单位</label>
+                            <input type="text" class="form-control" asp-for="OldSendDepartmentName" value="@Model.OldSendDepartmentName">
+                        </div>
+                        <div class="form-group text-left">
+                            <label>收件单位</label>
+                            <button id="btnReceiveDepartment" type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#ReceiveSelectModal" style="text-align: left">请选择收件单位...</button>
+                        </div>
+                        <div class="form-group">
+                            <label>密级</label>
+                            <select class="form-control" asp-for="SecretLevel"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>紧急程度</label>
+                            <select class="form-control" asp-for="UrgencyLevel"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>限时时间</label>
+                            <select class="form-control" asp-for="UrgencyTime"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>附加信息</label>
+                            <textarea class="form-control" asp-for="CustomData" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="box-body">
-        <div class="modal-body">
-            <form id="BoxCreateForm" method="post" asp-controller="Letter" asp-action="Receive">
-                <input type="hidden" asp-for="SendDepartmentId" value="@Model.SendDepartmentId" />
-                <div class="form-group">
-                    <label>原条码号</label>
-                    <input type="text" class="form-control" asp-for="OldBarcodeNo" value="@Model.OldBarcodeNo">
+    <div class="col-xs-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">今日登记记录</h3>
+            </div>
+            <div class="box-body">
+                <div class="modal-body">
+
                 </div>
-                <div class="form-group">
-                    <label>原发单位</label>
-                    <input type="text" class="form-control" asp-for="OldSendDepartmentName" value="@Model.OldSendDepartmentName">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ReceiveSelectModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="RuleEditForm" method="post" asp-controller="Rule" asp-action="Edit">
+                @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("选择收件单位"))
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-4" style="border-right:1px solid #e5e5e5;">
+                            <ul class="ztree" id="groupTree"></ul>
+                        </div>
+                        <div class="col-xs-8">
+                            <ul class="ztree" id="groupDetailTree"></ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>收件单位</label>
-                    <input type="text" class="form-control" asp-for="ReceiveDepartmentId">
-                </div>
-                <div class="form-group">
-                    <label>密级</label>
-                    <select class="form-control" asp-for="SecretLevel"></select>
-                </div>
-                <div class="form-group">
-                    <label>紧急程度</label>
-                    <select class="form-control" asp-for="UrgencyLevel"></select>
-                </div>
-                <div class="form-group">
-                    <label>限时时间</label>
-                    <select class="form-control" asp-for="UrgencyTime"></select>
-                </div>
-                <div class="form-group">
-                    <label>附加信息</label>
-                    <textarea class="form-control" asp-for="CustomData" rows="3"></textarea>
-                </div>
+                @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithClose.cshtml")
             </form>
         </div>
     </div>
 </div>
+
+@section scripts
+    {
+    <script src="~/views-resource/letter/receive.js" asp-append-version="true"></script>
+}

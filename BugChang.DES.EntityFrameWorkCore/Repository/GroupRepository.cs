@@ -28,4 +28,11 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             };
         }
     }
+
+    public class GroupDetailRepository:BaseRepository<GroupDetail>,IGroupDetailRepository
+    {
+        public GroupDetailRepository(DesDbContext dbContext) : base(dbContext)
+        {
+        }
+    }
 }

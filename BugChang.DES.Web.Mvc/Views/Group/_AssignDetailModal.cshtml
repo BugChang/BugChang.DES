@@ -1,5 +1,14 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+<form id="AssignDetailForm" method="post">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("分配详情"))
+    <div class="modal-body">
+        <input type="hidden" id="DefaultValue" data-group-id="@ViewBag.GroupId" />
+        <label>
+            <input type="checkbox" id="autoRelation" />
+            勾选自动关联
+        </label>
+        <ul id="ztree" class="ztree"></ul>
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/group/_assignDetailModal.js" asp-append-version="true"></script>

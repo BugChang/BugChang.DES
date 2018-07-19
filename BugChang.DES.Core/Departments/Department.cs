@@ -58,12 +58,13 @@ namespace BugChang.DES.Core.Departments
         /// <summary>
         /// 设置全称
         /// </summary>
-        public void SetFullName(Department parentDepartment)
+        public string SetFullName(Department parentDepartment)
         {
             if (string.IsNullOrWhiteSpace(FullName))
             {
-                FullName = parentDepartment.FullName + Name;
+                return parentDepartment.FullName + Name;
             }
+            return Name;
         }
     }
 }

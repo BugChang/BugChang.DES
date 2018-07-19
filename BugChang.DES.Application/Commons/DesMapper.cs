@@ -174,6 +174,8 @@ namespace BugChang.DES.Application.Commons
 
                 cfg.CreateMap<GroupEditDto, Group>();
 
+                cfg.CreateMap<GroupDetail, GroupDetailListDto>();
+
                 #endregion
 
             });

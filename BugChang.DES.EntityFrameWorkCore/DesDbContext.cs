@@ -76,5 +76,6 @@ namespace BugChang.DES.EntityFrameWorkCore
 
         public DbSet<Rule> BarcodeRules { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<GroupDetail> GroupDetails { get; set; }
     }
 }

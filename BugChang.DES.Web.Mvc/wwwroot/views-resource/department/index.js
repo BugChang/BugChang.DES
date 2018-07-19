@@ -244,7 +244,9 @@
     //清空表单
     function resetForm() {
         $('#DepartmentCreateForm')[0].reset();
-        $('.select2').val(currentNode.id).trigger('change');
+        if (currentNode !== null) {
+            $('.select2').val(currentNode.id).trigger('change');
+        }
     }
 
     //刷新数据

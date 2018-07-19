@@ -2,7 +2,7 @@
 
 namespace BugChang.DES.Core.Groups
 {
-    public class DepartmentGroupDetail : BaseEntity<int>, ISoftDelete
+    public class GroupDetail : BaseEntity<int>, ISoftDelete
     {
         public int GroupId { get; set; }
 

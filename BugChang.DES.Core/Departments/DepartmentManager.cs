@@ -40,10 +40,15 @@ namespace BugChang.DES.Core.Departments
             #endregion
 
             //设置机构全称
+
             if (department.ParentId != null)
             {
                 var parentDepartment = await _departmentRepository.GetByIdAsync(department.ParentId.Value);
-                department.SetFullName(parentDepartment);
+                department.FullName = department.SetFullName(parentDepartment);
+            }
+            else
+            {
+                department.FullName = department.Name;
             }
 
             if (department.Id > 0)

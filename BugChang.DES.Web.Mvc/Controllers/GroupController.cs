@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Groups;
 using BugChang.DES.Application.Groups.Dtos;
 using BugChang.DES.Core.Commons;
@@ -13,10 +15,12 @@ namespace BugChang.DES.Web.Mvc.Controllers
     public class GroupController : BaseController
     {
         private readonly IGroupAppService _groupAppService;
+        private readonly IDepartmentAppService _departmentAppService;
 
-        public GroupController(IGroupAppService groupAppService)
+        public GroupController(IGroupAppService groupAppService, IDepartmentAppService departmentAppService)
         {
             _groupAppService = groupAppService;
+            _departmentAppService = departmentAppService;
         }
 
         public IActionResult Index()
@@ -105,6 +109,36 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _groupAppService.DeleteByIdAsync(id, CurrentUserId);
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetGroupDetails(int id)
+        {
+            var departments = await _departmentAppService.GetAllAsync();
+            var groupDetails = await _groupAppService.GetGroupDetails(id);
+            var json = departments.Select(a => new SimpleTreeViewModel
+            {
+                Id = a.Id,
+                ParentId = a.ParentId,
+                Name = a.Name,
+                Checked = groupDetails.Any(b => b.DepartmentId == a.Id)
+            });
+            return Json(json);
+        }
+
+        public IActionResult AssignDetailModal(int id)
+        {
+            ViewBag.GroupId = id;
+            return PartialView("_AssignDetailModal");
+        }
+
+        [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "Group.AssignDetail" })]
+        public async Task<IActionResult> AssignDetail(int groupId, string strDetailId)
+        {
+            var lstDepartmentId = strDetailId.Split(',').ToList().Select(x => Convert.ToInt32(x)).ToList();
+            var result=await _groupAppService.AssignDetail(groupId, lstDepartmentId, CurrentUserId);
             return Json(result);
         }
     }

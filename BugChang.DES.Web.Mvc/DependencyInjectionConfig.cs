@@ -5,6 +5,7 @@ using BugChang.DES.Application.Channels;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.ExchangeObjects;
 using BugChang.DES.Application.Groups;
+using BugChang.DES.Application.Letters;
 using BugChang.DES.Application.Logs;
 using BugChang.DES.Application.Menus;
 using BugChang.DES.Application.Monitor;
@@ -73,6 +74,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IRuleAppService, RuleAppSercvice>();
             services.AddScoped<IBarcodeAppService, BarcodeAppService>();
             services.AddScoped<IGroupAppService, GroupAppService>();
+            services.AddScoped<ILetterAppService, LetterAppService>();
 
             #endregion
 
@@ -116,6 +118,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IExchangeObjectSignerRepository, ExchangeObjectSignerRepository>();
             services.AddScoped<IRuleRepository, RuleRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IGroupDetailRepository, GroupDetailRepository>();
 
             #endregion
 
