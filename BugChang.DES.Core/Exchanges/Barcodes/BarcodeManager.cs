@@ -55,6 +55,17 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
             return result;
         }
 
+        /// <summary>
+        /// 生成内部条码，33位
+        /// </summary>
+        /// <param name="recDepartmentId">收件单位</param>
+        /// <param name="sendDepartmentId">发件单位</param>
+        /// <returns></returns>
+        public Task<string> MakeInsideBarcode(int recDepartmentId, int sendDepartmentId)
+        {
+            return new Task<string>(() => "");
+        }
+
 
     }
 }

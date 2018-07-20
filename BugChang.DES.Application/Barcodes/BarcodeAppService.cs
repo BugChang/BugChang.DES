@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BugChang.DES.Application.Barcodes.Dtos;
 using BugChang.DES.Core.Exchanges.Barcodes;
 
@@ -7,6 +8,13 @@ namespace BugChang.DES.Application.Barcodes
 {
     public class BarcodeAppService : IBarcodeAppService
     {
+        private readonly BarcodeManager _barcodeManager;
+
+        public BarcodeAppService(BarcodeManager barcodeManager)
+        {
+            _barcodeManager = barcodeManager;
+        }
+
         public IList<BarcodeTypeListDto> GetBarcodeTypes()
         {
             var barcodeTypeList = new List<BarcodeTypeListDto>();
@@ -21,6 +29,11 @@ namespace BugChang.DES.Application.Barcodes
             }
 
             return barcodeTypeList;
+        }
+
+        public async Task<string> MakeBarcodeNo(int recDepartmentId, int sendDepartmentId)
+        {
+            return await _barcodeManager.MakeInsideBarcode(recDepartmentId, sendDepartmentId);
         }
     }
 }
