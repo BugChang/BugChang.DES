@@ -5,7 +5,7 @@ using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Departments;
-using BugChang.DES.Core.Security;
+using BugChang.DES.Core.Tools;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BugChang.DES.EntityFrameWorkCore

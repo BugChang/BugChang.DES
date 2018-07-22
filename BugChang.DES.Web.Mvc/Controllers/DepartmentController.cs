@@ -65,7 +65,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 department.ParentId = department.ParentId == 0 ? null : department.ParentId;
-                department.SetCreateOrUpdateInfo(CurrentUserId);
+                department.SetCreateOrUpdateInfo(CurrentUser.UserId);
                 result = await _departmentAppService.AddOrUpdateAsync(department);
                 return Json(result);
             }
@@ -148,7 +148,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             Arguments = new object[] { "Department.Delete" })]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _departmentAppService.DeleteByIdAsync(id, CurrentUserId);
+            var result = await _departmentAppService.DeleteByIdAsync(id, CurrentUser.UserId);
             return Json(result);
         }
 

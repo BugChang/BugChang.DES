@@ -1,4 +1,6 @@
-﻿using BugChang.DES.Core.Commons;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Core.Authentication.Card
 {
@@ -11,6 +13,11 @@ namespace BugChang.DES.Core.Authentication.Card
 
         public string Value { get; set; }
 
+        public bool Enabled { get; set; }
+
         public bool IsDeleted { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
     }
 }

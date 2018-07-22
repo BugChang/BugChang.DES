@@ -30,6 +30,12 @@
         public const string GroupEdit = "修改单位分组";
         public const string GroupDelete = "删除单位分组";
 
+        public const string CardAdd = "添加证卡";
+        public const string CardEdit = "修改证卡";
+        public const string CardDelete = "删除证卡";
+        public const string CardChangeEnabled = "更改证卡启用状态";
+
+
 
     }
 }

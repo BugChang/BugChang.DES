@@ -95,10 +95,6 @@
                     title: '所属机构'
                 },
                 {
-                    data: null,
-                    title: '查看角色'
-                },
-                {
                     data: 'locked',
                     title: '锁定状态'
                 },
@@ -139,14 +135,6 @@
                 {
                     targets: 4,
                     render: function (data, type, row) {
-                        var strHtml =
-                            '<button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> 查看</button>&nbsp;';
-                        return strHtml;
-                    }
-                },
-                {
-                    targets: 5,
-                    render: function (data, type, row) {
                         var strHtml;
                         if (row.locked) {
                             strHtml = '<label class="label label-danger"><i class="fa fa-lock"></i> 已锁定</label>&nbsp;';
@@ -158,7 +146,7 @@
                     }
                 },
                 {
-                    targets: 6,
+                    targets: 5,
                     render: function (data, type, row) {
                         var strHtml;
                         if (row.enabled) {
@@ -170,7 +158,7 @@
                     }
                 },
                 {
-                    targets: 9,
+                    targets: 8,
                     render: function (data, type, row) {
                         var strHtml;
                         if (!row.createUserName) {
@@ -183,12 +171,10 @@
                     }
                 },
                 {
-                    targets: 13,
+                    targets: 12,
                     render: function (data, type, row) {
                         var strHtml = '';
-                        if (Common.hasOperation('User.AssigningRoles')) {
-                            strHtml += '<button class="btn btn-primary btn-xs edit-user-role" data-user-id=' + row.id + '>分配角色</button>&nbsp;';
-                        }
+                        strHtml += '<button class="btn btn-primary btn-xs edit-user-role" data-user-id=' + row.id + '>分配角色</button>&nbsp;';
                         if (Common.hasOperation('User.Edit')) {
                             strHtml += '<button class="btn btn-info btn-xs edit-user" data-user-id=' + row.id + '>修改</button>&nbsp;';
                         }
@@ -278,7 +264,7 @@
 
     //初始化页面元素
     function initPageElement() {
-        if (!Common.hasOperation('Role.Create')) {
+        if (!Common.hasOperation('User.Create')) {
             $('#btnAddUser').hide();
         }
     }

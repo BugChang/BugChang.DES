@@ -1,6 +1,6 @@
 ﻿namespace BugChang.DES.Core.Authentication
 {
-    public class LoginSettings
+    public class AccountSettings
     {
 
         /// <summary>
@@ -17,6 +17,11 @@
         /// 登录过期时间（分钟）
         /// </summary>
         public int ExpiryTime { get; set; }
+
+        /// <summary>
+        /// 强制修改密码
+        /// </summary>
+        public bool ForceChangePassword { get; set; }
 
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Commons;
-using BugChang.DES.Core.Exchanges.Rules;
 using Microsoft.EntityFrameworkCore;
 
-namespace BugChang.DES.Core.Exchanges.Barcodes
+namespace BugChang.DES.Core.Exchanges.Rules
 {
     public class RuleManager
     {

@@ -69,7 +69,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             if (ModelState.IsValid)
             {
 
-                group.SetCreateOrUpdateInfo(CurrentUserId);
+                group.SetCreateOrUpdateInfo(CurrentUser.UserId);
                 result = await _groupAppService.AddOrUpdateAsync(group);
                 return Json(result);
             }
@@ -108,7 +108,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _groupAppService.DeleteByIdAsync(id, CurrentUserId);
+            var result = await _groupAppService.DeleteByIdAsync(id, CurrentUser.UserId);
             return Json(result);
         }
 
@@ -138,7 +138,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> AssignDetail(int groupId, string strDetailId)
         {
             var lstDepartmentId = strDetailId.Split(',').ToList().Select(x => Convert.ToInt32(x)).ToList();
-            var result=await _groupAppService.AssignDetail(groupId, lstDepartmentId, CurrentUserId);
+            var result=await _groupAppService.AssignDetail(groupId, lstDepartmentId, CurrentUser.UserId);
             return Json(result);
         }
     }

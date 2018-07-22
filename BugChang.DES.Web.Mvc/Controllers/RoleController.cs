@@ -59,7 +59,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = new ResultEntity();
             if (ModelState.IsValid)
             {
-                role.SetCreateOrUpdateInfo(CurrentUserId);
+                role.SetCreateOrUpdateInfo(CurrentUser.UserId);
                 result = await _roleAppService.AddOrUpdateAsync(role);
                 return Json(result);
             }
@@ -114,7 +114,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _roleAppService.DeleteByIdAsync(id, CurrentUserId);
+            var result = await _roleAppService.DeleteByIdAsync(id, CurrentUser.UserId);
             return Json(result);
         }
 

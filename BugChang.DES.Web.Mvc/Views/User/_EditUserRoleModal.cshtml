@@ -2,7 +2,7 @@
 @using BugChang.DES.Web.Mvc.Models.Common
 @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("分配角色"))
 <div class="modal-body">
-    <div class="form-group">
+    <div class="form-group" id="divAssignUserRole">
         <input id="userId" type="hidden" value="@ViewBag.UserId" />
         <div class="col-xs-10">
             <select id="roleId" class="form-control" style="width: 100%"></select>

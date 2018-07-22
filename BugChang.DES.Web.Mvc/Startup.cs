@@ -3,6 +3,7 @@ using BugChang.DES.Application.Commons;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.EntityFrameWorkCore;
+using BugChang.DES.Web.Mvc.Handler;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -57,7 +58,7 @@ namespace BugChang.DES.Web.Mvc
             });
 
             services.AddOptions();
-            services.Configure<LoginSettings>(Configuration.GetSection("LoginSettings"));
+            services.Configure<AccountSettings>(Configuration.GetSection("AccountSettings"));
             services.Configure<CommonSettings>(Configuration.GetSection("CommonSettings"));
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -78,6 +79,8 @@ namespace BugChang.DES.Web.Mvc
 
             //静态文件
             app.UseStaticFiles();
+
+            app.Map("/ws", SocketHandler.Map);
 
             //身份认证
             app.UseAuthentication();

@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Accounts;
 using BugChang.DES.Core.Authentication;
-using BugChang.DES.Core.Security;
+using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Tools;
 using BugChang.DES.Web.Mvc.Models.Account;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,8 +19,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
     {
 
         private readonly IAccountAppService _accountAppService;
-        private readonly IOptions<LoginSettings> _loginSettings;
-        public AccountController(IAccountAppService accountAppService, IOptions<LoginSettings> loginSettings)
+        private readonly IOptions<AccountSettings> _loginSettings;
+        public AccountController(IAccountAppService accountAppService, IOptions<AccountSettings> loginSettings)
         {
             _accountAppService = accountAppService;
             _loginSettings = loginSettings;
@@ -50,6 +51,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 switch (loginResult.Result)
                 {
                     case EnumLoginResult.登录成功:
+                    case EnumLoginResult.强制修改密码:
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, loginResult.ClaimsPrincipal, new AuthenticationProperties
                         {
                             IsPersistent = model.RememberMe,
@@ -79,6 +81,38 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             await HttpContext.SignOutAsync();
             return RedirectToAction("Login");
+        }
+
+        public IActionResult ChangePassword()
+        {
+            var model = new ChangePasswordViewModel
+            {
+                Id = CurrentUser.UserId,
+                UserName = CurrentUser.UserName
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel changePassword)
+        {
+            var result = new ResultEntity();
+            ViewBag.ChangePasswordFlag = 0;
+            if (ModelState.IsValid)
+            {
+                result = await _accountAppService.ChangePassword(changePassword.Id, changePassword.Password, changePassword.OldPassword);
+            }
+            else
+            {
+                result.Message = ModelState.Values.FirstOrDefault(a => a.ValidationState == ModelValidationState.Invalid)?.Errors.FirstOrDefault()?.ErrorMessage;
+            }
+
+            return Json(result);
+        }
+
+        public IActionResult ForceChangePassword()
+        {
+            return View();
         }
     }
 }

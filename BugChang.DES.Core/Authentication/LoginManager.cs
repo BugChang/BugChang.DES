@@ -3,15 +3,16 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Authorization.Users;
 using Microsoft.Extensions.Options;
+using NETCore.Encrypt.Extensions;
 
 namespace BugChang.DES.Core.Authentication
 {
     public class LoginManager
     {
         private readonly IUserRepository _userRepository;
-        private readonly IOptions<LoginSettings> _accountSettings;
+        private readonly IOptions<AccountSettings> _accountSettings;
 
-        public LoginManager(IUserRepository userRepository, IOptions<LoginSettings> accountSettings)
+        public LoginManager(IUserRepository userRepository, IOptions<AccountSettings> accountSettings)
         {
             _userRepository = userRepository;
             _accountSettings = accountSettings;
@@ -56,14 +57,23 @@ namespace BugChang.DES.Core.Authentication
                 }
                 else
                 {
-                    loginResult.Result = EnumLoginResult.登录成功;
+                    if (user.Password == User.DefaultPassword.MD5() && _accountSettings.Value.ForceChangePassword)
+                    {
+                        loginResult.Result = EnumLoginResult.强制修改密码;
+                    }
+                    else
+                    {
+                        loginResult.Result = EnumLoginResult.登录成功;
+                    }
+
                     ClearErrorCount(user);
                     var claims = new List<Claim>
                     {
                         new Claim("Id",user.Id.ToString()),
                         new Claim("UserName",user.UserName),
                         new Claim("DisplayName",user.DisplayName),
-                        new Claim("DepartmentId",user.DepartmentId.ToString())
+                        new Claim("DepartmentId",user.DepartmentId.ToString()),
+                        new Claim("NeedChangePassword",(loginResult.Result== EnumLoginResult.强制修改密码?1:0).ToString())
                     };
                     foreach (var role in user.UserRoles)
                     {

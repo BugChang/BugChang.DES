@@ -113,7 +113,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             {
                 if (box.PlaceId > 0)
                 {
-                    box.SetCreateOrUpdateInfo(CurrentUserId);
+                    box.SetCreateOrUpdateInfo(CurrentUser.UserId);
                     result = await _boxAppService.AddOrUpdateAsync(box);
                     return Json(result);
                 }
@@ -136,7 +136,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _boxAppService.DeleteByIdAsync(id, CurrentUserId);
+            var result = await _boxAppService.DeleteByIdAsync(id, CurrentUser.UserId);
             return Json(result);
         }
 
@@ -164,7 +164,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             Arguments = new object[] { "Box.AssignObject" })]
         public async Task<IActionResult> AssignObject(int boxId, List<int> objectIds)
         {
-            var result = await _boxAppService.AssignObject(boxId, objectIds, CurrentUserId);
+            var result = await _boxAppService.AssignObject(boxId, objectIds, CurrentUser.UserId);
             return Json(result);
         }
     }

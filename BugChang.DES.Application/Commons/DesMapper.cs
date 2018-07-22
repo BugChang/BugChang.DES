@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BugChang.DES.Application.Boxs.Dtos;
+using BugChang.DES.Application.Cards.Dtos;
 using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Application.ExchangeObjects.Dtos;
 using BugChang.DES.Application.Groups.Dtos;
@@ -9,6 +10,7 @@ using BugChang.DES.Application.Places.Dtos;
 using BugChang.DES.Application.Roles.Dtos;
 using BugChang.DES.Application.Rules.Dtos;
 using BugChang.DES.Application.Users.Dtos;
+using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
@@ -175,6 +177,20 @@ namespace BugChang.DES.Application.Commons
                 cfg.CreateMap<GroupEditDto, Group>();
 
                 cfg.CreateMap<GroupDetail, GroupDetailListDto>();
+
+                #endregion
+
+                #region Card
+
+                cfg.CreateMap<Card, CardListDto>()
+                    .ForMember(a => a.UserName, b => b.MapFrom(c => c.User.DisplayName))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.UpdateUserName, b => b.MapFrom(c => c.UpdateUser.DisplayName))
+                    .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
+                    .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+
+                cfg.CreateMap<CardEditDto, Card>();
 
                 #endregion
 

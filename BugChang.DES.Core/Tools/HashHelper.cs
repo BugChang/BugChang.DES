@@ -1,6 +1,6 @@
 ﻿using NETCore.Encrypt;
 
-namespace BugChang.DES.Core.Security
+namespace BugChang.DES.Core.Tools
 {
     /// <summary>
     /// HASH加密操作帮助类

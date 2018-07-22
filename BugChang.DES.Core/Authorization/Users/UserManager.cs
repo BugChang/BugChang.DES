@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Tools;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using NETCore.Encrypt.Extensions;
 
@@ -13,11 +17,13 @@ namespace BugChang.DES.Core.Authorization.Users
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IOptions<AccountSettings> _accountSettings;
 
-        public UserManager(IUserRepository userRepository, IUserRoleRepository userRoleRepository)
+        public UserManager(IUserRepository userRepository, IUserRoleRepository userRoleRepository, IOptions<AccountSettings> accountSettings)
         {
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
+            _accountSettings = accountSettings;
         }
 
         public async Task<ResultEntity> AddOrUpdateAsync(User user)
@@ -123,5 +129,35 @@ namespace BugChang.DES.Core.Authorization.Users
             return existUserRole;
         }
 
+        public async Task<ResultEntity> ChangePassword(int userId, string password, string oldPassword)
+        {
+            var result = new ResultEntity();
+            if (password.Length < _accountSettings.Value.PasswordMinLength)
+            {
+                result.Message = $"密码长度至少{_accountSettings.Value.PasswordMinLength}位";
+            }
+            else
+            {
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user.Password == HashHelper.Md5(oldPassword))
+                {
+                    if (user.Password == HashHelper.Md5(password))
+                    {
+                        result.Message = "不能使用原密码作为新密码";
+                    }
+                    else
+                    {
+                        user.Password = HashHelper.Md5(password);
+                        result.Message = $"用户【{user.DisplayName}】成功修改了登录密码";
+                        result.Success = true;
+                    }
+                }
+                else
+                {
+                    result.Message = "原密码输入错误";
+                }
+            }
+            return result;
+        }
     }
 }

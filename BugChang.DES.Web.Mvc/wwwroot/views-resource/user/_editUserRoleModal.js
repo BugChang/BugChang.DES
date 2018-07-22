@@ -4,7 +4,11 @@
     $(function () {
         initRoleList();
         initUserRoleTable();
+        //初始化操作代码
+        Common.initOperations('User');
 
+        //初始化页面元素
+        initPageElement();
 
         $('#btnAddUserRole').click(function () {
             var roleId = $('#roleId').val();
@@ -108,5 +112,12 @@
                 });
             }
         });
+    }
+
+    //初始化页面元素
+    function initPageElement() {
+        if (!Common.hasOperation('User.AssigningRoles')) {
+            $('#divAssignUserRole').hide();
+        }
     }
 })();

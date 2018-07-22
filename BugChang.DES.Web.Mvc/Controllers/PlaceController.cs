@@ -68,7 +68,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             Arguments = new object[] { "Place.Delete" })]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _placeAppService.DeleteByIdAsync(id, CurrentUserId);
+            var result = await _placeAppService.DeleteByIdAsync(id, CurrentUser.UserId);
             return Json(result);
 
         }
@@ -78,7 +78,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = new ResultEntity();
             if (ModelState.IsValid)
             {
-                place.SetCreateOrUpdateInfo(CurrentUserId);
+                place.SetCreateOrUpdateInfo(CurrentUser.UserId);
                 result = await _placeAppService.AddOrUpdateAsync(place);
                 return Json(result);
             }
@@ -160,7 +160,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             Arguments = new object[] { "Box.AssignWarden" })]
         public async Task<IActionResult> AssignWarden(int placeId, List<int> wardenIds)
         {
-            var result = await _placeAppService.AssignWarden(placeId, wardenIds, CurrentUserId);
+            var result = await _placeAppService.AssignWarden(placeId, wardenIds, CurrentUser.UserId);
             return Json(result);
         }
 

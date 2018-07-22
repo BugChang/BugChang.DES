@@ -40,7 +40,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 menu.ParentId = menu.ParentId == 0 ? null : menu.ParentId;
-                menu.SetCreateOrUpdateInfo(CurrentUserId);
+                menu.SetCreateOrUpdateInfo(CurrentUser.UserId);
                 result = await _menuAppService.AddOrUpdateAsync(menu);
                 return Json(result);
             }
@@ -115,7 +115,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _menuAppService.DeleteByIdAsync(id, CurrentUserId);
+            var result = await _menuAppService.DeleteByIdAsync(id, CurrentUser.UserId);
             return Json(result);
         }
     }

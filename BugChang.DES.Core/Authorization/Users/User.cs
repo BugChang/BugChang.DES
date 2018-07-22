@@ -8,7 +8,6 @@ namespace BugChang.DES.Core.Authorization.Users
 {
     public class User : BaseEntity, ISoftDelete
     {
-
         public const string DefaultPassword = "123qwe";
 
         /// <summary>
@@ -79,5 +78,10 @@ namespace BugChang.DES.Core.Authorization.Users
         /// 删除标识
         /// </summary>
         public bool IsDeleted { get; set; }
+
+        public void ChangePassword(string newPassword)
+        {
+            Password = newPassword;
+        }
     }
 }

@@ -169,7 +169,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = new ResultEntity();
             if (ModelState.IsValid)
             {
-                exchangeObject.SetCreateOrUpdateInfo(CurrentUserId);
+                exchangeObject.SetCreateOrUpdateInfo(CurrentUser.UserId);
                 result = await _exchangeObjectAppService.AddOrUpdateAsync(exchangeObject);
                 return Json(result);
             }
@@ -189,7 +189,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _exchangeObjectAppService.DeleteByIdAsync(id, CurrentUserId);
+            var result = await _exchangeObjectAppService.DeleteByIdAsync(id, CurrentUser.UserId);
             return Json(result);
         }
 
@@ -220,7 +220,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             Arguments = new object[] { "ExchangeObject.AssignObjectSigner" })]
         public async Task<IActionResult> AssignObjectSigner(int objectId, List<int> userIds)
         {
-            var result = await _exchangeObjectAppService.AssignObjectSigner(objectId, userIds, CurrentUserId);
+            var result = await _exchangeObjectAppService.AssignObjectSigner(objectId, userIds, CurrentUser.UserId);
             return Json(result);
         }
 

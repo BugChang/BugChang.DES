@@ -75,7 +75,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             if (ModelState.IsValid)
             {
 
-                barcodeRule.SetCreateOrUpdateInfo(CurrentUserId);
+                barcodeRule.SetCreateOrUpdateInfo(CurrentUser.UserId);
                 result = await _ruleAppService.AddOrUpdateAsync(barcodeRule);
                 return Json(result);
             }
@@ -108,7 +108,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _ruleAppService.DeleteByIdAsync(id, CurrentUserId);
+            var result = await _ruleAppService.DeleteByIdAsync(id, CurrentUser.UserId);
             return Json(result);
         }
     }

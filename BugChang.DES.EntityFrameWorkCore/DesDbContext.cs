@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Powers;
 using BugChang.DES.Core.Authorization.Roles;
@@ -77,5 +78,6 @@ namespace BugChang.DES.EntityFrameWorkCore
         public DbSet<Rule> BarcodeRules { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupDetail> GroupDetails { get; set; }
+        public DbSet<Card> Cards { get; set; }
     }
 }
