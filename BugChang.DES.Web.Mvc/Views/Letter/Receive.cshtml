@@ -1,6 +1,11 @@
 ﻿@using BugChang.DES.Web.Mvc.Models.Common
 @model BugChang.DES.Application.Letters.Dtos.ReceiveLetterEditDto
 
+@section css
+    {
+
+    <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+}
 <div class="row">
     <div class="col-xs-6">
         <div class="box box-primary">
@@ -10,30 +15,41 @@
             <div class="box-body">
                 <div class="modal-body">
                     <form id="BoxCreateForm" method="post" asp-controller="Letter" asp-action="Receive">
-                        <input type="hidden" asp-for="SendDepartmentId" value="@Model.SendDepartmentId" />
+                        <input type="hidden" asp-for="SendDepartmentId" value="" />
                         <div class="form-group">
                             <label>原条码号</label>
-                            <input type="text" class="form-control" asp-for="OldBarcodeNo" value="@Model.OldBarcodeNo">
+                            <input type="text" class="form-control" asp-for="OldBarcodeNo" value="">
                         </div>
                         <div class="form-group">
                             <label>原发单位</label>
-                            <input type="text" class="form-control" asp-for="OldSendDepartmentName" value="@Model.OldSendDepartmentName">
+                            <input type="text" class="form-control" asp-for="OldSendDepartmentName" value="">
                         </div>
                         <div class="form-group text-left">
                             <label>收件单位</label>
                             <button id="btnReceiveDepartment" type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#ReceiveSelectModal" style="text-align: left">请选择收件单位...</button>
+                            <input type="hidden" asp-for="ReceiveDepartmentId" value="" />
                         </div>
                         <div class="form-group">
                             <label>密级</label>
-                            <select class="form-control" asp-for="SecretLevel"></select>
+                            <select class="form-control" asp-for="SecretLevel">
+                                <option value="0">无</option>
+                                <option value="1">秘密</option>
+                                <option value="2">机密</option>
+                                <option value="3">绝密</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>紧急程度</label>
-                            <select class="form-control" asp-for="UrgencyLevel"></select>
+                            <select class="form-control" asp-for="UrgencyLevel">
+                                <option value="0">无</option>
+                                <option value="1">紧急</option>
+                                <option value="2">特急</option>
+                                <option value="3">限时</option>
+                            </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group hide" id="divUrgencyTime">
                             <label>限时时间</label>
-                            <select class="form-control" asp-for="UrgencyTime"></select>
+                            <input type="text" class="form-control" asp-for="UrgencyTime" value="" />
                         </div>
                         <div class="form-group">
                             <label>附加信息</label>
@@ -81,5 +97,7 @@
 
 @section scripts
     {
+    <script src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/lib/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
     <script src="~/views-resource/letter/receive.js" asp-append-version="true"></script>
 }

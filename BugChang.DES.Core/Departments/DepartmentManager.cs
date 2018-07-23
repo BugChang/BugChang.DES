@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Logs;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace BugChang.DES.Core.Departments
@@ -126,6 +128,24 @@ namespace BugChang.DES.Core.Departments
         public async Task<IList<Department>> GetAllAsync()
         {
             return await _departmentRepository.GetAllAsync();
+        }
+
+        public async Task<string> GetDepartmentCode(int departmentId)
+        {
+            var departmentCode = "";
+            var department = await _departmentRepository.GetQueryable().FirstOrDefaultAsync(a => a.Id == departmentId);
+            if (department != null)
+            {
+                departmentCode = department.Code + departmentCode;
+                while (department.ParentId != null)
+                {
+                    var parentId = department.ParentId;
+                    department = await _departmentRepository.GetQueryable().FirstOrDefaultAsync(a => a.Id == parentId);
+                    departmentCode = department.Code + departmentCode;
+                }
+            }
+
+            return departmentCode;
         }
     }
 }

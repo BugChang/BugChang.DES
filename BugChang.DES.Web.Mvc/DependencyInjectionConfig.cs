@@ -29,8 +29,10 @@ using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Exchanges.Rules;
 using BugChang.DES.Core.Groups;
+using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.Monitor;
+using BugChang.DES.Core.SerialNumbers;
 using BugChang.DES.EntityFrameWorkCore;
 using BugChang.DES.EntityFrameWorkCore.Repository;
 using BugChang.DES.Web.Mvc.Filters;
@@ -50,9 +52,7 @@ namespace BugChang.DES.Web.Mvc
 
             var mainConnectionString = configuration.GetConnectionString("DefaultConnectionString");
 
-            //注册业务数据库上下文
             services.AddDbContext<DesDbContext>(option => option.UseMySql(mainConnectionString));
-            //注入日志数据库上下文
 
             services.AddScoped<UnitOfWork>();
 
@@ -101,6 +101,8 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<RuleManager>();
             services.AddScoped<GroupManager>();
             services.AddScoped<CardManager>();
+            services.AddScoped<LetterManager>();
+            services.AddScoped<SerialNumberManager>();
 
             #endregion
 
@@ -126,6 +128,9 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IGroupDetailRepository, GroupDetailRepository>();
             services.AddScoped<ICardRepository, CardRepository>();
+            services.AddScoped<ILetterRepository, LetterRepository>();
+            services.AddScoped<ISerialNumberRepository, SerialNumberRepository>();
+            services.AddScoped<IBarcodeRepository, BarcodeRepository>();
 
             #endregion
 

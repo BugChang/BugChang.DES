@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.SecretLevels;
+using BugChang.DES.Core.UrgentLevels;
 
 namespace BugChang.DES.Core.Exchanges.Barcodes
 {
@@ -66,6 +69,34 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
             return new Task<string>(() => "");
         }
 
+
+        public string MakeBarcodeLength33(string sendDepartmentCode, string receiveDepartmentCode, EnumSecretLevel secretLevel, EnumUrgentLevel urgentLevel, int serialNo)
+        {
+            var barCode = "";
+            if (sendDepartmentCode.Length != 11 || receiveDepartmentCode.Length != 11)
+            {
+                return barCode;
+            }
+
+            var letterNo = serialNo.ToString("0000000");
+            barCode = sendDepartmentCode + ((int)secretLevel + 1) + ((int)urgentLevel + 1) + "0" +
+                          DateTime.Now.Year + letterNo + receiveDepartmentCode;
+            var sum = barCode.ToCharArray().Aggregate(0, (current, value) => current + value);
+            var checkCode = sum % 10;
+            barCode = sendDepartmentCode
+                      + ((int)secretLevel + 1) + ((int)urgentLevel + 1) + checkCode + DateTime.Now.Year.ToString().Substring(3, 1) + letterNo
+                      + receiveDepartmentCode;
+            return barCode;
+        }
+
+        public string MakeBarcodeLength26(string sendDepartmentCode, string receiveDepartmentCode,
+            EnumSecretLevel secretLevel, EnumUrgentLevel urgentLevel, int serialNo)
+        {
+            var barCode = "0" + sendDepartmentCode + serialNo.ToString("00000") + DateTime.Now.ToString("yyyyMMdd").Substring(3, 1)
+                          + (int)secretLevel + (int)urgentLevel
+                          + receiveDepartmentCode + "0";
+            return barCode;
+        }
 
     }
 }

@@ -34,13 +34,28 @@
 
         initGroupTree();
 
+        $("#UrgencyLevel").change(function () {
+            if ($(this).val() === "3") {
+                $("#divUrgencyTime").removeClass("hide");
+            } else {
+                $("#UrgencyTime").val("");
+                $("#divUrgencyTime").addClass("hide");
+            }
+
+        });
+
+        $('#UrgencyTime').datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',
+            language: 'zh-CN'
+        });
+
         $('#groupDetailTree').delegate('.department-select',
             'click',
             function () {
                 var departmentId = $(this).attr('data-department-id');
                 var departmentName = $(this).attr('data-department-name');
-                $("#btnReceiveDepartment").val(departmentId);
-                $("#btnReceiveDepartment").text("已选择："+departmentName);
+                $("#btnReceiveDepartment").text("已选择：" + departmentName);
+                $("#ReceiveDepartmentId").val(departmentId);
                 $('#ReceiveSelectModal').modal('hide');
             });
     });

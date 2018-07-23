@@ -4,6 +4,7 @@ using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Groups;
 using BugChang.DES.Application.Letters;
 using BugChang.DES.Application.Letters.Dtos;
+using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 namespace BugChang.DES.Web.Mvc.Controllers
@@ -20,14 +21,17 @@ namespace BugChang.DES.Web.Mvc.Controllers
             _groupAppService = groupAppService;
         }
 
-        public async Task<IActionResult> Receive(int id = 0)
+        [TypeFilter(typeof(MenuFilter))]
+        public IActionResult Receive()
         {
-            var receiveLetter = new ReceiveLetterEditDto();
-            if (id > 0)
-            {
-                receiveLetter = await _letterAppService.GetReceiveLetter(id);
-            }
-            return View(receiveLetter);
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Receive(ReceiveLetterEditDto receiveLetter)
+        {
+            var result = await _letterAppService.AddReceiveLetter(receiveLetter);
+            return Json(result);
         }
 
         public IActionResult Send()
