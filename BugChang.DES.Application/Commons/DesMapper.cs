@@ -4,6 +4,7 @@ using BugChang.DES.Application.Cards.Dtos;
 using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Application.ExchangeObjects.Dtos;
 using BugChang.DES.Application.Groups.Dtos;
+using BugChang.DES.Application.Letters.Dtos;
 using BugChang.DES.Application.Logs.Dtos;
 using BugChang.DES.Application.Menus.Dtos;
 using BugChang.DES.Application.Places.Dtos;
@@ -21,6 +22,7 @@ using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Exchanges.Rules;
 using BugChang.DES.Core.Groups;
+using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.Tools;
 
@@ -191,6 +193,12 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
 
                 cfg.CreateMap<CardEditDto, Card>();
+
+                #endregion
+
+                #region Letter
+                
+                cfg.CreateMap<ReceiveLetterEditDto, Letter>();
 
                 #endregion
 

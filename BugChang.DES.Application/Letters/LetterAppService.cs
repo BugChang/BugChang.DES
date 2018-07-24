@@ -8,6 +8,7 @@ using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.SerialNumbers;
+using BugChang.DES.Core.Tools;
 using BugChang.DES.Core.UrgentLevels;
 using BugChang.DES.EntityFrameWorkCore;
 
@@ -43,8 +44,8 @@ namespace BugChang.DES.Application.Letters
         public async Task<ResultEntity> AddReceiveLetter(ReceiveLetterEditDto receiveLetter)
         {
             var result = new ResultEntity();
-            var sendDepartmentCode = await _departmentManager.GetDepartmentCode(receiveLetter.SendDepartmentId);
-            var receiveDepartmentCode = await _departmentManager.GetDepartmentCode(receiveLetter.ReceiveDepartmentId);
+            var sendDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(receiveLetter.SendDepartmentId), 11);
+            var receiveDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(receiveLetter.ReceiveDepartmentId), 11);
             var serialNumber = await _serialNumberManager.GetSerialNumber(receiveLetter.SendDepartmentId, EnumSerialNumberType.内部交换);
             var barcodeNo = _barcodeManager.MakeBarcodeLength33(sendDepartmentCode, receiveDepartmentCode,
                 (EnumSecretLevel)receiveLetter.SecretLevel, (EnumUrgentLevel)receiveLetter.UrgencyLevel,
@@ -54,6 +55,7 @@ namespace BugChang.DES.Application.Letters
             await _letterRepository.AddAsync(letter);
             result.Success = true;
             await _unitOfWork.CommitAsync();
+            result.Data = letter.Id;
             return result;
         }
     }

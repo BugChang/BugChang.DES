@@ -3,18 +3,18 @@ using System.Linq;
 using System.Linq.Expressions;
 using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Authorization.Menus;
-using BugChang.DES.Core.Authorization.Powers;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
-using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Exchanges.Rules;
 using BugChang.DES.Core.Groups;
+using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
+using BugChang.DES.Core.SerialNumbers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.EntityFrameWorkCore
@@ -47,37 +47,26 @@ namespace BugChang.DES.EntityFrameWorkCore
             }
         }
 
+
         public DbSet<User> Users { get; set; }
-
         public DbSet<Role> Roles { get; set; }
-
         public DbSet<UserRole> UserRoles { get; set; }
-
         public DbSet<RoleMenu> RoleMenus { get; set; }
-
         public DbSet<Menu> Menus { get; set; }
-
         public DbSet<Department> Departments { get; set; }
-
         public DbSet<RoleOperation> RoleOperations { get; set; }
-
         public DbSet<Log> Logs { get; set; }
-
         public DbSet<Place> Places { get; set; }
-
         public DbSet<Box> Boxs { get; set; }
-
         public DbSet<ExchangeObject> ExchangeObjects { get; set; }
-
         public DbSet<BoxObject> BoxObjects { get; set; }
-
         public DbSet<PlaceWarden> PlaceWardens { get; set; }
-
         public DbSet<ExchangeObjectSigner> ObjectSigners { get; set; }
-
         public DbSet<Rule> BarcodeRules { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupDetail> GroupDetails { get; set; }
         public DbSet<Card> Cards { get; set; }
+        public DbSet<SerialNumber> SerialNumbers { get; set; }
+        public DbSet<Letter> Letters { get; set; }
     }
 }

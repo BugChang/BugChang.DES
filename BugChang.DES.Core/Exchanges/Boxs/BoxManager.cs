@@ -20,10 +20,10 @@ namespace BugChang.DES.Core.Exchanges.Boxs
         public async Task<ResultEntity> AddOrUpdateAsync(Box box)
         {
             var result = new ResultEntity();
-            var exist = await _boxRepository.GetQueryable().Where(a => a.DeviceCode == box.DeviceCode && a.PlaceId == box.PlaceId && a.Id != box.Id).CountAsync() > 0;
+            var exist = await _boxRepository.GetQueryable().Where(a => a.FrontBn == box.FrontBn && a.PlaceId == box.PlaceId && a.Id != box.Id).CountAsync() > 0;
             if (exist)
             {
-                result.Message = "同一交换场所下设备编码不允许重复";
+                result.Message = "同一交换场所下BN号码不允许重复";
             }
             else
             {

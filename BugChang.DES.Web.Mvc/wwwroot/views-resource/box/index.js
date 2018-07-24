@@ -94,8 +94,12 @@
                     title: '名称'
                 },
                 {
-                    data: 'deviceCode',
-                    title: '设备编码'
+                    data: 'frontBn',
+                    title: '正面BN号'
+                },
+                {
+                    data: 'backBn',
+                    title: '背面BN号'
                 },
                 {
                     data: 'permanentMessage',
@@ -132,7 +136,7 @@
             ],
             columnDefs: [
                 {
-                    targets: 5,
+                    targets: 6,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (row.enabled) {
@@ -144,7 +148,7 @@
                     }
                 },
                 {
-                    targets: 10,
+                    targets: 11,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (Common.hasOperation('Box.AssignObject')) {

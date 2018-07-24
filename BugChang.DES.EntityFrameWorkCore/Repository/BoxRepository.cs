@@ -21,7 +21,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             if (!string.IsNullOrWhiteSpace(pageSearchModel.Keywords))
             {
                 query = query.Where(a =>
-                    a.Name.Contains(pageSearchModel.Keywords) || a.DeviceCode.Contains(pageSearchModel.Keywords));
+                    a.Name.Contains(pageSearchModel.Keywords) || a.FrontBn.Contains(pageSearchModel.Keywords));
             }
             return new PageResultModel<Box>
             {

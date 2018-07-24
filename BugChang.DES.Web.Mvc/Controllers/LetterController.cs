@@ -1,12 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Groups;
 using BugChang.DES.Application.Letters;
 using BugChang.DES.Application.Letters.Dtos;
+using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace BugChang.DES.Web.Mvc.Controllers
 {
     public class LetterController : BaseController
@@ -30,7 +34,19 @@ namespace BugChang.DES.Web.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Receive(ReceiveLetterEditDto receiveLetter)
         {
-            var result = await _letterAppService.AddReceiveLetter(receiveLetter);
+            var result = new ResultEntity();
+            if (ModelState.IsValid)
+            {
+                receiveLetter.SetCreateOrUpdateInfo(CurrentUser.UserId);
+                receiveLetter.SendDepartmentId=CurrentUser.DepartmentId;
+                result = await _letterAppService.AddReceiveLetter(receiveLetter);
+            }
+            else
+            {
+                result.Message = ModelState.Values
+                    .FirstOrDefault(a => a.ValidationState == ModelValidationState.Invalid)?.Errors.FirstOrDefault()
+                    ?.ErrorMessage;
+            }
             return Json(result);
         }
 

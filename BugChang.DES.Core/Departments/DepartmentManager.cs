@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Authorization.Users;
@@ -42,16 +43,19 @@ namespace BugChang.DES.Core.Departments
             #endregion
 
             //设置机构全称
+            if (department.Id == 0 || String.IsNullOrEmpty(department.FullName))
+            {
+                if (department.ParentId != null)
+                {
+                    var parentDepartment = await _departmentRepository.GetByIdAsync(department.ParentId.Value);
+                    department.FullName = department.SetFullName(parentDepartment);
+                }
+                else
+                {
+                    department.FullName = department.Name;
+                }
+            }
 
-            if (department.ParentId != null)
-            {
-                var parentDepartment = await _departmentRepository.GetByIdAsync(department.ParentId.Value);
-                department.FullName = department.SetFullName(parentDepartment);
-            }
-            else
-            {
-                department.FullName = department.Name;
-            }
 
             if (department.Id > 0)
             {

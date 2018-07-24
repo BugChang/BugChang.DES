@@ -126,6 +126,9 @@
                     targets: 3,
                     render: function (data, type, row) {
                         var strHtml = '<span title="' + row.description + '">';
+                        if (!row.description) {
+                            return '-';
+                        }
                         if (row.description.length > 20) {
                             strHtml += row.description.substring(0, 20) + '...';
                         } else {

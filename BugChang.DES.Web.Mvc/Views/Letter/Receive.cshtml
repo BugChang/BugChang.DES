@@ -14,8 +14,8 @@
             </div>
             <div class="box-body">
                 <div class="modal-body">
-                    <form id="BoxCreateForm" method="post" asp-controller="Letter" asp-action="Receive">
-                        <input type="hidden" asp-for="SendDepartmentId" value="" />
+                    <form id="LetterReceiveForm" method="post" asp-controller="Letter" asp-action="Receive">
+                        <input type="hidden" asp-for="SendDepartmentId" value="0" />
                         <div class="form-group">
                             <label>原条码号</label>
                             <input type="text" class="form-control" asp-for="OldBarcodeNo" value="">
@@ -55,6 +55,9 @@
                             <label>附加信息</label>
                             <textarea class="form-control" asp-for="CustomData" rows="3"></textarea>
                         </div>
+                        <div class="form-group text-right">
+                            <button id="btnPrintBarcode" type="button" class="btn btn-primary"><i class="fa  fa-barcode"></i> 打印条码</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -77,21 +80,50 @@
 <div class="modal fade" id="ReceiveSelectModal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="RuleEditForm" method="post" asp-controller="Rule" asp-action="Edit">
-                @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("选择收件单位"))
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xs-4" style="border-right:1px solid #e5e5e5;">
-                            <ul class="ztree" id="groupTree"></ul>
-                        </div>
-                        <div class="col-xs-8">
-                            <ul class="ztree" id="groupDetailTree"></ul>
-                        </div>
+            @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("选择收件单位"))
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-4" style="border-right:1px solid #e5e5e5;">
+                        <ul class="ztree" id="groupTree"></ul>
+                    </div>
+                    <div class="col-xs-8">
+                        <ul class="ztree" id="groupDetailTree"></ul>
                     </div>
                 </div>
-                @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithClose.cshtml")
-            </form>
+            </div>
+            @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithClose.cshtml")
         </div>
+    </div>
+</div>
+<div>
+    <div style="width: 20%;float: left">
+
+    </div>
+    <div style="width: 80%;float: right">
+        <table style="width: 100%">
+            <tr style="height: 10%">
+                <td style="text-align: left;border-bottom: black 1px solid">秘密</td>
+                <td style="text-align: left;border-bottom: black 1px solid">信封号：1234567</td>
+            </tr>
+            <tr style="height: 10%">
+                <td style="text-align: left;border-bottom: black 1px solid">缓急：特急</td>
+                <td style="text-align: left;border-bottom: black 1px solid">市机码：1123</td>
+            </tr>
+            <tr style="height: 10%">
+                <td style="text-align: left;border-bottom: black 1px solid">原始编号：1111</td>
+                <td style="text-align: left;border-bottom: black 1px solid">原发单位：安全部大大大</td>
+            </tr>
+            <tr style="height: 40%">
+                <td colspan="2" style="text-align: center">一局三处</td>
+            </tr>
+            <tr style="height: 20%">
+                <td colspan="2" style="text-align: right;border-bottom: black 1px solid">张三（收）</td>
+            </tr>
+            <tr style="height: 10%">
+                <td style="text-align: left">北京市国家安全局一局六处</td>
+                <td style="text-align: right">2018-7-25</td>
+            </tr>
+        </table>
     </div>
 </div>
 
@@ -99,5 +131,6 @@
     {
     <script src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script src="~/lib/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script src="~/js/LodopFuncs.js"></script>
     <script src="~/views-resource/letter/receive.js" asp-append-version="true"></script>
 }

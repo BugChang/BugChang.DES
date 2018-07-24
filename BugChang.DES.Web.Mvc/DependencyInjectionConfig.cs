@@ -10,7 +10,7 @@ using BugChang.DES.Application.Groups;
 using BugChang.DES.Application.Letters;
 using BugChang.DES.Application.Logs;
 using BugChang.DES.Application.Menus;
-using BugChang.DES.Application.Monitor;
+using BugChang.DES.Application.Monitors;
 using BugChang.DES.Application.Operations;
 using BugChang.DES.Application.Places;
 using BugChang.DES.Application.Roles;

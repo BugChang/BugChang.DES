@@ -6,8 +6,6 @@ namespace BugChang.DES.Core.Authorization.Users
 {
     public class UserRole : BaseEntity<int>, ISoftDelete
     {
-        public int Id { get; set; }
-
         public int UserId { get; set; }
 
         public int RoleId { get; set; }
