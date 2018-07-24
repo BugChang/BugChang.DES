@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
@@ -6,6 +7,7 @@ using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Exchanges.Routes;
 using BugChang.DES.Core.Exchanges.Rules;
 using BugChang.DES.Core.Logs;
+using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.Core.Monitor
 {
@@ -17,8 +19,9 @@ namespace BugChang.DES.Core.Monitor
         private readonly IBoxObjectRepository _boxObjectRepository;
         private readonly LogManager _logManager;
         private readonly BarcodeManager _barcodeManager;
+        private readonly IBoxRepository _boxRepository;
 
-        public MonitorManager(IPlaceRepository placeRepository, IBarcodeRepository barcodeRepository, IRouteRepository routeRepository, IBoxObjectRepository boxObjectRepository, LogManager logManager, BarcodeManager barcodeManager)
+        public MonitorManager(IPlaceRepository placeRepository, IBarcodeRepository barcodeRepository, IRouteRepository routeRepository, IBoxObjectRepository boxObjectRepository, LogManager logManager, BarcodeManager barcodeManager, IBoxRepository boxRepository)
         {
             _placeRepository = placeRepository;
             _barcodeRepository = barcodeRepository;
@@ -26,6 +29,7 @@ namespace BugChang.DES.Core.Monitor
             _boxObjectRepository = boxObjectRepository;
             _logManager = logManager;
             _barcodeManager = barcodeManager;
+            _boxRepository = boxRepository;
         }
 
         public async Task<CheckBarcodeModel> CheckBarcodeType(string barcodeNo, int placeId)
@@ -132,6 +136,19 @@ namespace BugChang.DES.Core.Monitor
                 }
             }
             return checkBarcodeModel;
+        }
+
+
+        public async Task<IList<Box>> GetAllBoxs(int placeId)
+        {
+            var boxs = await _boxRepository.GetQueryable().Where(a => a.PlaceId == placeId).ToListAsync();
+            return boxs;
+        }
+
+        public async Task<Box> GetBox(int boxId)
+        {
+            var box = await _boxRepository.GetByIdAsync(boxId);
+            return box;
         }
     }
 }

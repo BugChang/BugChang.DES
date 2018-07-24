@@ -19,12 +19,23 @@
                 @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("新增箱格"))
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>设备编码</label>
-                        <input type="text" class="form-control" name="DeviceCode">
+                        <label>正面BN号</label>
+                        <input type="text" class="form-control" name="FrontBn">
+                    </div>
+                    <div class="form-group">
+                        <label>背面BN号</label>
+                        <input type="text" class="form-control" name="BackBn">
                     </div>
                     <div class="form-group">
                         <label>名称</label>
                         <input type="text" class="form-control" name="Name">
+                    </div>
+                    <div class="form-group">
+                        <label>双面锁</label>
+                        <select class="form-control" name="IsTwoLock">
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>常驻提示信息</label>

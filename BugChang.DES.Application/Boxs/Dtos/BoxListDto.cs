@@ -5,9 +5,14 @@ namespace BugChang.DES.Application.Boxs.Dtos
     public class BoxListDto : BaseDto
     {
         /// <summary>
-        /// 设备码
+        /// 正面BN号
         /// </summary>
-        public string DeviceCode { get; set; }
+        public string FrontBn { get; set; }
+
+        /// <summary>
+        /// 背面BN号
+        /// </summary>
+        public string BackBn { get; set; }
 
         /// <summary>
         /// 名称
@@ -25,5 +30,7 @@ namespace BugChang.DES.Application.Boxs.Dtos
         public string PlaceName { get; set; }
 
         public bool Enabled { get; set; }
+
+        public bool IsTwoLock { get; set; }
     }
 }

@@ -6,10 +6,15 @@ namespace BugChang.DES.Application.Boxs.Dtos
     public class BoxEditDto : EditDto
     {
         /// <summary>
-        /// 设备码
+        /// 正面BN号
         /// </summary>
-        [Required(ErrorMessage = "设备编码不能为空")]
-        public string DeviceCode { get; set; }
+        [Required(ErrorMessage = "正面BN号不能为空")]
+        public string FrontBn { get; set; }
+
+        /// <summary>
+        /// 背面BN号
+        /// </summary>
+        public string BackBn { get; set; }
 
         /// <summary>
         /// 名称
@@ -29,5 +34,7 @@ namespace BugChang.DES.Application.Boxs.Dtos
         public int PlaceId { get; set; }
 
         public bool Enabled { get; set; }
+
+        public int IsTwoLock { get; set; }
     }
 }

@@ -1,5 +1,95 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+@model BugChang.DES.Application.Letters.Dtos.SendLetterEditDto
+
+@section css
+    {
+
+    <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+}
+<div class="row">
+    <div class="col-xs-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">收信登记</h3>
+            </div>
+            <div class="box-body">
+                <div class="modal-body">
+                    <form id="BoxCreateForm" method="post" asp-controller="Letter" asp-action="Receive">
+                        <input type="hidden" asp-for="SendDepartmentId" value="" />
+                        <div class="form-group text-left">
+                            <label>收件单位</label>
+                            <button id="btnReceiveDepartment" type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#ReceiveSelectModal" style="text-align: left">请选择收件单位...</button>
+                            <input type="hidden" asp-for="ReceiveDepartmentId" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label>密级</label>
+                            <select class="form-control" asp-for="SecretLevel">
+                                <option value="0">无</option>
+                                <option value="1">秘密</option>
+                                <option value="2">机密</option>
+                                <option value="3">绝密</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>紧急程度</label>
+                            <select class="form-control" asp-for="UrgencyLevel">
+                                <option value="0">无</option>
+                                <option value="1">紧急</option>
+                                <option value="2">特急</option>
+                                <option value="3">限时</option>
+                            </select>
+                        </div>
+                        <div class="form-group hide" id="divUrgencyTime">
+                            <label>限时时间</label>
+                            <input type="text" class="form-control" asp-for="UrgencyTime" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label>附加信息</label>
+                            <textarea class="form-control" asp-for="CustomData" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">今日登记记录</h3>
+            </div>
+            <div class="box-body">
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ReceiveSelectModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="RuleEditForm" method="post" asp-controller="Rule" asp-action="Edit">
+                @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("选择收件单位"))
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-4" style="border-right:1px solid #e5e5e5;">
+                            <ul class="ztree" id="groupTree"></ul>
+                        </div>
+                        <div class="col-xs-8">
+                            <ul class="ztree" id="groupDetailTree"></ul>
+                        </div>
+                    </div>
+                </div>
+                @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithClose.cshtml")
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/lib/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script src="~/views-resource/letter/receive.js" asp-append-version="true"></script>
 }
