@@ -10,5 +10,9 @@ namespace BugChang.DES.Application.Letters
         Task<SendLetterEditDto> GetSendLetter(int letterId);
 
         Task<ResultEntity> AddReceiveLetter(ReceiveLetterEditDto receiveLetter);
+
+        Task<PageResultModel<LetterReceiveListDto>> GetTodayReceiveLetters(PageSearchModel pageSearchModel);
+
+        Task<LetterReceiveBarcodeDto> GetReceiveBarcode(int letterId);
     }
 }

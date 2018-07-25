@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BugChang.DES.Application.Letters.Dtos;
@@ -11,6 +12,7 @@ using BugChang.DES.Core.SerialNumbers;
 using BugChang.DES.Core.Tools;
 using BugChang.DES.Core.UrgentLevels;
 using BugChang.DES.EntityFrameWorkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.Application.Letters
 {
@@ -57,6 +59,18 @@ namespace BugChang.DES.Application.Letters
             await _unitOfWork.CommitAsync();
             result.Data = letter.Id;
             return result;
+        }
+
+        public async Task<PageResultModel<LetterReceiveListDto>> GetTodayReceiveLetters(PageSearchModel pageSearchModel)
+        {
+            var letters = await _letterRepository.GetTodayReceiveLetters(pageSearchModel);
+            return Mapper.Map<PageResultModel<LetterReceiveListDto>>(letters);
+        }
+
+        public async Task<LetterReceiveBarcodeDto> GetReceiveBarcode(int letterId)
+        {
+            var letter = await _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment).SingleOrDefaultAsync(a => a.Id == letterId);
+            return Mapper.Map<LetterReceiveBarcodeDto>(letter);
         }
     }
 }

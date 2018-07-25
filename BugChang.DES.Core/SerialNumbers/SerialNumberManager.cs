@@ -30,7 +30,9 @@ namespace BugChang.DES.Core.SerialNumbers
                 await _numberRepository.AddAsync(serialNumber);
             }
 
-            return serialNumber.Number;
+            var no = serialNumber.Number;
+            serialNumber.Number = serialNumber.Number + 1;
+            return no;
         }
     }
 }

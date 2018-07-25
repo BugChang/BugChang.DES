@@ -1,22 +1,17 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Text;
 using BugChang.DES.Application.Commons;
-using BugChang.DES.Core.Letters;
 
 namespace BugChang.DES.Application.Letters.Dtos
 {
-    public class ReceiveLetterEditDto : EditDto
+    public class LetterReceiveListDto : BaseDto
     {
         /// <summary>
         /// 条码号
         /// </summary>
         public string BarcodeNo { get; set; }
 
-        public EnumLetterType LetterType { get; set; }
-
-        /// <summary>
-        /// 原条码号
-        /// </summary>
         public string OldBarcodeNo { get; set; }
 
         /// <summary>
@@ -32,28 +27,24 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// <summary>
         /// 限时时间
         /// </summary>
-        public DateTime? UrgencyTime { get; set; }
+        public string UrgencyTime { get; set; }
 
         /// <summary>
         /// 收件单位
         /// </summary>
-        [Required(ErrorMessage = "收件单位不能为空")]
-        public int ReceiveDepartmentId { get; set; }
+        public string ReceiveDepartmentName { get; set; }
 
         /// <summary>
         /// 发件单位
         /// </summary>
-        public int SendDepartmentId { get; set; }
+        public string SendDepartmentName { get; set; }
+
+        public string OldSendDepartmentName { get; set; }
 
         /// <summary>
         /// 附加数据
         /// </summary>
         public string CustomData { get; set; }
-
-        /// <summary>
-        /// 原发单位名称
-        /// </summary>
-        public string OldSendDepartmentName { get; set; }
 
         public string Receiver { get; set; }
     }

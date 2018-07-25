@@ -11,5 +11,10 @@
         /// 硬盘分区名称
         /// </summary>
         public string HardDiskPartition { get; set; }
+
+        /// <summary>
+        /// 收信部门（管理部门）
+        /// </summary>
+        public int ReceiveDepartmentId { get; set; }
     }
 }

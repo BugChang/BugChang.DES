@@ -6,6 +6,7 @@ using BugChang.DES.Application.Groups;
 using BugChang.DES.Application.Letters;
 using BugChang.DES.Application.Letters.Dtos;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Letters;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 receiveLetter.SetCreateOrUpdateInfo(CurrentUser.UserId);
-                receiveLetter.SendDepartmentId=CurrentUser.DepartmentId;
+                receiveLetter.LetterType = EnumLetterType.收信;
+                receiveLetter.SendDepartmentId = CurrentUser.DepartmentId;
                 result = await _letterAppService.AddReceiveLetter(receiveLetter);
             }
             else
@@ -48,6 +50,32 @@ namespace BugChang.DES.Web.Mvc.Controllers
                     ?.ErrorMessage;
             }
             return Json(result);
+        }
+
+        public async Task<IActionResult> GetTodayReceiveLetters(int draw, int start, int length)
+        {
+            var keywords = Request.Query["search[value]"];
+            var pageSearchDto = new PageSearchModel
+            {
+                Keywords = keywords,
+                Take = length,
+                Skip = start
+            };
+            var pagereslut = await _letterAppService.GetTodayReceiveLetters(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
+        }
+
+        public async Task<IActionResult> GetReceiveBarcode(int id)
+        {
+            var letter = await _letterAppService.GetReceiveBarcode(id);
+            return Json(letter);
         }
 
         public IActionResult Send()

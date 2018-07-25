@@ -1,5 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.SecretLevels;
+using BugChang.DES.Core.UrgentLevels;
 
 namespace BugChang.DES.Core.Letters
 {
@@ -11,6 +15,11 @@ namespace BugChang.DES.Core.Letters
         public string BarcodeNo { get; set; }
 
         /// <summary>
+        /// 信件类型
+        /// </summary>
+        public EnumLetterType LetterType { get; set; }  
+
+        /// <summary>
         /// 原条码号
         /// </summary>
         public string OldBarcodeNo { get; set; }
@@ -18,12 +27,12 @@ namespace BugChang.DES.Core.Letters
         /// <summary>
         /// 密级
         /// </summary>
-        public int SecretLevel { get; set; }
+        public EnumSecretLevel SecretLevel { get; set; }
 
         /// <summary>
         /// 紧急程度
         /// </summary>
-        public int UrgencyLevel { get; set; }
+        public EnumUrgentLevel UrgencyLevel { get; set; }
 
         /// <summary>
         /// 现实时间
@@ -34,6 +43,11 @@ namespace BugChang.DES.Core.Letters
         /// 收件单位
         /// </summary>
         public int ReceiveDepartmentId { get; set; }
+
+        /// <summary>
+        /// 收件人
+        /// </summary>
+        public string Receiver { get; set; }
 
         /// <summary>
         /// 发件单位
@@ -51,5 +65,11 @@ namespace BugChang.DES.Core.Letters
         public string OldSendDepartmentName { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        [ForeignKey("SendDepartmentId")]
+        public virtual Department SendDepartment { get; set; }
+
+        [ForeignKey("ReceiveDepartmentId")]
+        public virtual Department ReceiveDepartment { get; set; }
     }
 }
