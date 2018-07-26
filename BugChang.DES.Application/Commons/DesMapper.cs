@@ -5,6 +5,7 @@ using BugChang.DES.Application.Cards.Dtos;
 using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Application.ExchangeObjects.Dtos;
 using BugChang.DES.Application.Groups.Dtos;
+using BugChang.DES.Application.HardWares.Dtos;
 using BugChang.DES.Application.Letters.Dtos;
 using BugChang.DES.Application.Logs.Dtos;
 using BugChang.DES.Application.Menus.Dtos;
@@ -23,6 +24,7 @@ using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Exchanges.Rules;
 using BugChang.DES.Core.Groups;
+using BugChang.DES.Core.HardWares;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.SecretLevels;
@@ -219,6 +221,11 @@ namespace BugChang.DES.Application.Commons
 
                 #endregion
 
+                #region HardWare
+
+                cfg.CreateMap<HardWareSaveDto, HardWare>();
+
+                #endregion
             });
         }
 

@@ -1,0 +1,76 @@
+﻿<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3>硬件参数设置</h3>
+    </div>
+    <div class="box-body">
+        <form asp-controller="HardWare" asp-action="Save" method="post" id="HardWareSaveForm">
+            <input type="hidden" id="macAddress" name="macAddress" value="" />
+            <div class="form-group">
+                <label class="control-label">激光打印机（A4纸）</label>
+                <select class="form-control printer" name="LaserPrintA4"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">激光打印机（B5纸）</label>
+                <select class="form-control printer" name="LaserPrintB5"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">条码打印机（60*25）</label>
+                <select class="form-control printer" name="BarcodePrint6025"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">条码打印机（90*30）</label>
+                <select class="form-control printer" name="BarcodePrint9030"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">条码打印机（80*130）</label>
+                <select class="form-control printer" name="BarcodePrint80130"></select>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">ID读卡器 & 波特率</label>
+                <select class="form-control serialPort" name="IdReadCard"></select>
+                <select class="form-control" name="IdReadCardBaudRate">
+                    <option value="9600">9600</option>
+                    <option value="19200">19200</option>
+                    <option value="115200">115200</option>
+                </select>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label">IC读卡器 & 波特率</label>
+                <select class="form-control serialPort" name="IcReadCard"></select>
+                <select class="form-control" name="IcReadCardBaudRate">
+                    <option value="9600">9600</option>
+                    <option value="19200">19200</option>
+                    <option value="115200">115200</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Cpu读卡器 & 波特率</label>
+                <select class="form-control serialPort" name="CpuReadCard"></select>
+                <select class="form-control" name="CpuReadCardBaudRate">
+                    <option value="9600">9600</option>
+                    <option value="19200">19200</option>
+                    <option value="115200">115200</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">扫描枪 & 波特率</label>
+                <select class="form-control serialPort" name="ScanGun"></select>
+                <select class="form-control" name="ScanGunBaudRate">
+                    <option value="9600">9600</option>
+                    <option value="19200">19200</option>
+                    <option value="115200">115200</option>
+                </select>
+            </div>
+            <div class="form-group text-right">
+                <button id="btnSave" type="submit" class="btn btn-primary"><i class="fa  fa-save"></i> 保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts
+    {
+    <script src="~/js/LodopFuncs.js"></script>
+    <script src="~/views-resource/hardWare/index.js" asp-append-version="true"></script>
+}
