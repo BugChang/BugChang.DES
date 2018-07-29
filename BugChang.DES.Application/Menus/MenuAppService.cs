@@ -50,7 +50,7 @@ namespace BugChang.DES.Application.Menus
             return Mapper.Map<IList<MenuListDto>>(menus);
         }
 
-        public async Task<PageResultModel<MenuListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<MenuListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
             var pageResult = await _menuRepository.GetPagingAysnc(pageSearchDto.ParentId, pageSearchDto.Take, pageSearchDto.Skip, pageSearchDto.Keywords);
             return Mapper.Map<PageResultModel<MenuListDto>>(pageResult);

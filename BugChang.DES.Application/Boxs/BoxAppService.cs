@@ -52,7 +52,7 @@ namespace BugChang.DES.Application.Boxs
             return Mapper.Map<BoxEditDto>(box);
         }
 
-        public async Task<PageResultModel<BoxListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<BoxListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
             var pageResult = await _boxRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<BoxListDto>>(pageResult);

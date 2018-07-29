@@ -21,6 +21,6 @@ namespace BugChang.DES.Core.Commons
 
     public interface IBasePageSearchRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
-        Task<PageResultModel<TEntity>> GetPagingAysnc(PageSearchModel pageSearchModel);
+        Task<PageResultModel<TEntity>> GetPagingAysnc(PageSearchCommonModel pageSearchModel);
     }
 }

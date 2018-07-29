@@ -57,7 +57,11 @@
                         </div>
                         <div class="form-group">
                             <label>市机码</label>
-                            <input type="text" class="form-control" asp-for="CustomData" />
+                            <input type="text" class="form-control" asp-for="ShiJiCode" />
+                        </div>
+                        <div class="form-group">
+                            <label>附加数据</label>
+                            <textarea asp-for="CustomData" class="form-control" placeholder="可自由记录附加信息，如文号等..." rows="3"></textarea>
                         </div>
                         <div class="form-group text-right">
                             <button id="btnPrintBarcode" type="button" class="btn btn-primary"><i class="fa  fa-barcode"></i> 打印条码</button>

@@ -21,7 +21,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<PageResultModel<Log>> GetSystemLogs(PageSearchModel pageSearchModel)
+        public async Task<PageResultModel<Log>> GetSystemLogs(PageSearchCommonModel pageSearchModel)
         {
             var query = _dbContext.Logs.Where(a => a.Type == EnumLogType.System);
             if (!string.IsNullOrWhiteSpace(pageSearchModel.Keywords))
@@ -37,7 +37,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             };
         }
 
-        public async Task<PageResultModel<Log>> GetAuditLogs(PageSearchModel pageSearchModel)
+        public async Task<PageResultModel<Log>> GetAuditLogs(PageSearchCommonModel pageSearchModel)
         {
             var query = _dbContext.Logs.Include(a => a.Operator).Where(a => a.Type == EnumLogType.Audit);
             if (!string.IsNullOrWhiteSpace(pageSearchModel.Keywords))

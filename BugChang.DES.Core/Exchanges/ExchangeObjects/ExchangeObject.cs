@@ -44,6 +44,11 @@ namespace BugChang.DES.Core.Exchanges.ExchangeObjects
         /// </summary>
         public bool IsVirtual { get; set; }
 
+        /// <summary>
+        /// 限制码
+        /// </summary>
+        public string RestrictionCode { get; set; }
+
         public bool IsDeleted { get; set; }
 
         [ForeignKey("ParentId")]

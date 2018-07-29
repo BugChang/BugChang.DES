@@ -42,6 +42,11 @@ namespace BugChang.DES.Application.Letters.Dtos
         public string OldSendDepartmentName { get; set; }
 
         /// <summary>
+        /// 市机码
+        /// </summary>
+        public string ShiJiCode { get; set; }
+
+        /// <summary>
         /// 附加数据
         /// </summary>
         public string CustomData { get; set; }

@@ -12,6 +12,8 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// </summary>
         public string BarcodeNo { get; set; }
 
+        public string LetterNo { get; set; }
+
         public EnumLetterType LetterType { get; set; }
 
         /// <summary>
@@ -44,6 +46,11 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// 发件单位
         /// </summary>
         public int SendDepartmentId { get; set; }
+
+        /// <summary>
+        /// 市机码
+        /// </summary>
+        public string ShiJiCode { get; set; }
 
         /// <summary>
         /// 附加数据

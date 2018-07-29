@@ -139,8 +139,12 @@
                     title: '限时时间'
                 },
                 {
-                    data: 'customData',
+                    data: 'shiJiCode',
                     title: '市机码'
+                },
+                {
+                    data: 'customData',
+                    title: '附加数据'
                 },
                 {
                     data: 'createUserName',

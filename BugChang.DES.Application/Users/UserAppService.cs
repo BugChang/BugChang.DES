@@ -110,7 +110,7 @@ namespace BugChang.DES.Application.Users
             return Mapper.Map<UserEditDto>(user);
         }
 
-        public async Task<PageResultModel<UserListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<UserListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
             var users = await _userRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<UserListDto>>(users);

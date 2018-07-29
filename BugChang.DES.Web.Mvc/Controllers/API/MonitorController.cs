@@ -65,11 +65,23 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
             return Json(box);
         }
 
+        /// <summary>
+        /// 检查证卡类型
+        /// </summary>
+        /// <param name="cardValue"></param>
+        /// <param name="placeId"></param>
+        /// <param name="boxId"></param>
+        /// <returns></returns>
         public async Task<IActionResult> CheckCardType(string cardValue, int placeId, int boxId)
         {
-            //todo:如果是本场所管理员，负责的流转对象的箱子为签收，不负责的为开门
-            //todo:如果不是本场所管理员，只负责签收负责的流转对象
-            return Json(null);
+            var result = await _monitorAppService.CheckCardType(placeId, boxId, cardValue);
+            return Json(result);
+        }
+
+        public async Task<IActionResult> SaveLetter(int pacleId, string barCode, int boxId, int fileCount, bool isJiaJi)
+        {
+            var result = await _monitorAppService.SaveLetter(pacleId, barCode, boxId, 1, isJiaJi);
+            return Json(result);
         }
     }
 }

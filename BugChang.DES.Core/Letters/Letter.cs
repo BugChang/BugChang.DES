@@ -15,9 +15,14 @@ namespace BugChang.DES.Core.Letters
         public string BarcodeNo { get; set; }
 
         /// <summary>
+        /// 信封号
+        /// </summary>
+        public string LetterNo { get; set; }
+
+        /// <summary>
         /// 信件类型
         /// </summary>
-        public EnumLetterType LetterType { get; set; }  
+        public EnumLetterType LetterType { get; set; }
 
         /// <summary>
         /// 原条码号
@@ -55,6 +60,11 @@ namespace BugChang.DES.Core.Letters
         public int SendDepartmentId { get; set; }
 
         /// <summary>
+        /// 市机码
+        /// </summary>
+        public string ShiJiCode { get; set; }
+
+        /// <summary>
         /// 附加数据
         /// </summary>
         public string CustomData { get; set; }
@@ -71,5 +81,53 @@ namespace BugChang.DES.Core.Letters
 
         [ForeignKey("ReceiveDepartmentId")]
         public virtual Department ReceiveDepartment { get; set; }
+
+        public string GetLetterNo(string barCodeNo)
+        {
+            if (barCodeNo.Length == 33)
+            {
+                return barCodeNo.Substring(15, 7);
+            }
+            if (barCodeNo.Length == 26)
+            {
+                return barCodeNo.Substring(8, 8);
+            }
+
+            return "";
+        }
+
+        public EnumSecretLevel GetSecretLevel(string barCode)
+        {
+            if (barCode.Length == 33)
+            {
+                var sec = Convert.ToInt32(barCode.Substring(11, 1));
+                return (EnumSecretLevel)(sec - 1);
+            }
+
+            if (barCode.Length == 26)
+            {
+                var sec = Convert.ToInt32(barCode.Substring(17, 1));
+                return (EnumSecretLevel)sec;
+            }
+
+            return EnumSecretLevel.无;
+        }
+
+        public EnumUrgentLevel GetUrgencyLevel(string barCode)
+        {
+            if (barCode.Length == 33)
+            {
+                var urg = Convert.ToInt32(barCode.Substring(12, 1));
+                return (EnumUrgentLevel)(urg - 1);
+            }
+
+            if (barCode.Length == 26)
+            {
+                var urg = Convert.ToInt32(barCode.Substring(18, 1));
+                return (EnumUrgentLevel)urg;
+            }
+
+            return EnumUrgentLevel.无;
+        }
     }
 }

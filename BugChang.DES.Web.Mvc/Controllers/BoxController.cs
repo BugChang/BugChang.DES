@@ -53,7 +53,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> GetBoxs(int draw, int start, int length)
         {
             var keywords = Request.Query["search[value]"];
-            var pageSearchDto = new PageSearchModel
+            var pageSearchDto = new PageSearchCommonModel
             {
                 Keywords = keywords,
                 Take = length,

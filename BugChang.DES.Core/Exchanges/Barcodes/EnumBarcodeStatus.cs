@@ -6,13 +6,13 @@
         已投递,
         已签收,
         已勘误,
-        已退回
+        已退回,
+        申请退回
     }
 
     public enum EnumBarcodeSubStatus
     {
         正常,
-        勘误,
         退回
     }
 }

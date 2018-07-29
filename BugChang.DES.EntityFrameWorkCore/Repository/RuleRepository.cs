@@ -14,7 +14,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<PageResultModel<Rule>> GetPagingAysnc(PageSearchModel pageSearchModel)
+        public async Task<PageResultModel<Rule>> GetPagingAysnc(PageSearchCommonModel pageSearchModel)
         {
 
             var query = _dbContext.BarcodeRules.Include(a => a.CreateUser).Include(a => a.UpdateUser).Where(a => true);

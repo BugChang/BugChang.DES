@@ -108,7 +108,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<JsonResult> GetListForTable(int draw, int start, int length, int? parentId)
         {
             var keywords = Request.Query["search[value]"];
-            var pageSearchDto = new PageSearchModel
+            var pageSearchDto = new PageSearchCommonModel
             {
                 Keywords = keywords,
                 ParentId = parentId == 0 ? null : parentId,

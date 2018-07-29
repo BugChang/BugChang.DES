@@ -55,7 +55,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         /// </summary>
         /// <param name="pageSearchModel"></param>
         /// <returns></returns>
-        public async Task<PageResultModel<User>> GetPagingAysnc(PageSearchModel pageSearchModel)
+        public async Task<PageResultModel<User>> GetPagingAysnc(PageSearchCommonModel pageSearchModel)
         {
             var query = _dbContext.Users.Include(a => a.CreateUser).Include(a => a.UpdateUser)
                 .Include(a => a.Department).Where(a => true);
