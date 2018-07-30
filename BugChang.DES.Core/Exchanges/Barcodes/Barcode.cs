@@ -35,6 +35,11 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         public EnumBarcodeEntity Entity { get; set; }
 
         /// <summary>
+        /// 当前流转对象Id
+        /// </summary>
+        public int CurrentObjectId { get; set; }
+
+        /// <summary>
         /// 附加数据
         /// </summary>
         public string CustomData { get; set; }

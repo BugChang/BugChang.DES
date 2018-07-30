@@ -129,5 +129,33 @@ namespace BugChang.DES.Core.Letters
 
             return EnumUrgentLevel.无;
         }
+
+        public string GetSendCode(string barCodeNo)
+        {
+            if (barCodeNo.Length == 33)
+            {
+                return barCodeNo.Substring(0, 11);
+            }
+            if (barCodeNo.Length == 26)
+            {
+                return barCodeNo.Substring(1, 6);
+            }
+
+            return "";
+        }
+
+        public string GetReceiveCode(string barCodeNo)
+        {
+            if (barCodeNo.Length == 33)
+            {
+                return barCodeNo.Substring(22, 11);
+            }
+            if (barCodeNo.Length == 26)
+            {
+                return barCodeNo.Substring(19, 6);
+            }
+
+            return "";
+        }
     }
 }

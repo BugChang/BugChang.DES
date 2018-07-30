@@ -49,5 +49,15 @@ namespace BugChang.DES.Application.Monitors
             }
             return result;
         }
+
+        public async Task<int> UserGetLetter(int boxId, string cardValue, int placeId)
+        {
+            var result = await _monitorManager.UserGetLetter(boxId, cardValue, placeId);
+            if (result > 0)
+            {
+                await _unitOfWork.CommitAsync();
+            }
+            return result;
+        }
     }
 }

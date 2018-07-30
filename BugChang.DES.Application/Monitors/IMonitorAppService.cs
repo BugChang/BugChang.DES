@@ -16,5 +16,7 @@ namespace BugChang.DES.Application.Monitors
         Task<CheckCardTypeModel> CheckCardType(int placeId, int boxId, string cardValue);
 
         Task<int> SaveLetter(int placeId, string barCode, int boxId, int fileCount, bool isJiaJi);
+
+        Task<int> UserGetLetter(int boxId, string cardValue, int placeId);
     }
 }

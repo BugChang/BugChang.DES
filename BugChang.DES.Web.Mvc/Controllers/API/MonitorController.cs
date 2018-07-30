@@ -83,5 +83,12 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
             var result = await _monitorAppService.SaveLetter(pacleId, barCode, boxId, 1, isJiaJi);
             return Json(result);
         }
+
+        public async Task<IActionResult> Box_UserGetLetter(int boxId, string cardValue, int placeId)
+        {
+            var result = await _monitorAppService.UserGetLetter(boxId, cardValue, placeId);
+            return Json(result);
+        
+        }
     }
 }

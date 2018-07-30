@@ -135,6 +135,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<ISerialNumberRepository, SerialNumberRepository>();
             services.AddScoped<IBarcodeRepository, BarcodeRepository>();
             services.AddScoped<IHardWareRepository, HardWareRepository>();
+            services.AddScoped<IBarcodeLogRepository, BarcodeLogRepository>();
 
             #endregion
 

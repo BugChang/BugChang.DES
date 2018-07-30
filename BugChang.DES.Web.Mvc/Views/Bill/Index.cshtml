@@ -1,0 +1,63 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+@section css
+    {
+    <style>
+
+        .col-md-6 a {
+            height: 160px;
+            line-height: 160px;
+            font-size: 48pt;
+            vertical-align: middle;
+            margin: 10px;
+        }
+
+        .col-md-4 a {
+            height: 100px;
+            line-height: 100px;
+            font-size: 24pt;
+            vertical-align: middle;
+            margin: 10px;
+        }
+    </style>
+}
+<div class="col-md-6">
+    <a class="btn btn-info btn-block print-receive" data-toggle="modal" data-target="#SelectObjectModal">收件清单</a>
+</div>
+<div class="col-md-6">
+    <a class="btn btn-warning btn-block print-send">发件清单</a>
+</div>
+<div class="col-md-6">
+    <a class="btn btn-success btn-block print-receive-send">收发清单</a>
+</div>
+<div class="col-md-6">
+    <a asp-action="List" asp-controller="Bill" class="btn btn-primary btn-block">历史清单</a>
+</div>
+<div class="modal fade" id="SelectObjectModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("选择流转对象"))
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a class="btn btn-info btn-block print-receive">全部</a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-warning btn-block print-send">外发</a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-success btn-block print-receive-send">办公室</a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-info btn-block print-receive">全部</a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-warning btn-block print-send">外发</a>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="btn btn-success btn-block print-receive-send">办公室</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

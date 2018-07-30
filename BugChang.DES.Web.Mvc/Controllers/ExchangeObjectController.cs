@@ -63,7 +63,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var json = departments.Select(a => new SelectViewModel
             {
                 Id = a.Id,
-                Text = a.Name
+                Text = a.FullName
             });
             return Json(json);
         }
