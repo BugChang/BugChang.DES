@@ -31,6 +31,16 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         /// </summary>
         public int? OperatorId { get; set; }
 
+        /// <summary>
+        /// 当前流转对象Id
+        /// </summary>
+        public int CurrentObjectId { get; set; }
+
+        /// <summary>
+        /// 当前场所
+        /// </summary>
+        public int CurrentPlaceId { get; set; }
+
 
         /// <summary>
         /// 备注

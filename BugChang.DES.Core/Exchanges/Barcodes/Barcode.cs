@@ -40,6 +40,11 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         public int CurrentObjectId { get; set; }
 
         /// <summary>
+        /// 当前场所
+        /// </summary>
+        public int CurrentPlaceId { get; set; }
+
+        /// <summary>
         /// 附加数据
         /// </summary>
         public string CustomData { get; set; }
