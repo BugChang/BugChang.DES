@@ -34,6 +34,11 @@ namespace BugChang.DES.Core.Departments
 
         public int? ParentId { get; set; }
 
+        /// <summary>
+        /// 地址
+        /// </summary>
+        public string Address { get; set; }
+
         public bool IsDeleted { get; set; }
 
         [JsonIgnore]

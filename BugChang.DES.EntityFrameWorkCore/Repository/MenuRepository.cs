@@ -47,7 +47,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         /// <returns></returns>
         public async Task<IList<Menu>> GetAllRootAsync()
         {
-            return await _dbContext.Menus.Include(a => a.Items).ThenInclude(a=>a.Items).Where(a => a.ParentId == null).ToListAsync();
+            return await _dbContext.Menus.Include(a => a.Items).ThenInclude(a => a.Items).Where(a => a.ParentId == null).ToListAsync();
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             var pageResultEntity = new PageResultModel<Menu>
             {
                 Total = await query.CountAsync(),
-                Rows = await query.Take(take).Skip(skip).ToListAsync()
+                Rows = await query.Take(take).Skip(skip).OrderByDescending(a => a.Id).ToListAsync()
             };
 
             return pageResultEntity;

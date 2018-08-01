@@ -24,7 +24,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             }
             return new PageResultModel<Rule>
             {
-                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync(),
+                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync(),
                 Total = await query.CountAsync()
             };
         }

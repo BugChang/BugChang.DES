@@ -16,20 +16,20 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<PageResultModel<Group>> GetPagingAysnc(PageSearchModel pageSearchModel)
         {
-            var query = _dbContext.Groups.Include(a=>a.CreateUser).Include(a=>a.UpdateUser).Where(a => true);
+            var query = _dbContext.Groups.Include(a => a.CreateUser).Include(a => a.UpdateUser).Where(a => true);
             if (!string.IsNullOrWhiteSpace(pageSearchModel.Keywords))
             {
                 query = query.Where(a => a.Name.Contains(pageSearchModel.Keywords));
             }
             return new PageResultModel<Group>
             {
-                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync(),
+                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync(),
                 Total = await query.CountAsync()
             };
         }
     }
 
-    public class GroupDetailRepository:BaseRepository<GroupDetail>,IGroupDetailRepository
+    public class GroupDetailRepository : BaseRepository<GroupDetail>, IGroupDetailRepository
     {
         public GroupDetailRepository(DesDbContext dbContext) : base(dbContext)
         {

@@ -33,7 +33,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             return new PageResultModel<Log>
             {
                 Total = await query.CountAsync(),
-                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync()
+                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync()
             };
         }
 
@@ -49,7 +49,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             return new PageResultModel<Log>
             {
                 Total = await query.CountAsync(),
-                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync()
+                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync()
             };
         }
     }
