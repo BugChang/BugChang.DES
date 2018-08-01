@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using BugChang.DES.Application.Commons;
+using BugChang.DES.Core.Letters;
 
 namespace BugChang.DES.Application.Letters.Dtos
 {
@@ -9,6 +11,10 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// 条码号
         /// </summary>
         public string BarcodeNo { get; set; }
+
+        public string LetterNo { get; set; }
+
+        public EnumLetterType LetterType { get; set; }
 
         /// <summary>
         /// 原条码号
@@ -33,12 +39,18 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// <summary>
         /// 收件单位
         /// </summary>
+        [Required(ErrorMessage = "收件单位不能为空")]
         public int ReceiveDepartmentId { get; set; }
 
         /// <summary>
         /// 发件单位
         /// </summary>
         public int SendDepartmentId { get; set; }
+
+        /// <summary>
+        /// 市机码
+        /// </summary>
+        public string ShiJiCode { get; set; }
 
         /// <summary>
         /// 附加数据
@@ -49,5 +61,7 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// 原发单位名称
         /// </summary>
         public string OldSendDepartmentName { get; set; }
+
+        public string Receiver { get; set; }
     }
 }

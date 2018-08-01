@@ -34,7 +34,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             return await _dbContext.Departments.CountAsync(d => d.ParentId == parentId);
         }
 
-        public async Task<PageResultModel<Department>> GetPagingAysnc(PageSearchModel pageSearchModel)
+        public async Task<PageResultModel<Department>> GetPagingAysnc(PageSearchCommonModel pageSearchModel)
         {
             var query = from department in _dbContext.Departments
                         where department.ParentId == pageSearchModel.ParentId

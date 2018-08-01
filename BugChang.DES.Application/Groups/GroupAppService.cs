@@ -69,7 +69,7 @@ namespace BugChang.DES.Application.Groups
             return Mapper.Map<GroupEditDto>(group);
         }
 
-        public async Task<PageResultModel<GroupListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<GroupListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
             var groups = await _groupRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<GroupListDto>>(groups);

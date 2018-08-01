@@ -32,6 +32,10 @@
                 <option value="true" @(Model.IsVirtual?"selected=\"selected\"":"")>是</option>
             </select>
         </div>
+        <div class="form-group">
+            <label>限制码</label>
+            <input asp-for="RestrictionCode" class="form-control" type="text" value="@Model.RestrictionCode" />
+        </div>
         <input type="hidden" asp-for="ValueText" value="@Model.ValueText" />
     </div>
     @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")

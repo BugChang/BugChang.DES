@@ -7,9 +7,9 @@ namespace BugChang.DES.Application.Logs
 {
     public interface ILogAppService
     {
-        Task<PageResultModel<AuditLogListDto>> GetAuditLogs(PageSearchModel pageSearchModel);
+        Task<PageResultModel<AuditLogListDto>> GetAuditLogs(PageSearchCommonModel pageSearchModel);
 
-        Task<PageResultModel<SystemLogListDto>> GetSystemLogs(PageSearchModel pageSearchModel);
+        Task<PageResultModel<SystemLogListDto>> GetSystemLogs(PageSearchCommonModel pageSearchModel);
 
 
     }

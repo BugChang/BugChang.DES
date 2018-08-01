@@ -7,11 +7,13 @@ using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Exchanges.Rules;
 using BugChang.DES.Core.Groups;
+using BugChang.DES.Core.HardWares;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.SerialNumbers;
@@ -68,5 +70,8 @@ namespace BugChang.DES.EntityFrameWorkCore
         public DbSet<Card> Cards { get; set; }
         public DbSet<SerialNumber> SerialNumbers { get; set; }
         public DbSet<Letter> Letters { get; set; }
+        public DbSet<HardWare> HardWares { get; set; }
+        public DbSet<BarcodeLog> BarcodeLogs { get; set; }
+        public DbSet<Barcode> Barcodes { get; set; }
     }
 }

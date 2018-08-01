@@ -49,7 +49,7 @@ namespace BugChang.DES.Application.Roles
             return Mapper.Map<RoleEditDto>(role);
         }
 
-        public async Task<PageResultModel<RoleListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<RoleListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
             var roles = await _roleRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<RoleListDto>>(roles);

@@ -55,7 +55,7 @@ namespace BugChang.DES.Application.ExchangeObjects
             return Mapper.Map<ExchangeObjectEditDto>(exchangeObject);
         }
 
-        public async Task<PageResultModel<ExchangeObjectListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<ExchangeObjectListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
             var exchangeObjects = await _exchangeObjectRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<ExchangeObjectListDto>>(exchangeObjects);

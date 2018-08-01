@@ -47,6 +47,7 @@ namespace BugChang.DES.Core.Exchanges.Boxs
 
         public int FileCount { get; set; }
 
+
         [ForeignKey("PlaceId")]
         public virtual Place Place { get; set; }
     }

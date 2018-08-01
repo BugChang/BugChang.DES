@@ -110,6 +110,10 @@
                     title: '值'
                 },
                 {
+                    data: 'restrictionCode',
+                    title: '限制码'
+                },
+                {
                     data: 'parentName',
                     title: '上级流转对象'
                 },
@@ -140,7 +144,7 @@
             ],
             columnDefs: [
                 {
-                    targets: 5,
+                    targets: 6,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (row.isVirtual) {
@@ -152,7 +156,7 @@
                     }
                 },
                 {
-                    targets: 10,
+                    targets: 11,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (Common.hasOperation('ExchangeObject.AssignObjectSigner')) {

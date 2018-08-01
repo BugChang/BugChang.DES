@@ -67,7 +67,7 @@ namespace BugChang.DES.Application.Rules
             return Mapper.Map<RuleEditDto>(barcodeRule);
         }
 
-        public async Task<PageResultModel<RuleListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<RuleListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
             return Mapper.Map<PageResultModel<RuleListDto>>(await _ruleRepository.GetPagingAysnc(pageSearchDto));
         }

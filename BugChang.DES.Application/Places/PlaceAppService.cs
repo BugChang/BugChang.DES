@@ -57,7 +57,7 @@ namespace BugChang.DES.Application.Places
             return Mapper.Map<PlaceEditDto>(await _placeRepository.GetByIdAsync(id));
         }
 
-        public async Task<PageResultModel<PlaceListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<PlaceListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
             var pageResult = await _placeRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<PlaceListDto>>(pageResult);

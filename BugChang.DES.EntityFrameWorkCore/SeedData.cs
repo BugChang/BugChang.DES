@@ -19,7 +19,7 @@ namespace BugChang.DES.EntityFrameWorkCore
                 var dbContext = serviceScope.ServiceProvider.GetService<DesDbContext>();
 
 
-               //dbContext.Database.EnsureDeleted();
+                //dbContext.Database.EnsureDeleted();
 
                 dbContext.Database.EnsureCreated();
 

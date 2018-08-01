@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.UrgentLevels;
+using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.Core.Exchanges.Barcodes
 {
@@ -11,10 +13,12 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
     {
 
         private readonly IBarcodeRepository _barcodeRepository;
+        private readonly IDepartmentRepository _departmentRepository;
 
-        public BarcodeManager(IBarcodeRepository barcodeRepository)
+        public BarcodeManager(IBarcodeRepository barcodeRepository, IDepartmentRepository departmentRepository)
         {
             _barcodeRepository = barcodeRepository;
+            _departmentRepository = departmentRepository;
         }
 
         /// <summary>
@@ -98,5 +102,110 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
             return barCode;
         }
 
+        public async Task<int> GetSendDepartmentId(string barCodeNo)
+        {
+            var sendDepartmentId = 0;
+            switch (barCodeNo.Length)
+            {
+                case 26:
+                    {
+                        var sendlv1Code = barCodeNo.Substring(1, 3);
+                        var sendlv1Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == null && a.Code == sendlv1Code).FirstOrDefaultAsync();
+                        if (sendlv1Department != null)
+                        {
+                            sendDepartmentId = sendlv1Department.Id;
+                            var sendlv2Code = barCodeNo.Substring(4, 3);
+                            var sendlv2Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == sendlv1Department.Id && a.Code == sendlv2Code).FirstOrDefaultAsync();
+                            if (sendlv2Department != null)
+                            {
+                                sendDepartmentId = sendlv2Department.Id;
+                            }
+                        }
+                    }
+                    break;
+                case 33:
+                    {
+                        var sendlv1Code = barCodeNo.Substring(0, 3);
+                        var sendlv1Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == null && a.Code == sendlv1Code).FirstOrDefaultAsync();
+                        if (sendlv1Department != null)
+                        {
+                            sendDepartmentId = sendlv1Department.Id;
+                            var sendlv2Code = barCodeNo.Substring(3, 3);
+                            var sendlv2Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == sendlv1Department.Id && a.Code == sendlv2Code).FirstOrDefaultAsync();
+                            if (sendlv2Department != null)
+                            {
+                                sendDepartmentId = sendlv2Department.Id;
+                                var sendlv3Code = barCodeNo.Substring(6, 3);
+                                var sendlv3Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == sendlv2Department.Id && a.Code == sendlv3Code).FirstOrDefaultAsync();
+                                if (sendlv3Department != null)
+                                {
+                                    sendDepartmentId = sendlv3Department.Id;
+                                    var sendlv4Code = barCodeNo.Substring(9, 2);
+                                    var sendlv4Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == sendlv3Department.Id && a.Code == sendlv4Code).FirstOrDefaultAsync();
+                                    if (sendlv4Department != null)
+                                    {
+                                        sendDepartmentId = sendlv4Department.Id;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+            return sendDepartmentId;
+        }
+
+        public async Task<int> GetReceiveDepartmentId(string barCodeNo)
+        {
+            var receiveDepartmentId = 0;
+            switch (barCodeNo.Length)
+            {
+                case 26:
+                    {
+                        var receivelv1Code = barCodeNo.Substring(19, 3);
+                        var receivelv1Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == null && a.Code == receivelv1Code).FirstOrDefaultAsync();
+                        if (receivelv1Department != null)
+                        {
+                            receiveDepartmentId = receivelv1Department.Id;
+                            var receivelv2Code = barCodeNo.Substring(22, 3);
+                            var receivelv2Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == receivelv1Department.Id && a.Code == receivelv2Code).FirstOrDefaultAsync();
+                            if (receivelv2Department != null)
+                            {
+                                receiveDepartmentId = receivelv2Department.Id;
+                            }
+                        }
+                    }
+                    break;
+                case 33:
+                    {
+                        var receivelv1Code = barCodeNo.Substring(22, 3);
+                        var receivelv1Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == null && a.Code == receivelv1Code).FirstOrDefaultAsync();
+                        if (receivelv1Department != null)
+                        {
+                            receiveDepartmentId = receivelv1Department.Id;
+                            var receivelv2Code = barCodeNo.Substring(25, 3);
+                            var receivelv2Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == receivelv1Department.Id && a.Code == receivelv2Code).FirstOrDefaultAsync();
+                            if (receivelv2Department != null)
+                            {
+                                receiveDepartmentId = receivelv2Department.Id;
+                                var receivelv3Code = barCodeNo.Substring(28, 3);
+                                var receivelv3Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == receivelv2Department.Id && a.Code == receivelv3Code).FirstOrDefaultAsync();
+                                if (receivelv3Department != null)
+                                {
+                                    receiveDepartmentId = receivelv3Department.Id;
+                                    var receivelv4Code = barCodeNo.Substring(31, 2);
+                                    var receivelv4Department = await _departmentRepository.GetQueryable().Where(a => a.ParentId == receivelv3Department.Id && a.Code == receivelv4Code).FirstOrDefaultAsync();
+                                    if (receivelv4Department != null)
+                                    {
+                                        receiveDepartmentId = receivelv4Department.Id;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+            return receiveDepartmentId;
+        }
     }
 }

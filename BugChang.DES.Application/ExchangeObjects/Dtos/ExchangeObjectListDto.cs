@@ -15,5 +15,10 @@ namespace BugChang.DES.Application.ExchangeObjects.Dtos
         public string ParentName { get; set; }
 
         public bool IsVirtual { get; set; }
+
+        /// <summary>
+        /// 限制码
+        /// </summary>
+        public string RestrictionCode { get; set; }
     }
 }

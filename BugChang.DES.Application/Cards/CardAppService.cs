@@ -65,7 +65,7 @@ namespace BugChang.DES.Application.Cards
             return Mapper.Map<CardEditDto>(card);
         }
 
-        public async Task<PageResultModel<CardListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<CardListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
             var cards = await _cardRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<CardListDto>>(cards);

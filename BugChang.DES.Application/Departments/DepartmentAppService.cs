@@ -88,7 +88,7 @@ namespace BugChang.DES.Application.Departments
         /// </summary>
         /// <param name="pageSearchDto"></param>
         /// <returns></returns>
-        public async Task<PageResultModel<DepartmentListDto>> GetPagingAysnc(PageSearchModel pageSearchDto)
+        public async Task<PageResultModel<DepartmentListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
             var pageResult = await _departmentRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<DepartmentListDto>>(pageResult);

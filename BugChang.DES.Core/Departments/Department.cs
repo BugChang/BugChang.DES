@@ -65,7 +65,7 @@ namespace BugChang.DES.Core.Departments
         /// </summary>
         public string SetFullName(Department parentDepartment)
         {
-            if (!string.IsNullOrWhiteSpace(FullName))
+            if (string.IsNullOrWhiteSpace(FullName))
             {
                 return parentDepartment.FullName + Name;
             }

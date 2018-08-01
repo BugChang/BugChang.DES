@@ -21,11 +21,25 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         /// </summary>
         public DateTime OperationTime { get; set; }
 
+        /// <summary>
+        /// 操作单位
+        /// </summary>
+        public int DepartmentId { get; set; }
 
         /// <summary>
         /// 操作人
         /// </summary>
-        public int OperatorId { get; set; }
+        public int? OperatorId { get; set; }
+
+        /// <summary>
+        /// 当前流转对象Id
+        /// </summary>
+        public int CurrentObjectId { get; set; }
+
+        /// <summary>
+        /// 当前场所
+        /// </summary>
+        public int CurrentPlaceId { get; set; }
 
 
         /// <summary>

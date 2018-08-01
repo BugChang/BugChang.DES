@@ -14,7 +14,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<PageResultModel<ExchangeObject>> GetPagingAysnc(PageSearchModel pageSearchModel)
+        public async Task<PageResultModel<ExchangeObject>> GetPagingAysnc(PageSearchCommonModel pageSearchModel)
         {
 
             var queryable = _dbContext.ExchangeObjects.Include(a => a.CreateUser).Include(a => a.UpdateUser).Include(a => a.Parent).Where(a => true);

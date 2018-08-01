@@ -8,7 +8,7 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         Task<Barcode> GetByNoAsync(string barcode);
     }
 
-    public interface IBarcodeLogRepository : IBasePageSearchRepository<Barcode>
+    public interface IBarcodeLogRepository : IBaseRepository<BarcodeLog>
     {
 
     }

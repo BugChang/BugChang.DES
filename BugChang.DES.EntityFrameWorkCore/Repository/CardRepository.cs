@@ -17,7 +17,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<PageResultModel<Card>> GetPagingAysnc(PageSearchModel pageSearchModel)
+        public async Task<PageResultModel<Card>> GetPagingAysnc(PageSearchCommonModel pageSearchModel)
         {
             var query = _dbContext.Cards.Include(a => a.CreateUser).Include(a => a.UpdateUser).Include(a => a.User).Where(a => true);
             if (!string.IsNullOrWhiteSpace(pageSearchModel.Keywords))

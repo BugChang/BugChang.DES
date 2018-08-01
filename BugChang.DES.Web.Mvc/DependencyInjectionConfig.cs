@@ -7,6 +7,7 @@ using BugChang.DES.Application.DashBoards;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.ExchangeObjects;
 using BugChang.DES.Application.Groups;
+using BugChang.DES.Application.HardWares;
 using BugChang.DES.Application.Letters;
 using BugChang.DES.Application.Logs;
 using BugChang.DES.Application.Menus;
@@ -29,6 +30,7 @@ using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Exchanges.Rules;
 using BugChang.DES.Core.Groups;
+using BugChang.DES.Core.HardWares;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.Monitor;
@@ -80,6 +82,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<ILetterAppService, LetterAppService>();
             services.AddScoped<IDashBoardAppService, DashBoardAppService>();
             services.AddScoped<ICardAppService, CardAppService>();
+            services.AddScoped<IHardWareAppService, HardWareAppService>();
 
             #endregion
 
@@ -131,6 +134,8 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<ILetterRepository, LetterRepository>();
             services.AddScoped<ISerialNumberRepository, SerialNumberRepository>();
             services.AddScoped<IBarcodeRepository, BarcodeRepository>();
+            services.AddScoped<IHardWareRepository, HardWareRepository>();
+            services.AddScoped<IBarcodeLogRepository, BarcodeLogRepository>();
 
             #endregion
 
