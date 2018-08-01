@@ -12,6 +12,7 @@ using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
+using BugChang.DES.Core.Sortings;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.Core.Monitor
@@ -32,10 +33,11 @@ namespace BugChang.DES.Core.Monitor
         private readonly ILetterRepository _letterRepository;
         private readonly IBarcodeLogRepository _barcodeLogRepository;
         private readonly IExchangeObjectRepository _objectRepository;
+        private readonly ISortingRepository _sortingRepository;
         public MonitorManager(IPlaceRepository placeRepository, IBarcodeRepository barcodeRepository, IBoxObjectRepository boxObjectRepository,
             LogManager logManager, BarcodeManager barcodeManager, IBoxRepository boxRepository, ICardRepository cardRepository, IUserRepository userRepository, IPlaceWardenRepository placeWardenRepository,
             IExchangeObjectSignerRepository objectSignerRepository, ILetterRepository letterRepository, IBarcodeLogRepository barcodeLogRepository, IExchangeObjectRepository objectRepository,
-            IDepartmentRepository departmentRepository)
+            IDepartmentRepository departmentRepository, ISortingRepository sortingRepository)
         {
             _placeRepository = placeRepository;
             _barcodeRepository = barcodeRepository;
@@ -51,6 +53,7 @@ namespace BugChang.DES.Core.Monitor
             _barcodeLogRepository = barcodeLogRepository;
             _objectRepository = objectRepository;
             _departmentRepository = departmentRepository;
+            _sortingRepository = sortingRepository;
         }
 
         public async Task<CheckBarcodeModel> CheckBarcodeType(string barcodeNo, int placeId)
@@ -104,7 +107,7 @@ namespace BugChang.DES.Core.Monitor
 
                         var tempObject = exchangeObject;
                         var boxs = await _boxObjectRepository.GetQueryable()
-                            .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == tempObject.Id)
+                            .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == tempObject.Id && a.Box.Enabled)
                             .Select(a => a.Box).ToListAsync();
                         if (boxs.Count > 0)
                         {
@@ -122,7 +125,7 @@ namespace BugChang.DES.Core.Monitor
                                     .FirstOrDefaultAsync();
                                 var exchangeObject1 = exchangeObject;
                                 boxs = await _boxObjectRepository.GetQueryable()
-                                    .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == exchangeObject1.Id)
+                                    .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == exchangeObject1.Id && a.Box.Enabled)
                                     .Select(a => a.Box).ToListAsync();
                                 if (boxs.Count > 0)
                                 {
@@ -145,7 +148,7 @@ namespace BugChang.DES.Core.Monitor
                         if (channelExchangeObjects.Count > 0)
                         {
                             var boxs = await _boxObjectRepository.GetQueryable()
-                                .Where(a => a.Box.PlaceId == placeId && channelExchangeObjects.Any(b => b.Id == a.ExchangeObjectId))
+                                .Where(a => a.Box.PlaceId == placeId && channelExchangeObjects.Any(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
                                 .Select(a => a.Box).ToListAsync();
                             if (boxs.Count > 0)
                             {
@@ -185,12 +188,12 @@ namespace BugChang.DES.Core.Monitor
                                 var receiveCode = letter.GetReceiveCode(letter.BarcodeNo);
                                 var matchExchangeObjects = insideExchangeObjects.Where(a => receiveCode.Contains(a.RestrictionCode)).ToList();
                                 var boxs = await _boxObjectRepository.GetQueryable()
-                                    .Where(a => a.Box.PlaceId == placeId && insideExchangeObjects.Any(b => b.Id == a.ExchangeObjectId))
+                                    .Where(a => a.Box.PlaceId == placeId && insideExchangeObjects.Any(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
                                     .Select(a => a.Box).ToListAsync();
                                 if (matchExchangeObjects.Count > 0)
                                 {
                                     boxs = await _boxObjectRepository.GetQueryable()
-                                        .Where(a => a.Box.PlaceId == placeId && matchExchangeObjects.Any(b => b.Id == a.ExchangeObjectId))
+                                        .Where(a => a.Box.PlaceId == placeId && matchExchangeObjects.Any(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
                                         .Select(a => a.Box).ToListAsync();
                                 }
                                 checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
@@ -219,7 +222,7 @@ namespace BugChang.DES.Core.Monitor
 
                             var tempObject = exchangeObject;
                             var boxs = await _boxObjectRepository.GetQueryable()
-                                .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == tempObject.Id)
+                                .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == tempObject.Id && a.Box.Enabled)
                                 .Select(a => a.Box).ToListAsync();
                             if (boxs.Count > 0)
                             {
@@ -240,7 +243,7 @@ namespace BugChang.DES.Core.Monitor
                                         .FirstOrDefaultAsync();
                                     var exchangeObject1 = exchangeObject;
                                     boxs = await _boxObjectRepository.GetQueryable()
-                                        .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == exchangeObject1.Id)
+                                        .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == exchangeObject1.Id && a.Box.Enabled)
                                         .Select(a => a.Box).ToListAsync();
                                     if (boxs.Count > 0)
                                     {
@@ -281,13 +284,13 @@ namespace BugChang.DES.Core.Monitor
                                         if (matchExchangeObjects.Count > 0)
                                         {
                                             boxs = await _boxObjectRepository.GetQueryable()
-                                                .Where(a => a.Box.PlaceId == placeId && matchExchangeObjects.Any(b => b.Id == a.ExchangeObjectId))
+                                                .Where(a => a.Box.PlaceId == placeId && matchExchangeObjects.Any(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
                                                 .Select(a => a.Box).ToListAsync();
                                         }
                                         else
                                         {
                                             boxs = await _boxObjectRepository.GetQueryable()
-                                                .Where(a => a.Box.PlaceId == placeId && exchangeObjects.Any(b => b.Id == a.ExchangeObjectId))
+                                                .Where(a => a.Box.PlaceId == placeId && exchangeObjects.Any(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
                                                 .Select(a => a.Box).ToListAsync();
                                         }
                                         checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
@@ -365,6 +368,7 @@ namespace BugChang.DES.Core.Monitor
                     BarcodeNo = barCodeNo
                 };
                 letter.LetterNo = letter.GetLetterNo(barCodeNo);
+                //本系统未登记过的信件，全部判定为收信
                 letter.LetterType = EnumLetterType.收信;
                 letter.ReceiveDepartmentId = await _barcodeManager.GetReceiveDepartmentId(barCodeNo);
                 letter.SendDepartmentId = await _barcodeManager.GetSendDepartmentId(barCodeNo);
@@ -437,6 +441,13 @@ namespace BugChang.DES.Core.Monitor
             return 1;
         }
 
+        /// <summary>
+        /// 用户取件
+        /// </summary>
+        /// <param name="boxId">箱子ID</param>
+        /// <param name="cardValue">卡号</param>
+        /// <param name="placeId">场所ID</param>
+        /// <returns></returns>
         public async Task<int> UserGetLetter(int boxId, string cardValue, int placeId)
         {
             //箱子的流转对象签收人是否包含此人
@@ -467,6 +478,19 @@ namespace BugChang.DES.Core.Monitor
                         OperatorId = user.Id
                     };
                     await _barcodeLogRepository.AddAsync(barcodeLog);
+
+                    var firtExchangeObject = boxObjects.FirstOrDefault();
+                    if (firtExchangeObject == null || firtExchangeObject.ObjectType != EnumObjectType.渠道) continue;
+                    if (firtExchangeObject.Value != (int)EnumChannel.同城交换 &&
+                        firtExchangeObject.Value != (int)EnumChannel.机要通信 &&
+                        firtExchangeObject.Value != (int)EnumChannel.直送) continue;
+                    //添加至待分拣列表
+                    var sorting = new Sorting
+                    {
+                        Channel = (EnumChannel)firtExchangeObject.Value,
+                        BarcodeNo = barcode.BarcodeNo
+                    };
+                    await _sortingRepository.AddAsync(sorting);
                 }
                 return 1;
             }

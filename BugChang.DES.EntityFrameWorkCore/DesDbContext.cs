@@ -8,6 +8,7 @@ using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
+using BugChang.DES.Core.Exchanges.Bill;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
@@ -17,6 +18,7 @@ using BugChang.DES.Core.HardWares;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.SerialNumbers;
+using BugChang.DES.Core.Sortings;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.EntityFrameWorkCore
@@ -73,5 +75,11 @@ namespace BugChang.DES.EntityFrameWorkCore
         public DbSet<HardWare> HardWares { get; set; }
         public DbSet<BarcodeLog> BarcodeLogs { get; set; }
         public DbSet<Barcode> Barcodes { get; set; }
+        public DbSet<Sorting> Sortings { get; set; }
+        public DbSet<SortingList> SortingLists { get; set; }
+        public DbSet<SortingListDetail> SortingListDetails { get; set; }
+        public DbSet<ExchangeList> ExchangeLists { get; set; }
+        public DbSet<ExchangeListDetail> ExchangeListDetails { get; set; }
+
     }
 }

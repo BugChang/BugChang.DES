@@ -14,6 +14,11 @@ namespace BugChang.DES.Core.Clients
         /// </summary>
         public int PlaceId { get; set; }
 
+        /// <summary>
+        /// 客户端类型
+        /// </summary>
+        public EnumClientType ClientType { get; set; }  
+
         public bool IsDeleted { get; set; }
     }
 }

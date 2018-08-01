@@ -8,6 +8,8 @@ namespace BugChang.DES.Core.Exchanges.Bill
 
         public EnumListType Type { get; set; }
 
+        public int DepartmentId { get; set; }
+
         public bool Printed { get; set; }
 
     }

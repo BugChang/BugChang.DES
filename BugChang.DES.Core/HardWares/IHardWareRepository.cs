@@ -7,5 +7,6 @@ namespace BugChang.DES.Core.HardWares
     public interface IHardWareRepository : IBaseRepository<HardWare>
     {
         Task<IList<HardWare>> GetSettings(string deviceCode);
+        Task<HardWare> GetSettings(string deviceCode,EnumHardWareType hardWareType);
     }
 }

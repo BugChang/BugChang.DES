@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace BugChang.DES.Web.Mvc.Controllers
 {
     public class BillController : BaseController
     {
-        // GET: /<controller>/
         public IActionResult Index()
         {
             return View();
@@ -16,5 +13,22 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             return View();
         }
+
+        public IActionResult CheckReceive(string deviceCode)
+        {
+            //根据deviceCode找到当前是哪个场所
+            return Json(null);
+        }
+
+        public IActionResult CheckSend(string deviceCode)
+        {
+            return Json(null);
+        }
+
+        public IActionResult CheckSendAndReceive(string deviceCode)
+        {
+            return Json(null);
+        }
+
     }
 }

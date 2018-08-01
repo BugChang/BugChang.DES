@@ -20,5 +20,11 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             var hardWares = await _dbContext.HardWares.Where(a => a.DeviceCode == deviceCode).ToListAsync();
             return hardWares;
         }
+
+        public async Task<HardWare> GetSettings(string deviceCode, EnumHardWareType hardWareType)
+        {
+            var hardWare = await _dbContext.HardWares.Where(a => a.DeviceCode == deviceCode && a.HardWareType == hardWareType).FirstOrDefaultAsync();
+            return hardWare;
+        }
     }
 }

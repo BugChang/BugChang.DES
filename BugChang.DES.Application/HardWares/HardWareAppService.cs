@@ -26,6 +26,12 @@ namespace BugChang.DES.Application.HardWares
             return Mapper.Map<IList<HardWareDto>>(hardWares);
         }
 
+        public async Task<HardWareDto> GetSettings(string deviceCode, EnumHardWareType hardWareType)
+        {
+            var hardWare = await _hardWareRepository.GetSettings(deviceCode.Trim(), hardWareType);
+            return Mapper.Map<HardWareDto>(hardWare);
+        }
+
         public async Task<ResultEntity> SaveHardWareSettings(List<HardWareSaveDto> hardWares, string deviceCode)
         {
             var result = new ResultEntity();

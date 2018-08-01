@@ -5,7 +5,7 @@ namespace BugChang.DES.Core.Exchanges.Bill
 {
     public class ExchangeListDetail : BaseEntity<int>
     {
-        public int ListId { get; set; }
+        public int ExchangeListId { get; set; }
 
         public EnumListDetailType DetailType { get; set; }
 
