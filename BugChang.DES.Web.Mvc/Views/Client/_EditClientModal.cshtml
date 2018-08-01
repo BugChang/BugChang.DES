@@ -1,0 +1,39 @@
+﻿@model BugChang.DES.Application.Clients.Dtos.ClientEditDto
+@using BugChang.DES.Web.Mvc.Models.Common
+<form id="ClientEditForm" method="post" asp-controller="Client" asp-action="Edit">
+    @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("修改客户端信息"))
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <input type="hidden" asp-for="CreateBy" value="@Model.CreateBy" />
+        <input type="hidden" asp-for="CreateTime" value="@Model.CreateTime" />
+        <input type="hidden" asp-for="UpdateBy" value="@Model.UpdateBy" />
+        <input type="hidden" asp-for="UpdateTime" value="@Model.UpdateTime" />
+        <input type="hidden" id="DefaultValue" data-place-id="@Model.PlaceId" />
+        <div class="form-group">
+            <label>名称</label>
+            <input type="text" class="form-control" asp-for="Name" value="@Model.Name">
+        </div>
+        <div class="form-group">
+            <label>设备编码</label>
+            <div class="input-group">
+                <input type="text" class="form-control device-code" asp-for="DeviceCode">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-primary btn-device-code">点击获取本机设备码</button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>客户端类型</label>
+            <select asp-for="ClientType" class="form-control">
+                <option value="0" @(Model.ClientType==0?"selected=\"selected\"":"")>自助终端</option>
+                <option value="1" @(Model.ClientType==1?"selected=\"selected\"":"")>个人终端</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>交换场所</label>
+            <select name="PlaceId" class="form-control place-select" style="width: 100%"></select>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</form>
+<script src="~/views-resource/client/_editClientModal.js" asp-append-version="true"></script>

@@ -1,0 +1,27 @@
+﻿using BugChang.DES.Application.Commons;
+
+namespace BugChang.DES.Application.Clients.Dtos
+{
+    public class ClientEditDto : EditDto
+    {
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
+
+        ///<summary>
+        /// 设备码
+        /// </summary>
+        public string DeviceCode { get; set; }
+
+        /// <summary>
+        /// 交换场所
+        /// </summary>
+        public int PlaceId { get; set; }
+
+        /// <summary>
+        /// 客户端类型
+        /// </summary>
+        public int ClientType { get; set; }
+    }
+}

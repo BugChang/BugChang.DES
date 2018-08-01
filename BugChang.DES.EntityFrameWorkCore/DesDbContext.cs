@@ -5,6 +5,7 @@ using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
@@ -80,6 +81,7 @@ namespace BugChang.DES.EntityFrameWorkCore
         public DbSet<SortingListDetail> SortingListDetails { get; set; }
         public DbSet<ExchangeList> ExchangeLists { get; set; }
         public DbSet<ExchangeListDetail> ExchangeListDetails { get; set; }
+        public DbSet<Client> Clients { get; set; }
 
     }
 }

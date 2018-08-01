@@ -2,6 +2,7 @@
 using AutoMapper;
 using BugChang.DES.Application.Boxs.Dtos;
 using BugChang.DES.Application.Cards.Dtos;
+using BugChang.DES.Application.Clients.Dtos;
 using BugChang.DES.Application.Departments.Dtos;
 using BugChang.DES.Application.ExchangeObjects.Dtos;
 using BugChang.DES.Application.Groups.Dtos;
@@ -17,6 +18,7 @@ using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
@@ -27,9 +29,7 @@ using BugChang.DES.Core.Groups;
 using BugChang.DES.Core.HardWares;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
-using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.Tools;
-using BugChang.DES.Core.UrgentLevels;
 
 namespace BugChang.DES.Application.Commons
 {
@@ -46,7 +46,6 @@ namespace BugChang.DES.Application.Commons
 
                 #endregion
 
-
                 #region Department
 
                 cfg.CreateMap<DepartmentEditDto, Department>();
@@ -59,7 +58,6 @@ namespace BugChang.DES.Application.Commons
 
                 #endregion
 
-
                 #region User
 
                 cfg.CreateMap<UserEditDto, User>();
@@ -71,7 +69,6 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
 
                 #endregion
-
 
                 #region Role
 
@@ -86,7 +83,6 @@ namespace BugChang.DES.Application.Commons
 
                 #endregion
 
-
                 #region Log
 
                 cfg.CreateMap<Log, SystemLogListDto>()
@@ -100,7 +96,6 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.Level, b => b.MapFrom(c => EnumHelper.GetEnumDescription(c.Level)));
 
                 #endregion
-
 
                 #region Place
 
@@ -119,7 +114,6 @@ namespace BugChang.DES.Application.Commons
 
                 #endregion
 
-
                 #region Box
 
                 cfg.CreateMap<Box, BoxListDto>()
@@ -133,7 +127,6 @@ namespace BugChang.DES.Application.Commons
                 cfg.CreateMap<BoxEditDto, Box>();
 
                 #endregion
-
 
                 #region ExchangeObject
 
@@ -152,7 +145,6 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.ParentId, b => b.MapFrom(c => c.ParentId ?? 0));
 
                 #endregion
-
 
                 #region Rule
 
@@ -214,8 +206,8 @@ namespace BugChang.DES.Application.Commons
                 cfg.CreateMap<Letter, LetterReceiveBarcodeDto>()
                     .ForMember(a => a.SendDepartmentName, b => b.MapFrom(c => c.SendDepartment.FullName))
                     .ForMember(a => a.ReceiveDepartmentName, b => b.MapFrom(c => c.ReceiveDepartment.Name))
-                    .ForMember(a => a.SecretLevel, b => b.MapFrom(c => ((EnumSecretLevel)c.SecretLevel).ToString()))
-                    .ForMember(a => a.UrgencyLevel, b => b.MapFrom(c => ((EnumUrgentLevel)c.UrgencyLevel).ToString()))
+                    .ForMember(a => a.SecretLevel, b => b.MapFrom(c => c.SecretLevel.ToString()))
+                    .ForMember(a => a.UrgencyLevel, b => b.MapFrom(c => c.UrgencyLevel.ToString()))
                     .ForMember(a => a.PrintDate, b => b.MapFrom(c => DateTime.Now.ToString("yyyy-MM-dd")))
                     .ForMember(a => a.UrgencyTime, b => b.MapFrom(c => c.UrgencyTime == null ? "-" : c.UrgencyTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
 
@@ -224,6 +216,18 @@ namespace BugChang.DES.Application.Commons
                 #region HardWare
 
                 cfg.CreateMap<HardWareSaveDto, HardWare>();
+
+                #endregion
+
+                #region Client  
+
+                cfg.CreateMap<ClientEditDto, Client>();
+                cfg.CreateMap<Client, ClientListDto>()
+                    .ForMember(a => a.PlaceName, b => b.MapFrom(c => c.Place.Name))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
+                    .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
 
                 #endregion
             });

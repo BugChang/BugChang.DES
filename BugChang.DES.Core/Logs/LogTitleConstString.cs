@@ -36,6 +36,10 @@
         public const string CardChangeEnabled = "更改证卡启用状态";
 
 
+        public const string ClientAdd = "添加客户端";
+        public const string ClientEdit = "修改客户端";
+        public const string ClientDelete = "删除客户端";
+
 
     }
 }

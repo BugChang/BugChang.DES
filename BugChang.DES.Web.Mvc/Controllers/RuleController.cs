@@ -106,6 +106,9 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(json);
         }
 
+        [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "Rule.Delete" })]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _ruleAppService.DeleteByIdAsync(id, CurrentUser.UserId);

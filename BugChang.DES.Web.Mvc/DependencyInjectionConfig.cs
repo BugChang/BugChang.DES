@@ -3,6 +3,7 @@ using BugChang.DES.Application.Barcodes;
 using BugChang.DES.Application.Boxs;
 using BugChang.DES.Application.Cards;
 using BugChang.DES.Application.Channels;
+using BugChang.DES.Application.Clients;
 using BugChang.DES.Application.DashBoards;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.ExchangeObjects;
@@ -23,6 +24,7 @@ using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Operations;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
@@ -83,6 +85,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IDashBoardAppService, DashBoardAppService>();
             services.AddScoped<ICardAppService, CardAppService>();
             services.AddScoped<IHardWareAppService, HardWareAppService>();
+            services.AddScoped<IClientAppService, ClientAppService>();
 
             #endregion
 
@@ -106,6 +109,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<CardManager>();
             services.AddScoped<LetterManager>();
             services.AddScoped<SerialNumberManager>();
+            services.AddScoped<ClientManager>();
 
             #endregion
 
@@ -136,6 +140,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IBarcodeRepository, BarcodeRepository>();
             services.AddScoped<IHardWareRepository, HardWareRepository>();
             services.AddScoped<IBarcodeLogRepository, BarcodeLogRepository>();
+            services.AddScoped<IClientRepository, ClientRepository>();
 
             #endregion
 
