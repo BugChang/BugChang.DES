@@ -12,5 +12,7 @@ namespace BugChang.DES.Web.Mvc.Models.Account
 
         [Required]
         public bool RememberMe { get; set; }
+
+        public string DeviceCode { get; set; }
     }
 }

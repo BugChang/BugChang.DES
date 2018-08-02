@@ -99,5 +99,11 @@ namespace BugChang.DES.Application.ExchangeObjects
         {
             return await _exchangeObjectManager.GetObjectSignerIds(objectId);
         }
+
+        public async Task<IList<ExchangeObjectListDto>> GetObjects(int signerId, int placeId)
+        {
+            var objects = await _exchangeObjectManager.GetObjects(signerId, placeId);
+            return Mapper.Map<IList<ExchangeObjectListDto>>(objects);
+        }
     }
 }

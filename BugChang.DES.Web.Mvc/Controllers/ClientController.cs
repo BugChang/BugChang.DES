@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using BugChang.DES.Application.Clients;
 using BugChang.DES.Application.Clients.Dtos;
 using BugChang.DES.Application.Places;
-using BugChang.DES.Application.Places.Dtos;
-using BugChang.DES.Application.Rules.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
@@ -64,7 +62,10 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = new ResultEntity();
             if (ModelState.IsValid)
             {
-
+                if (string.IsNullOrWhiteSpace(client.HomePage))
+                {
+                    client.HomePage = "/Home/Index";
+                }
                 client.SetCreateOrUpdateInfo(CurrentUser.UserId);
                 result = await _clientAppService.AddOrUpdateAsync(client);
                 return Json(result);

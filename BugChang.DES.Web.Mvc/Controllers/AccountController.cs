@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Accounts;
+using BugChang.DES.Application.Clients;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Tools;
@@ -20,10 +21,12 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         private readonly IAccountAppService _accountAppService;
         private readonly IOptions<AccountSettings> _loginSettings;
-        public AccountController(IAccountAppService accountAppService, IOptions<AccountSettings> loginSettings)
+        private readonly IClientAppService _clientAppService;
+        public AccountController(IAccountAppService accountAppService, IOptions<AccountSettings> loginSettings, IClientAppService clientAppService)
         {
             _accountAppService = accountAppService;
             _loginSettings = loginSettings;
+            _clientAppService = clientAppService;
         }
 
         [AllowAnonymous]
@@ -52,6 +55,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 {
                     case EnumLoginResult.登录成功:
                     case EnumLoginResult.强制修改密码:
+                        var client = await _clientAppService.GetClient(model.DeviceCode);
+                        if (client != null)
+                        {
+                            returnUrl = string.IsNullOrWhiteSpace(returnUrl) ? client.HomePage : returnUrl;
+                        }
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, loginResult.ClaimsPrincipal, new AuthenticationProperties
                         {
                             IsPersistent = model.RememberMe,

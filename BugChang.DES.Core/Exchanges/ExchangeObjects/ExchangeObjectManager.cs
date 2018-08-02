@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Exchanges.Boxs;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.Core.Exchanges.ExchangeObjects
@@ -10,11 +11,13 @@ namespace BugChang.DES.Core.Exchanges.ExchangeObjects
     {
         private readonly IExchangeObjectRepository _exchangeObjectRepository;
         private readonly IExchangeObjectSignerRepository _objectSignerRepository;
+        private readonly IBoxObjectRepository _boxObjectRepository;
 
-        public ExchangeObjectManager(IExchangeObjectRepository exchangeObjectRepository, IExchangeObjectSignerRepository objectSignerRepository)
+        public ExchangeObjectManager(IExchangeObjectRepository exchangeObjectRepository, IExchangeObjectSignerRepository objectSignerRepository, IBoxObjectRepository boxObjectRepository)
         {
             _exchangeObjectRepository = exchangeObjectRepository;
             _objectSignerRepository = objectSignerRepository;
+            _boxObjectRepository = boxObjectRepository;
         }
 
         public async Task<ResultEntity> AddOrUpdateAsync(ExchangeObject exchangeObject)
@@ -104,9 +107,18 @@ namespace BugChang.DES.Core.Exchanges.ExchangeObjects
 
         public async Task<IList<int>> GetObjectSignerIds(int objectId)
         {
-            var objectSignerIds =await _objectSignerRepository.GetQueryable().Where(a => a.ExchangeObjectId == objectId)
+            var objectSignerIds = await _objectSignerRepository.GetQueryable().Where(a => a.ExchangeObjectId == objectId)
                 .Select(a => a.UserId).ToListAsync();
             return objectSignerIds;
+        }
+
+        public async Task<IList<ExchangeObject>> GetObjects(int signerId, int placeId)
+        {
+            var objectIds = await _objectSignerRepository.GetQueryable().Where(a => a.UserId == signerId).Select(a => a.ExchangeObjectId).ToListAsync();
+            var objects = await _boxObjectRepository.GetQueryable()
+                .Where(a => a.Box.PlaceId == placeId && objectIds.Any(b => b == a.ExchangeObjectId))
+                .Select(a => a.ExchangeObject).ToListAsync();
+            return objects;
         }
     }
 }

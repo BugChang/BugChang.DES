@@ -26,6 +26,11 @@ namespace BugChang.DES.Core.Clients
         /// </summary>
         public EnumClientType ClientType { get; set; }
 
+        /// <summary>
+        /// 默认首页
+        /// </summary>
+        public string HomePage { get; set; }
+
         [ForeignKey("PlaceId")]
         public virtual Place Place { get; set; }
     }

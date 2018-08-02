@@ -25,9 +25,13 @@
         <div class="form-group">
             <label>客户端类型</label>
             <select asp-for="ClientType" class="form-control">
-                <option value="0" @(Model.ClientType==0?"selected=\"selected\"":"")>自助终端</option>
-                <option value="1" @(Model.ClientType==1?"selected=\"selected\"":"")>个人终端</option>
+                <option value="0" @(Model.ClientType= =0?"selected =\"selected\"":"")>自助终端</option>
+                <option value="1" @(Model.ClientType= =1?"selected =\"selected\"":"")>个人终端</option>
             </select>
+        </div>
+        <div class="form-group">
+            <label>默认首页</label>
+            <input class="form-control" asp-for="HomePage" value="@Model.HomePage" placeholder="登录后的界面，如：/Home/Index" />
         </div>
         <div class="form-group">
             <label>交换场所</label>

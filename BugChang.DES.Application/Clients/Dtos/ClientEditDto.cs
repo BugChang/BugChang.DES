@@ -1,4 +1,5 @@
 ﻿using BugChang.DES.Application.Commons;
+using BugChang.DES.Core.Clients;
 
 namespace BugChang.DES.Application.Clients.Dtos
 {
@@ -22,6 +23,11 @@ namespace BugChang.DES.Application.Clients.Dtos
         /// <summary>
         /// 客户端类型
         /// </summary>
-        public int ClientType { get; set; }
+        public EnumClientType ClientType { get; set; }
+
+        /// <summary>
+        /// 默认首页
+        /// </summary>
+        public string HomePage { get; set; }
     }
 }

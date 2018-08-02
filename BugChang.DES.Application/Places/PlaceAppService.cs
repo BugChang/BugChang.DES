@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BugChang.DES.Application.Places.Dtos;
@@ -85,6 +86,12 @@ namespace BugChang.DES.Application.Places
                     JsonConvert.SerializeObject(result.Data), operatorId);
             }
             return result;
+        }
+
+        public async Task<bool> IsPlaceWarden(int userId, int placeId)
+        {
+            var placeWardens = await _placeManager.GetPlaceWardenIds(placeId);
+            return placeWardens.Contains(userId);
         }
     }
 }

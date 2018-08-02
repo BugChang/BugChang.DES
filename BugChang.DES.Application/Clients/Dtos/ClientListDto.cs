@@ -23,5 +23,10 @@ namespace BugChang.DES.Application.Clients.Dtos
         /// 客户端类型
         /// </summary>
         public string ClientType { get; set; }
+
+        /// <summary>
+        /// 默认首页
+        /// </summary>
+        public string HomePage { get; set; }
     }
 }

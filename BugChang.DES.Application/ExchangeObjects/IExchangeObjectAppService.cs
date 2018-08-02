@@ -15,5 +15,7 @@ namespace BugChang.DES.Application.ExchangeObjects
         Task<ResultEntity> AssignObjectSigner(int objectId, List<int> userIds, int operatorId);
 
         Task<IList<int>> GetObjectSignerIds(int objectId);
+
+        Task<IList<ExchangeObjectListDto>> GetObjects(int signerId, int placeId);
     }
 }
