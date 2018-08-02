@@ -37,7 +37,7 @@ namespace BugChang.DES.Application.Clients
                         $"【{editDto.Name}】", JsonConvert.SerializeObject(barcodeRule), editDto.CreateBy);
                 }
                 else
-                { 
+                {
                     await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.ClientAdd,
                         $"【{editDto.Name}】", JsonConvert.SerializeObject(barcodeRule), editDto.CreateBy);
                 }
@@ -68,6 +68,12 @@ namespace BugChang.DES.Application.Clients
             var clients = await _clientRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<ClientListDto>>(clients);
 
+        }
+
+        public async Task<ClientEditDto> GetClient(string deviceCode)
+        {
+            var client = await _clientRepository.GetClient(deviceCode);
+            return Mapper.Map<ClientEditDto>(client);
         }
     }
 }
