@@ -211,6 +211,16 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.PrintDate, b => b.MapFrom(c => DateTime.Now.ToString("yyyy-MM-dd")))
                     .ForMember(a => a.UrgencyTime, b => b.MapFrom(c => c.UrgencyTime == null ? "-" : c.UrgencyTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
 
+                cfg.CreateMap<LetterSendEditDto, Letter>();
+
+                cfg.CreateMap<Letter, LetterSendListDto>()
+                    .ForMember(a => a.SendDepartmentName, b => b.MapFrom(c => c.SendDepartment.Name))
+                    .ForMember(a => a.ReceiveDepartmentName, b => b.MapFrom(c => c.ReceiveDepartment.Name))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
+                    .ForMember(a => a.UrgencyTime, b => b.MapFrom(c => c.UrgencyTime == null ? "-" : c.UrgencyTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+
                 #endregion
 
                 #region HardWare

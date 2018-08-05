@@ -48,11 +48,35 @@ namespace BugChang.DES.Web.Mvc.Controllers
         }
 
         [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "Rule.Create" })]
+        public async Task<IActionResult> Create(UserEditDto user)
+        {
+            if (user.Id > 0)
+            {
+                return Json(new ResultEntity { Message = "请求数据有误，新增数据非0主键" });
+            }
+            return await CreateOrUpdate(user);
+        }
+
+        [HttpPost]
+        [TypeFilter(typeof(OperationFilter),
+            Arguments = new object[] { "Rule.Edit" })]
         public async Task<IActionResult> Edit(UserEditDto user)
+        {
+            if (user.Id <= 0)
+            {
+                return Json(new ResultEntity { Message = "请求数据有误，修改数据空主键" });
+            }
+            return await CreateOrUpdate(user);
+        }
+
+        private async Task<IActionResult> CreateOrUpdate(UserEditDto user)
         {
             var result = new ResultEntity();
             if (ModelState.IsValid)
             {
+
                 user.SetCreateOrUpdateInfo(CurrentUser.UserId);
                 result = await _userAppService.AddOrUpdateAsync(user);
                 return Json(result);
@@ -139,6 +163,13 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> DeleteUserRole(int userId, int roleId)
         {
             var result = await _userAppService.DeleteUserRole(userId, roleId, CurrentUser.UserId);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserEnabled(int id)
+        {
+            var result = await _userAppService.ChangeUserEnabled(id, CurrentUser.UserId);
             return Json(result);
         }
     }

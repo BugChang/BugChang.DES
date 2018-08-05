@@ -16,6 +16,11 @@
         public const string UserRoleDelete = "新增用户角色";
         public const string UserRoleAdd = "删除用户角色";
 
+        public const string UserAdd = "新增用户";
+        public const string UserEdit = "修改用户";
+        public const string UserDelete = "删除用户";
+        public const string UserEnabled = "更改用户启用状态";
+
         public const string BarcodeSendFail = "条码投箱失败";
 
         public const string BoxObjectAssign = "箱格流转对象分配";

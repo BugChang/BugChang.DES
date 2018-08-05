@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BugChang.DES.Application.Letters.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
+using BugChang.DES.Core.Exchanges.Channel;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.SerialNumbers;
@@ -45,7 +45,7 @@ namespace BugChang.DES.Application.Letters
             throw new NotImplementedException();
         }
 
-        public Task<SendLetterEditDto> GetSendLetter(int letterId)
+        public Task<LetterSendEditDto> GetSendLetter(int letterId)
         {
             throw new NotImplementedException();
         }
@@ -59,6 +59,11 @@ namespace BugChang.DES.Application.Letters
             var barcodeNo = _barcodeManager.MakeBarcodeLength33(sendDepartmentCode, receiveDepartmentCode,
                 (EnumSecretLevel)receiveLetter.SecretLevel, (EnumUrgentLevel)receiveLetter.UrgencyLevel,
                 serialNumber);
+            if (barcodeNo == "")
+            {
+                result.Message = "条码生成失败";
+                return result;
+            }
             receiveLetter.BarcodeNo = barcodeNo;
             receiveLetter.LetterNo = barcodeNo.Substring(15, 7);
             var letter = Mapper.Map<Letter>(receiveLetter);
@@ -106,7 +111,7 @@ namespace BugChang.DES.Application.Letters
             return Mapper.Map<LetterReceiveBarcodeDto>(letter);
         }
 
-        public async Task<PageResultModel<LetterReceiveListDto>> GetReceiveLetters(ReceivePageSerchModel pageSearchModel)
+        public async Task<PageResultModel<LetterReceiveListDto>> GetReceiveLetters(LetterPageSerchModel pageSearchModel)
         {
             PageResultModel<Letter> letters;
             if (_commonSettings.Value.ReceiveDepartmentId == pageSearchModel.ReceiveDepartmentId)
@@ -119,6 +124,95 @@ namespace BugChang.DES.Application.Letters
             }
 
             return Mapper.Map<PageResultModel<LetterReceiveListDto>>(letters);
+        }
+
+        public async Task<ResultEntity> AddSendLetter(LetterSendEditDto sendLetter)
+        {
+            var result = new ResultEntity();
+            var letter = Mapper.Map<Letter>(sendLetter);
+            var receiveDepartment = await _departmentManager.GetAsync(sendLetter.ReceiveDepartmentId);
+            var sendDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.SendDepartmentId), 11);
+            var receiveDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.ReceiveDepartmentId), 11);
+            letter.LetterType = letter.GetSendLetterType(sendDepartmentCode, receiveDepartmentCode);
+            int serialNumber;
+            var barcodeNo = "";
+            switch (letter.LetterType)
+            {
+                case EnumLetterType.发信:
+                    switch (receiveDepartment.ReceiveChannel)
+                    {
+                        case EnumChannel.同城交换:
+                            serialNumber = await _serialNumberManager.GetSerialNumber(letter.SendDepartmentId, EnumSerialNumberType.同城交换);
+                            barcodeNo = _barcodeManager.MakeBarcodeLength26(sendDepartmentCode, receiveDepartmentCode,
+                                letter.SecretLevel, letter.UrgencyLevel,
+                                serialNumber);
+                            break;
+                        case EnumChannel.机要通信:
+                            serialNumber = await _serialNumberManager.GetSerialNumber(letter.SendDepartmentId, EnumSerialNumberType.机要通信);
+                            barcodeNo = _barcodeManager.MakeBarcodeLength33(sendDepartmentCode, receiveDepartmentCode,
+                                letter.SecretLevel, letter.UrgencyLevel,
+                                serialNumber);
+                            break;
+                    }
+                    break;
+                case EnumLetterType.内交换:
+                    serialNumber = await _serialNumberManager.GetSerialNumber(letter.SendDepartmentId, EnumSerialNumberType.内部交换);
+                    barcodeNo = _barcodeManager.MakeBarcodeLength33(sendDepartmentCode, receiveDepartmentCode,
+                        letter.SecretLevel, letter.UrgencyLevel,
+                        serialNumber);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException($"发信类型有误");
+            }
+
+            if (barcodeNo == "")
+            {
+                result.Message = "条码生成失败";
+                return result;
+            }
+            letter.BarcodeNo = barcodeNo;
+            letter.LetterNo = barcodeNo.Length == 33 ? barcodeNo.Substring(15, 7) : barcodeNo.Substring(8, 8);
+            await _letterRepository.AddAsync(letter);
+
+            var barcode = new Barcode
+            {
+                BarcodeNo = barcodeNo,
+                Entity = EnumBarcodeEntity.信件,
+                Souce = EnumBarcodeSouce.本系统,
+                Status = EnumBarcodeStatus.已就绪,
+                SubStatus = EnumBarcodeSubStatus.正常,
+                CreateTime = DateTime.Now,
+                CreateBy = letter.CreateBy
+            };
+            barcode.BarcodeType = barcode.AnalysisBarcodeType(barcodeNo);
+            await _barcodeRepository.AddAsync(barcode);
+
+            var baroceLog = new BarcodeLog
+            {
+                BarcodeNumber = barcodeNo,
+                BarcodeStatus = EnumBarcodeStatus.已就绪,
+                DepartmentId = letter.SendDepartmentId,
+                OperationTime = DateTime.Now,
+                OperatorId = letter.CreateBy,
+            };
+
+            await _barcodeLogRepository.AddAsync(baroceLog);
+            result.Success = true;
+            await _unitOfWork.CommitAsync();
+            result.Data = letter.Id;
+            return result;
+        }
+
+        public async Task<PageResultModel<LetterSendListDto>> GetTodaySendLetters(PageSearchCommonModel pageSearchModel)
+        {
+            var letters = await _letterRepository.GetTodaySendLetters(pageSearchModel);
+            return Mapper.Map<PageResultModel<LetterSendListDto>>(letters);
+        }
+
+        public async Task<PageResultModel<LetterSendListDto>> GetSendLetters(LetterPageSerchModel pageSearchModel)
+        {
+            var letters = await _letterRepository.GetSendLetters(pageSearchModel);
+            return Mapper.Map<PageResultModel<LetterSendListDto>>(letters);
         }
     }
 }

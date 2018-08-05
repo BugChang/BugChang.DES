@@ -1,5 +1,19 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3>异形件通知单</h3>
+    </div>
+    <div class="box-body">
+        <div class="col-md-8">
+            <input type="text" id="barcodeNo" class="input-lg form-control" value="" placeholder="请扫描条码！" />
+        </div>
+        <div class="col-md-2">
+            <input id="btnPrintDifferent" type="button" class="btn btn-primary btn-lg" value="打印通知单" />
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/js/LodopFuncs.js"></script>
+    <script src="~/views-resource/letter/different.js" asp-append-version="true"></script>
 }

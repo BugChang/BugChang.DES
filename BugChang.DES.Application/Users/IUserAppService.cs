@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Roles.Dtos;
 using BugChang.DES.Application.Users.Dtos;
-using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Commons;
 
 namespace BugChang.DES.Application.Users
@@ -17,5 +16,7 @@ namespace BugChang.DES.Application.Users
         Task<ResultEntity> AddUserRole(int userId, int roleId, int operatorId);
 
         Task<ResultEntity> DeleteUserRole(int userId, int userRole, int operatorId);
+
+        Task<ResultEntity> ChangeUserEnabled(int userId, int operatorId);
     }
 }

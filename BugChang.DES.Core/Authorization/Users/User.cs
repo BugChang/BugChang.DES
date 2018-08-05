@@ -3,9 +3,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
+using Newtonsoft.Json;
 
 namespace BugChang.DES.Core.Authorization.Users
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class User : BaseEntity, ISoftDelete
     {
         public const string DefaultPassword = "123qwe";
@@ -27,6 +29,7 @@ namespace BugChang.DES.Core.Authorization.Users
         /// <summary>
         /// 密码
         /// </summary>
+        [JsonIgnore]
         [Required]
         [MinLength(6)]
         public string Password { get; set; }

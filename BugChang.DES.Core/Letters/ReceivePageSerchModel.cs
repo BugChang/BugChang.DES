@@ -2,7 +2,7 @@
 
 namespace BugChang.DES.Core.Letters
 {
-    public class ReceivePageSerchModel : PageSearchDetailModel
+    public class LetterPageSerchModel : PageSearchDetailModel
     {
         public int ReceiveDepartmentId { get; set; }
 

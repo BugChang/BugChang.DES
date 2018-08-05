@@ -29,7 +29,19 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             };
         }
 
-        public async Task<PageResultModel<Letter>> GetReceiveLetters(ReceivePageSerchModel pageSearch)
+        public async Task<PageResultModel<Letter>> GetTodaySendLetters(PageSearchCommonModel pageSearchModel)
+        {
+            var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a =>
+                (a.LetterType == EnumLetterType.发信 || a.LetterType == EnumLetterType.内交换) && a.SendDepartmentId == pageSearchModel.DepartmentId && a.CreateTime.Date == DateTime.Now.Date);
+
+            return new PageResultModel<Letter>
+            {
+                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync(),
+                Total = await query.CountAsync()
+            };
+        }
+
+        public async Task<PageResultModel<Letter>> GetReceiveLetters(LetterPageSerchModel pageSearch)
         {
             //父级单位可以查询子单位的信件
             var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment)
@@ -68,7 +80,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             };
         }
 
-        public async Task<PageResultModel<Letter>> GetManagerReceiveLetters(ReceivePageSerchModel pageSearch)
+        public async Task<PageResultModel<Letter>> GetManagerReceiveLetters(LetterPageSerchModel pageSearch)
         {
             var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => a.LetterType == EnumLetterType.收信);
             if (pageSearch.BeginTime != null)
@@ -103,8 +115,36 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<Letter> GetLetter(string barcodeNo)
         {
-            var letter = await _dbContext.Letters.Where(a => a.BarcodeNo == barcodeNo).SingleOrDefaultAsync();
+            var letter = await _dbContext.Letters.AsNoTracking().Where(a => a.BarcodeNo == barcodeNo).SingleOrDefaultAsync();
             return letter;
+        }
+
+        public async Task<PageResultModel<Letter>> GetSendLetters(LetterPageSerchModel pageSearch)
+        {
+            var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => a.LetterType != EnumLetterType.收信 && a.SendDepartmentId == pageSearch.SendDepartmentId);
+            if (pageSearch.BeginTime != null)
+            {
+                query = query.Where(a => a.CreateTime >= pageSearch.BeginTime.Value);
+            }
+
+            if (pageSearch.EndTime != null)
+            {
+                query = query.Where(a => a.CreateTime <= pageSearch.EndTime.Value);
+            }
+            if (!string.IsNullOrWhiteSpace(pageSearch.LetterNo))
+            {
+                query = query.Where(a => a.LetterNo.Contains(pageSearch.LetterNo));
+            }
+
+            if (pageSearch.ReceiveDepartmentId != 0)
+            {
+                query = query.Where(a => a.ReceiveDepartmentId == pageSearch.ReceiveDepartmentId);
+            }
+            return new PageResultModel<Letter>
+            {
+                Rows = await query.Skip(pageSearch.Skip).Take(pageSearch.Take).ToListAsync(),
+                Total = await query.CountAsync()
+            };
         }
     }
 }

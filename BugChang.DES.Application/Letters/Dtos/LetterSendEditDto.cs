@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using BugChang.DES.Application.Commons;
+using BugChang.DES.Core.Letters;
 
 namespace BugChang.DES.Application.Letters.Dtos
 {
-    public class LetterReceiveListDto : BaseDto
+    public class LetterSendEditDto : EditDto
     {
         /// <summary>
         /// 条码号
@@ -13,14 +12,9 @@ namespace BugChang.DES.Application.Letters.Dtos
         public string BarcodeNo { get; set; }
 
         /// <summary>
-        /// 信封编号
+        /// 信件类型
         /// </summary>
-        public string LetterNo { get; set; }
-
-        /// <summary>
-        /// 原条码号
-        /// </summary>
-        public string OldBarcodeNo { get; set; }
+        public EnumLetterType LetterType { get; set; }
 
         /// <summary>
         /// 密级
@@ -35,36 +29,26 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// <summary>
         /// 限时时间
         /// </summary>
-        public string UrgencyTime { get; set; }
+        public DateTime? UrgencyTime { get; set; }
 
         /// <summary>
         /// 收件单位
         /// </summary>
-        public string ReceiveDepartmentName { get; set; }
-
-        /// <summary>
-        /// 发件单位
-        /// </summary>
-        public string SendDepartmentName { get; set; }
-
-        /// <summary>
-        /// 原发单位
-        /// </summary>
-        public string OldSendDepartmentName { get; set; }
-
-        /// <summary>
-        /// 市机码
-        /// </summary>
-        public string ShiJiCode { get; set; }
-
-        /// <summary>
-        /// 附加数据
-        /// </summary>
-        public string CustomData { get; set; }
+        public int ReceiveDepartmentId { get; set; }
 
         /// <summary>
         /// 收件人
         /// </summary>
         public string Receiver { get; set; }
+
+        /// <summary>
+        /// 发件单位
+        /// </summary>
+        public int SendDepartmentId { get; set; }
+
+        /// <summary>
+        /// 附加数据
+        /// </summary>
+        public string CustomData { get; set; }
     }
 }

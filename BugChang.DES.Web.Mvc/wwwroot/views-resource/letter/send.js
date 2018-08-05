@@ -1,4 +1,4 @@
-﻿var LetterReceive = function () {
+﻿var LetterSend = function () {
     var table;
     var groupTreeObj;
     var groupDetailTreeObj;
@@ -63,8 +63,8 @@
             });
 
         $("#btnPrintBarcode").click(function () {
-            var data = $("#LetterReceiveForm").serialize();
-            $.post('/Letter/Receive',
+            var data = $("#LetterSendForm").serialize();
+            $.post('/Letter/Send',
                 data,
                 function (result) {
                     if (result.success) {
@@ -94,7 +94,7 @@
             serverSide: true,
             autoWith: true,
             ajax: {
-                url: '/Letter/GetTodayReceiveLetters'
+                url: '/Letter/GetTodaySendLetters'
             },
             stateSave: true,
             columns: [
@@ -103,12 +103,8 @@
                     title: '操作'
                 },
                 {
-                    data: 'barcodeNo',
+                    data: 'letterNo',
                     title: '信封编号'
-                },
-                {
-                    data: 'oldBarcodeNo',
-                    title: '原条码号'
                 },
                 {
                     data: 'receiveDepartmentName',
@@ -123,10 +119,6 @@
                     title: '发件单位'
                 },
                 {
-                    data: 'oldSendDepartmentName',
-                    title: '原发件单位'
-                },
-                {
                     data: 'secretLevel',
                     title: '秘密等级'
                 },
@@ -137,10 +129,6 @@
                 {
                     data: 'urgencyTime',
                     title: '限时时间'
-                },
-                {
-                    data: 'shiJiCode',
-                    title: '市机码'
                 },
                 {
                     data: 'customData',
@@ -157,14 +145,7 @@
             ],
             columnDefs: [
                 {
-                    targets: 1,
-                    render: function (data, type, row) {
-
-                        return row.barcodeNo.substring(15, 22);
-                    }
-                },
-                {
-                    targets: 7,
+                    targets: 5,
                     render: function (data, type, row) {
                         var secretLevelText;
                         switch (row.secretLevel) {
@@ -189,7 +170,7 @@
                     }
                 },
                 {
-                    targets: 8,
+                    targets: 6,
                     render: function (data, type, row) {
                         var secretLevelText;
                         switch (row.urgencyLevel) {
@@ -249,7 +230,7 @@
     }
 
     function initGroupTree() {
-        $.get('/Letter/GetReceiveGroupSelect/',
+        $.get('/Letter/GetSendGroupSelect/',
             function (nodes) {
                 groupTreeObj = $.fn.zTree.init($('#groupTree'), groupSetting, nodes);
             });
@@ -263,7 +244,7 @@
     }
 
     function printBarcode(letterId) {
-        $.get("/Letter/GetReceiveBarcode/" + letterId, function (data) {
+        $.get("/Letter/GetSendBarcode/" + letterId, function (data) {
             var lodop = getLodop();
             lodop.PRINT_INIT("");
             lodop.SET_PRINT_MODE("PRINT_NOCOLLATE", 1);

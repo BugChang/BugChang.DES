@@ -2,7 +2,7 @@
     var table;
     $(function () {
 
-        initSendDepartments();
+        initReceiveDepartments();
 
         initTable();
 
@@ -27,11 +27,10 @@
             autoWith: true,
             searching: false,
             ajax: {
-                url: '/Letter/GetReceiveLetters',
+                url: '/Letter/GetSendLetters',
                 data: function (d) {
                     d.letterNo = $('#LetterNo').val();
-                    d.shiJiNo = $('#ShiJiNo').val();
-                    d.sendDepartmentId = $('.department-select').val();
+                    d.receiveDepartmentId = $('.department-select').val();
                     d.beginTime = $('#BeginTime').val();
                     d.endTime = $('#EndTime').val();
                 }
@@ -43,24 +42,12 @@
                     title: '信封编号'
                 },
                 {
-                    data: 'oldBarcodeNo',
-                    title: '原条码号'
-                },
-                {
                     data: 'receiveDepartmentName',
                     title: '收件单位'
                 },
                 {
                     data: 'receiver',
                     title: '收件人'
-                },
-                {
-                    data: 'sendDepartmentName',
-                    title: '发件单位'
-                },
-                {
-                    data: 'oldSendDepartmentName',
-                    title: '原发件单位'
                 },
                 {
                     data: 'secretLevel',
@@ -73,10 +60,6 @@
                 {
                     data: 'urgencyTime',
                     title: '限时时间'
-                },
-                {
-                    data: 'shiJiCode',
-                    title: '市机码'
                 },
                 {
                     data: 'customData',
@@ -97,7 +80,7 @@
             ],
             columnDefs: [
                 {
-                    targets: 6,
+                    targets: 3,
                     render: function (data, type, row) {
                         var secretLevelText;
                         switch (row.secretLevel) {
@@ -122,7 +105,7 @@
                     }
                 },
                 {
-                    targets: 7,
+                    targets: 4,
                     render: function (data, type, row) {
                         var secretLevelText;
                         switch (row.urgencyLevel) {
@@ -147,7 +130,7 @@
                     }
                 },
                 {
-                    targets: 13,
+                    targets: 9,
                     render: function (data, type, row) {
                         var strHtml = '';
                         strHtml += '<button class="btn btn-primary btn-xs exchange-detail" data-letter-id=' + row.id + '>流转详情</button>&nbsp;';
@@ -166,7 +149,7 @@
         table.ajax.reload();
     }
 
-    function initSendDepartments() {
+    function initReceiveDepartments() {
         $.get('/Letter/GetDepartments',
             function (data) {
                 $('.department-select').select2({

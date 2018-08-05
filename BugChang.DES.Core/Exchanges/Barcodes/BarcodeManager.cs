@@ -82,6 +82,11 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
                 return barCode;
             }
 
+            if (serialNo == 0)
+            {
+                return "";
+            }
+
             var letterNo = serialNo.ToString("0000000");
             barCode = sendDepartmentCode + ((int)secretLevel + 1) + ((int)urgentLevel + 1) + "0" +
                           DateTime.Now.Year + letterNo + receiveDepartmentCode;
@@ -96,9 +101,18 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         public string MakeBarcodeLength26(string sendDepartmentCode, string receiveDepartmentCode,
             EnumSecretLevel secretLevel, EnumUrgentLevel urgentLevel, int serialNo)
         {
-            var barCode = "0" + sendDepartmentCode + serialNo.ToString("00000") + DateTime.Now.ToString("yyyyMMdd").Substring(3, 1)
-                          + (int)secretLevel + (int)urgentLevel
-                          + receiveDepartmentCode + "0";
+            var barCode = "";
+            if (sendDepartmentCode.Length != 11 || receiveDepartmentCode.Length != 11)
+            {
+                return barCode;
+            }
+            if (serialNo == 0)
+            {
+                return "";
+            }
+            barCode = "0" + sendDepartmentCode.Substring(0, 6) + "0" + sendDepartmentCode.Substring(6, 3) + serialNo.ToString("00000") + DateTime.Now.ToString("yyyyMMdd").Substring(3, 1)
+                         + (int)secretLevel + (int)urgentLevel
+                         + receiveDepartmentCode.Substring(0, 6) + "0";
             return barCode;
         }
 

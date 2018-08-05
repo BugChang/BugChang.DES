@@ -82,12 +82,35 @@ namespace BugChang.DES.Application.Users
             return result;
         }
 
+        public async Task<ResultEntity> ChangeUserEnabled(int userId, int operatorId)
+        {
+            var result = new ResultEntity();
+            var user = await _userRepository.GetByIdAsync(userId);
+            user.Enabled = !user.Enabled;
+            result.Success = true;
+            await _unitOfWork.CommitAsync();
+            await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.UserEnabled, $"用户【{user.DisplayName}】已被【{(user.Enabled ? "启用" : "禁用")}】", null, operatorId);
+            return result;
+
+        }
+
         public async Task<ResultEntity> AddOrUpdateAsync(UserEditDto userEditDto)
         {
-            var result = await _userManager.AddOrUpdateAsync(Mapper.Map<User>(userEditDto));
+            var user = Mapper.Map<User>(userEditDto);
+            var result = await _userManager.AddOrUpdateAsync(user);
             if (result.Success)
             {
                 await _unitOfWork.CommitAsync();
+                if (userEditDto.Id > 0)
+                {
+                    await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.UserEdit,
+                        $"【{userEditDto.DisplayName}】", JsonConvert.SerializeObject(user), userEditDto.UpdateBy);
+                }
+                else
+                {
+                    await _logManager.LogInfomationAsync(EnumLogType.Audit, LogTitleConstString.UserAdd,
+                        $"【{userEditDto.DisplayName}】", JsonConvert.SerializeObject(user), userEditDto.CreateBy);
+                }
             }
 
             return result;

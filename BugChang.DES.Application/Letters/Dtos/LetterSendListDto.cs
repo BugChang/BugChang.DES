@@ -1,15 +1,18 @@
-﻿using System;
-using BugChang.DES.Application.Commons;
+﻿using BugChang.DES.Application.Commons;
 
 namespace BugChang.DES.Application.Letters.Dtos
 {
-    public class SendLetterEditDto : EditDto
+    public class LetterSendListDto : BaseDto
     {
         /// <summary>
         /// 条码号
         /// </summary>
         public string BarcodeNo { get; set; }
 
+        /// <summary>
+        /// 信封编号
+        /// </summary>
+        public string LetterNo { get; set; }
 
         /// <summary>
         /// 密级
@@ -24,21 +27,26 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// <summary>
         /// 限时时间
         /// </summary>
-        public DateTime? UrgencyTime { get; set; }
+        public string UrgencyTime { get; set; }
 
         /// <summary>
         /// 收件单位
         /// </summary>
-        public int ReceiveDepartmentId { get; set; }
+        public string ReceiveDepartmentName { get; set; }
 
         /// <summary>
         /// 发件单位
         /// </summary>
-        public int SendDepartmentId { get; set; }
+        public string SendDepartmentName { get; set; }
 
         /// <summary>
         /// 附加数据
         /// </summary>
         public string CustomData { get; set; }
+
+        /// <summary>
+        /// 收件人
+        /// </summary>
+        public string Receiver { get; set; }
     }
 }

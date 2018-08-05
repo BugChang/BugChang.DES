@@ -8,7 +8,7 @@ namespace BugChang.DES.Application.Letters
     public interface ILetterAppService
     {
         Task<ReceiveLetterEditDto> GetReceiveLetter(int letterId);
-        Task<SendLetterEditDto> GetSendLetter(int letterId);
+        Task<LetterSendEditDto> GetSendLetter(int letterId);
 
         Task<ResultEntity> AddReceiveLetter(ReceiveLetterEditDto receiveLetter);
 
@@ -16,6 +16,12 @@ namespace BugChang.DES.Application.Letters
 
         Task<LetterReceiveBarcodeDto> GetReceiveBarcode(int letterId);
 
-        Task<PageResultModel<LetterReceiveListDto>> GetReceiveLetters(ReceivePageSerchModel pageSearchModel);
+        Task<PageResultModel<LetterReceiveListDto>> GetReceiveLetters(LetterPageSerchModel pageSearchModel);
+
+        Task<ResultEntity> AddSendLetter(LetterSendEditDto sendLetter);
+
+        Task<PageResultModel<LetterSendListDto>> GetTodaySendLetters(PageSearchCommonModel pageSearchModel);
+
+        Task<PageResultModel<LetterSendListDto>> GetSendLetters(LetterPageSerchModel pageSearchModel);
     }
 }

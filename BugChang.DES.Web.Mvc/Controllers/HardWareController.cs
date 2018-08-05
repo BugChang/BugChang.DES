@@ -118,42 +118,42 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.LaserPrintA4);
             return Json(result);
         }
-        public async Task<IActionResult> LaserPrintB5(string deviceCode)
+        public async Task<IActionResult> GetLaserPrintB5(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.LaserPrintB5);
             return Json(result);
         }
-        public async Task<IActionResult> BarcodePrint6025(string deviceCode)
+        public async Task<IActionResult> GetBarcodePrint6025(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.BarcodePrint6025);
             return Json(result);
         }
-        public async Task<IActionResult> BarcodePrint9030(string deviceCode)
+        public async Task<IActionResult> GetBarcodePrint9030(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.BarcodePrint9030);
             return Json(result);
         }
-        public async Task<IActionResult> BarcodePrint80130(string deviceCode)
+        public async Task<IActionResult> GetBarcodePrint80130(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.BarcodePrint80130);
             return Json(result);
         }
-        public async Task<IActionResult> IdReadCard(string deviceCode)
+        public async Task<IActionResult> GetIdReadCard(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.IdReadCard);
             return Json(result);
         }
-        public async Task<IActionResult> IcReadCard(string deviceCode)
+        public async Task<IActionResult> GetIcReadCard(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.IcReadCard);
             return Json(result);
         }
-        public async Task<IActionResult> CpuReadCard(string deviceCode)
+        public async Task<IActionResult> GetCpuReadCard(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.CpuReadCard);
             return Json(result);
         }
-        public async Task<IActionResult> ScanGun(string deviceCode)
+        public async Task<IActionResult> GetScanGun(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.ScanGun);
             return Json(result);

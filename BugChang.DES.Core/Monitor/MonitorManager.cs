@@ -12,6 +12,7 @@ using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
+using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.Sortings;
 using Microsoft.EntityFrameworkCore;
 
@@ -71,8 +72,18 @@ namespace BugChang.DES.Core.Monitor
 
             switch (barcode.Status)
             {
-                case EnumBarcodeStatus.已就绪:
                 case EnumBarcodeStatus.已签收:
+                    if (barcode.CurrentPlaceId == placeId && barcode.SubStatus == EnumBarcodeSubStatus.正常)
+                    {
+                        //同一场所下，已签收的文件禁止再次投箱（勘误、退回件除外）
+                        checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
+                    }
+                    else
+                    {
+                        return await CheckBarcodeTypeCommon(letter, placeId);
+                    }
+                    break;
+                case EnumBarcodeStatus.已就绪:
                 case EnumBarcodeStatus.已勘误:
                     return await CheckBarcodeTypeCommon(letter, placeId);
                 case EnumBarcodeStatus.已投递:
@@ -142,8 +153,14 @@ namespace BugChang.DES.Core.Monitor
                 case EnumLetterType.发信:
                     {
                         var receiveDepartment = await _departmentRepository.GetByIdAsync(letter.ReceiveDepartmentId);
+                        var receiveChannel = receiveDepartment.ReceiveChannel;
+                        if (letter.BarcodeNo.Length == 26 && letter.SecretLevel == EnumSecretLevel.绝密)
+                        {
+                            //特殊逻辑，交换站绝密件走市机
+                            receiveChannel = EnumChannel.机要通信;
+                        }
                         var channelExchangeObjects = await _objectRepository.GetQueryable().Where(a =>
-                                a.ObjectType == EnumObjectType.渠道 && a.Value == (int)receiveDepartment.ReceiveChannel)
+                                a.ObjectType == EnumObjectType.渠道 && a.Value == (int)receiveChannel)
                             .ToListAsync();
                         if (channelExchangeObjects.Count > 0)
                         {

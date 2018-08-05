@@ -157,5 +157,21 @@ namespace BugChang.DES.Core.Letters
 
             return "";
         }
+
+        /// <summary>
+        /// 获取发信类型
+        /// </summary>
+        /// <param name="sendDepartmentCode">发件单位代码</param>
+        /// <param name="receiveDepartmentCode">收件单位代码</param>
+        /// <returns></returns>
+        public EnumLetterType GetSendLetterType(string sendDepartmentCode, string receiveDepartmentCode)
+        {
+            if (sendDepartmentCode.Substring(0, 3) == receiveDepartmentCode.Substring(0, 3))
+            {
+                return EnumLetterType.内交换;
+            }
+
+            return EnumLetterType.发信;
+        }
     }
 }

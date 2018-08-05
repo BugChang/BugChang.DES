@@ -22,7 +22,7 @@
         $('#UserCreateForm').submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            $.post('/User/Edit',
+            $.post('/User/Create',
                 data,
                 function (result) {
                     if (result.success) {
@@ -58,6 +58,13 @@
             function () {
                 var userId = $(this).attr('data-user-id');
                 editUserRole(userId);
+            });
+
+        $('table').delegate('.enabled-user',
+            'click',
+            function () {
+                var userId = $(this).attr('data-user-id');
+                changeUserEnabled(userId);
             });
 
         $('#btnRefresh').click(function () {
@@ -149,11 +156,20 @@
                     targets: 5,
                     render: function (data, type, row) {
                         var strHtml;
-                        if (row.enabled) {
-                            strHtml = '<label class="label label-success">已启用</label>';
+                        if (Common.hasOperation('User.Enabled')) {
+                            if (row.enabled) {
+                                strHtml = '<button class="btn btn-danger btn-xs enabled-user" data-user-id=' + row.id + '>禁用</button>&nbsp;';
+                            } else {
+                                strHtml = '<button class="btn btn-success btn-xs enabled-user" data-user-id=' + row.id + '>启用</button>&nbsp;';
+                            }
                         } else {
-                            strHtml = '<label class="label label-danger">已停用</label>';
+                            if (row.enabled) {
+                                strHtml = '<label class="label label-success">已启用</label>';
+                            } else {
+                                strHtml = '<label class="label label-danger">已停用</label>';
+                            }
                         }
+
                         return strHtml;
                     }
                 },
@@ -267,6 +283,19 @@
         if (!Common.hasOperation('User.Create')) {
             $('#btnAddUser').hide();
         }
+    }
+
+    //切换用户启用状态
+    function changeUserEnabled(id) {
+        $.post("/User/ChangeUserEnabled/" + id,
+            function (result) {
+                if (result.success) {
+                    window.toastr.success('操作成功');
+                    refresh();
+                } else {
+                    window.toastr.error(result.message);
+                }
+            });
     }
 
     //向外暴露方法

@@ -29,33 +29,25 @@ namespace BugChang.DES.Core.Authorization.Users
         public async Task<ResultEntity> AddOrUpdateAsync(User user)
         {
             var result = new ResultEntity();
-            if (user.Id > 0)
+            var existUserName = await _userRepository
+                .GetQueryable().AnyAsync(a => a.UserName == user.UserName && a.Id != user.Id);
+            if (existUserName)
             {
-                var dataBaseUser = await _userRepository.GetAsync(user.UserName);
-                if (dataBaseUser != null && dataBaseUser.UserName != user.UserName)
-                {
-                    result.Message = "已存在的用户名";
-                }
-                else
-                {
-                    _userRepository.Update(user);
-                    result.Success = true;
-                }
+                result.Message = "已存在的用户名";
             }
             else
             {
-                if (await ExistUserNameAsync(user.UserName))
+                if (user.Id > 0)
                 {
-                    result.Message = "已存在的用户名";
+                    _userRepository.Update(user);
                 }
                 else
                 {
                     user.Password = User.DefaultPassword.MD5();
                     await _userRepository.AddAsync(user);
-                    result.Success = true;
                 }
+                result.Success = true;
             }
-
             return result;
         }
 
