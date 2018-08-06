@@ -36,7 +36,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
             return new PageResultModel<Letter>
             {
-                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync(),
+                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync(),
                 Total = await query.CountAsync()
             };
         }
@@ -142,9 +142,63 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             }
             return new PageResultModel<Letter>
             {
-                Rows = await query.Skip(pageSearch.Skip).Take(pageSearch.Take).ToListAsync(),
+                Rows = await query.Skip(pageSearch.Skip).Take(pageSearch.Take).OrderByDescending(a => a.Id).ToListAsync(),
                 Total = await query.CountAsync()
             };
+        }
+
+        public async Task<PageResultModel<Letter>> GetBackLettersForSearch(PageSearchCommonModel pageSearchModel)
+        {
+            var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => a.ReceiveDepartmentId == pageSearchModel.DepartmentId && a.BarcodeNo.Contains(pageSearchModel.Keywords));
+            return new PageResultModel<Letter>
+            {
+                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync(),
+                Total = await query.CountAsync()
+            };
+        }
+
+        public async Task<PageResultModel<Letter>> GetBackLettersForManagerSearch(PageSearchCommonModel pageSearchModel)
+        {
+            var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords));
+            return new PageResultModel<Letter>
+            {
+                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync(),
+                Total = await query.CountAsync()
+            };
+        }
+    }
+
+    public class BackLetterRepository : BaseRepository<BackLetter>, IBackLetterRepository
+    {
+        private readonly DesDbContext _dbContext;
+        public BackLetterRepository(DesDbContext dbContext) : base(dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<PageResultModel<Letter>> GetBackLetters(PageSearchCommonModel pageSerch)
+        {
+            var query = from letter in _dbContext.Letters.Include(a => a.CreateUser).Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment)
+                        join backLetter in _dbContext.BackLetters on letter.Id equals backLetter.LetterId
+                        where backLetter.OperationDepartmentId == pageSerch.DepartmentId
+                        select letter;
+            if (!string.IsNullOrWhiteSpace(pageSerch.Keywords))
+            {
+                query = query.Where(a => a.LetterNo.Contains(pageSerch.Keywords));
+            }
+
+            return new PageResultModel<Letter>
+            {
+                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSerch.Skip).Take(pageSerch.Take).ToListAsync(),
+                Total = await query.Select(a => a).CountAsync()
+            };
+        }
+    }
+
+    public class CancelLetterRepository : BaseRepository<CancelLetter>, ICancelLetterRepository
+    {
+        public CancelLetterRepository(DesDbContext dbContext) : base(dbContext)
+        {
         }
     }
 }

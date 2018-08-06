@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BugChang.DES.Application.Letters.Dtos;
@@ -25,10 +27,11 @@ namespace BugChang.DES.Application.Letters
         private readonly ILetterRepository _letterRepository;
         private readonly IBarcodeRepository _barcodeRepository;
         private readonly IBarcodeLogRepository _barcodeLogRepository;
+        private readonly IBackLetterRepository _backLetterRepository;
         private readonly UnitOfWork _unitOfWork;
         private readonly IOptions<CommonSettings> _commonSettings;
 
-        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository)
+        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository)
         {
             _departmentManager = departmentManager;
             _serialNumberManager = serialNumberManager;
@@ -38,6 +41,7 @@ namespace BugChang.DES.Application.Letters
             _commonSettings = commonSettings;
             _barcodeLogRepository = barcodeLogRepository;
             _barcodeRepository = barcodeRepository;
+            _backLetterRepository = backLetterRepository;
         }
 
         public Task<ReceiveLetterEditDto> GetReceiveLetter(int letterId)
@@ -213,6 +217,62 @@ namespace BugChang.DES.Application.Letters
         {
             var letters = await _letterRepository.GetSendLetters(pageSearchModel);
             return Mapper.Map<PageResultModel<LetterSendListDto>>(letters);
+        }
+
+        public async Task<PageResultModel<LetterBackListDto>> GetBackLetters(PageSearchCommonModel pageSearchModel)
+        {
+            var letters = await _backLetterRepository.GetBackLetters(pageSearchModel);
+            return Mapper.Map<PageResultModel<LetterBackListDto>>(letters);
+        }
+
+        public async Task<PageResultModel<LetterBackListDto>> GetBackLettersForSearch(PageSearchCommonModel pageSearchModel)
+        {
+            PageResultModel<Letter> letters;
+            if (_commonSettings.Value.ReceiveDepartmentId == pageSearchModel.DepartmentId)
+            {
+                letters = await _letterRepository.GetBackLettersForManagerSearch(pageSearchModel);
+            }
+            else
+            {
+                letters = await _letterRepository.GetBackLettersForSearch(pageSearchModel);
+            }
+
+            return Mapper.Map<PageResultModel<LetterBackListDto>>(letters);
+        }
+
+        public async Task<ResultEntity> BackLetter(int letterId, int departmentId, int operatorId)
+        {
+            var result = new ResultEntity();
+            var letter = await _letterRepository.GetByIdAsync(letterId);
+            var existBack = await _backLetterRepository.GetQueryable().Where(a => a.LetterId == letterId).CountAsync() > 0;
+            if (existBack)
+            {
+                result.Message = "该文件已经存在退回记录，请勿重复操作！";
+            }
+            else
+            {
+                var barcode = await _barcodeRepository.GetByNoAsync(letter.BarcodeNo);
+                if (barcode == null || barcode.Status!= EnumBarcodeStatus.已签收)
+                {
+                    result.Message = "流转状态不正确，无法退回！";
+                }
+                else
+                {
+                    barcode.Status = EnumBarcodeStatus.申请退回;
+                    var backLetter = new BackLetter
+                    {
+                        LetterId = letterId,
+                        OperationDepartmentId = departmentId,
+                        OperatorId = operatorId,
+                        OperationTime = DateTime.Now
+                    };
+                    await _backLetterRepository.AddAsync(backLetter);
+                    await _unitOfWork.CommitAsync();
+                    result.Success = true;
+                }
+            }
+
+            return result;
         }
     }
 }

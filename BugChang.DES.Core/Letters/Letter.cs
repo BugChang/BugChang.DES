@@ -40,7 +40,7 @@ namespace BugChang.DES.Core.Letters
         public EnumUrgentLevel UrgencyLevel { get; set; }
 
         /// <summary>
-        /// 现实时间
+        /// 限时时间
         /// </summary>
         public DateTime? UrgencyTime { get; set; }
 

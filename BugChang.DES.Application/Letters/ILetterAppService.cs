@@ -8,6 +8,7 @@ namespace BugChang.DES.Application.Letters
     public interface ILetterAppService
     {
         Task<ReceiveLetterEditDto> GetReceiveLetter(int letterId);
+
         Task<LetterSendEditDto> GetSendLetter(int letterId);
 
         Task<ResultEntity> AddReceiveLetter(ReceiveLetterEditDto receiveLetter);
@@ -23,5 +24,11 @@ namespace BugChang.DES.Application.Letters
         Task<PageResultModel<LetterSendListDto>> GetTodaySendLetters(PageSearchCommonModel pageSearchModel);
 
         Task<PageResultModel<LetterSendListDto>> GetSendLetters(LetterPageSerchModel pageSearchModel);
+
+        Task<PageResultModel<LetterBackListDto>> GetBackLetters(PageSearchCommonModel pageSearchModel);
+
+        Task<PageResultModel<LetterBackListDto>> GetBackLettersForSearch(PageSearchCommonModel pageSearchModel);
+        Task<ResultEntity> BackLetter(int letterId, int departmentId, int operatorId);
+
     }
 }

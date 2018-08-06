@@ -82,6 +82,7 @@ namespace BugChang.DES.EntityFrameWorkCore
         public DbSet<ExchangeList> ExchangeLists { get; set; }
         public DbSet<ExchangeListDetail> ExchangeListDetails { get; set; }
         public DbSet<Client> Clients { get; set; }
+        public DbSet<BackLetter> BackLetters { get; set; }  
 
     }
 }

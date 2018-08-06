@@ -16,5 +16,19 @@ namespace BugChang.DES.Core.Letters
         Task<Letter> GetLetter(string barcodeNo);
 
         Task<PageResultModel<Letter>> GetSendLetters(LetterPageSerchModel pageSearch);
+
+        Task<PageResultModel<Letter>> GetBackLettersForSearch(PageSearchCommonModel pageSearchModel);
+
+        Task<PageResultModel<Letter>> GetBackLettersForManagerSearch(PageSearchCommonModel pageSearchModel);
+    }
+
+    public interface IBackLetterRepository : IBaseRepository<BackLetter>
+    {
+        Task<PageResultModel<Letter>> GetBackLetters(PageSearchCommonModel pageSerch);
+    }
+
+    public interface ICancelLetterRepository : IBaseRepository<CancelLetter>
+    {
+
     }
 }

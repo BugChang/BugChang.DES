@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Departments;
@@ -30,6 +31,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         [TypeFilter(typeof(MenuFilter))]
         public IActionResult Receive()
+        {
+            return View();
+        }
+
+        public IActionResult ReceiveList()
         {
             return View();
         }
@@ -151,11 +157,6 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
-        public IActionResult ReceiveList()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> GetSendLetters(int draw, int start, int length)
         {
             var pageSearchDto = new LetterPageSerchModel
@@ -229,6 +230,57 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public IActionResult Back()
         {
             return View();
+        }
+
+
+        public async Task<IActionResult> GetBackLetters(int draw, int start, int length)
+        {
+            var keywords = Request.Query["search[value]"];
+            var pageSearchDto = new PageSearchCommonModel
+            {
+                DepartmentId = CurrentUser.DepartmentId,
+                Keywords = keywords,
+                Take = length,
+                Skip = start
+            };
+            var pagereslut = await _letterAppService.GetBackLetters(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
+        }
+
+        public async Task<IActionResult> SearchBackLetters(int draw, int start, int length)
+        {
+            var pageSearchDto = new PageSearchCommonModel
+            {
+                DepartmentId = CurrentUser.DepartmentId,
+                Keywords = Request.Query["letterNo"],
+                Take = length,
+                Skip = start
+            };
+
+            var pagereslut = string.IsNullOrWhiteSpace(pageSearchDto.Keywords) ? new PageResultModel<LetterBackListDto> { Rows = new List<LetterBackListDto>() } : await _letterAppService.GetBackLettersForSearch(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> BackLetter(int id)
+        {
+            var result = await _letterAppService.BackLetter(id, CurrentUser.DepartmentId, CurrentUser.UserId);
+            return Json(result);
         }
 
         #endregion

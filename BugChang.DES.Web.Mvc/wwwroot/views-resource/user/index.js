@@ -79,6 +79,7 @@
             processing: true,
             serverSide: true,
             autoWith: true,
+            select: true,
             ajax: {
                 url: '/User/GetListForTable'
             },

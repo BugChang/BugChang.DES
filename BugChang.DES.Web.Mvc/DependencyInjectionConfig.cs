@@ -41,6 +41,7 @@ using BugChang.DES.EntityFrameWorkCore;
 using BugChang.DES.EntityFrameWorkCore.Repository;
 using BugChang.DES.Web.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -56,7 +57,7 @@ namespace BugChang.DES.Web.Mvc
 
             var mainConnectionString = configuration.GetConnectionString("DefaultConnectionString");
 
-            services.AddDbContext<DesDbContext>(option => option.UseMySql(mainConnectionString));
+            services.AddDbContext<DesDbContext>(option => option.UseMySql(mainConnectionString).ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning)));
 
             services.AddScoped<UnitOfWork>();
 
@@ -141,6 +142,8 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IHardWareRepository, HardWareRepository>();
             services.AddScoped<IBarcodeLogRepository, BarcodeLogRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
+            services.AddScoped<IBackLetterRepository, BackLetterRepository>();
+            services.AddScoped<ICancelLetterRepository, CancelLetterRepository>();
 
             #endregion
 

@@ -6,15 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\lib\bootstrap-table\**" />
     <Compile Remove="wwwroot\lib\dist\**" />
     <Compile Remove="wwwroot\lib\lib\**" />
     <Compile Remove="wwwroot\lib\pages\**" />
+    <Content Remove="wwwroot\lib\bootstrap-table\**" />
     <Content Remove="wwwroot\lib\dist\**" />
     <Content Remove="wwwroot\lib\lib\**" />
     <Content Remove="wwwroot\lib\pages\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap-table\**" />
     <EmbeddedResource Remove="wwwroot\lib\dist\**" />
     <EmbeddedResource Remove="wwwroot\lib\lib\**" />
     <EmbeddedResource Remove="wwwroot\lib\pages\**" />
+    <None Remove="wwwroot\lib\bootstrap-table\**" />
     <None Remove="wwwroot\lib\dist\**" />
     <None Remove="wwwroot\lib\lib\**" />
     <None Remove="wwwroot\lib\pages\**" />

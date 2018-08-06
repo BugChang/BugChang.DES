@@ -4,6 +4,8 @@ namespace BugChang.DES.Core.Letters
 {
     public class LetterPageSerchModel : PageSearchDetailModel
     {
+        public int OperationDepartmentId { get; set; }
+
         public int ReceiveDepartmentId { get; set; }
 
         public string LetterNo { get; set; }
