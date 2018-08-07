@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BugChang.DES.Application.Bills;
 using BugChang.DES.Application.Clients;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Departments.Dtos;
@@ -19,16 +20,23 @@ namespace BugChang.DES.Web.Mvc.Controllers
         private readonly IExchangeObjectAppService _exchangeObjectAppService;
         private readonly IDepartmentAppService _departmentAppService;
         private readonly IPlaceAppService _placeAppService;
+        private readonly IBillAppService _billAppService;
 
-        public BillController(IClientAppService clientAppService, IExchangeObjectAppService exchangeObjectAppService, IDepartmentAppService departmentAppService, IPlaceAppService placeAppService)
+        public BillController(IClientAppService clientAppService, IExchangeObjectAppService exchangeObjectAppService, IDepartmentAppService departmentAppService, IPlaceAppService placeAppService, IBillAppService billAppService)
         {
             _clientAppService = clientAppService;
             _exchangeObjectAppService = exchangeObjectAppService;
             _departmentAppService = departmentAppService;
             _placeAppService = placeAppService;
+            _billAppService = billAppService;
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Detail()
         {
             return View();
         }
@@ -117,6 +125,24 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             return Json(null);
         }
+
+        public async Task<IActionResult> CreateReceiveBill(int objectId)
+        {
+            return Json(null);
+        }
+
+        public async Task<IActionResult> CreateSendBill(int departmentId)
+        {
+            return Json(null);
+        }
+
+        public async Task<IActionResult> CreateReceiveSendBill()
+        {
+            return Json(null);
+        }
+
+
+
 
     }
 }

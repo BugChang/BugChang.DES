@@ -22,6 +22,11 @@ namespace BugChang.DES.Core.Letters
         public int OperatorId { get; set; }
 
         /// <summary>
+        /// 操作部门ID
+        /// </summary>
+        public int OperationDepartmentId { get; set; }
+
+        /// <summary>
         /// 操作时间
         /// </summary>
         public DateTime OperationTime { get; set; }

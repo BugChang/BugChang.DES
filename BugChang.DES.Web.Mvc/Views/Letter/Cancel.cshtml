@@ -1,5 +1,57 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+
+@section css
+    {
+    <link href="~/lib/datatables/css/select.dataTables.min.css" rel="stylesheet" />
+}
+
+<div class="box box-primary">
+    <div class="box-body">
+        <div class="col-md-8">
+            <input type="text" id="barcodeNo" class="input-lg form-control" value="" placeholder="请扫描或输入条码号！" />
+        </div>
+        <div class="col-md-2">
+            <input id="btnSearch" type="button" class="btn btn-primary btn-lg" value="查询" />
+        </div>
+    </div>
+</div>
+<div class="box box-primary">
+    <div class="box-body">
+        <div class="table-responsive">
+            <table id="cancelTable" class="table table-bordered table-hover text-nowrap"></table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="SearchBarcodeModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            @Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("条码详情"))
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label col-xs-2">申请人</label>
+                    <div class="col-xs-10">
+                        <select id="applicantId" class="form-control" style="width: 100%"></select>
+                    </div>
+                </div>
+                <hr />
+                <div class="table-responsive">
+                    <table id="searchTable" class="table table-bordered table-hover text-nowrap"></table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" id="btnSave" class="btn btn-primary">
+                        确认勘误
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section scripts
+    {
+    <script src="~/lib/datatables/js/dataTables.select.min.js"></script>
+    <script src="~/views-resource/letter/cancel.js" asp-append-version="true"></script>
 }

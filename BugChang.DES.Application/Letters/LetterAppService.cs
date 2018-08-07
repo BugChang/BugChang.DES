@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,6 +6,7 @@ using BugChang.DES.Application.Letters.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
+using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.Channel;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SecretLevels;
@@ -28,10 +28,12 @@ namespace BugChang.DES.Application.Letters
         private readonly IBarcodeRepository _barcodeRepository;
         private readonly IBarcodeLogRepository _barcodeLogRepository;
         private readonly IBackLetterRepository _backLetterRepository;
+        private readonly ICancelLetterRepository _cancelLetterRepository;
+        private readonly BoxManager _boxManager;
         private readonly UnitOfWork _unitOfWork;
         private readonly IOptions<CommonSettings> _commonSettings;
 
-        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository)
+        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository, ICancelLetterRepository cancelLetterRepository, BoxManager boxManager)
         {
             _departmentManager = departmentManager;
             _serialNumberManager = serialNumberManager;
@@ -42,6 +44,8 @@ namespace BugChang.DES.Application.Letters
             _barcodeLogRepository = barcodeLogRepository;
             _barcodeRepository = barcodeRepository;
             _backLetterRepository = backLetterRepository;
+            _cancelLetterRepository = cancelLetterRepository;
+            _boxManager = boxManager;
         }
 
         public Task<ReceiveLetterEditDto> GetReceiveLetter(int letterId)
@@ -252,7 +256,7 @@ namespace BugChang.DES.Application.Letters
             else
             {
                 var barcode = await _barcodeRepository.GetByNoAsync(letter.BarcodeNo);
-                if (barcode == null || barcode.Status!= EnumBarcodeStatus.已签收)
+                if (barcode == null || barcode.Status != EnumBarcodeStatus.已签收)
                 {
                     result.Message = "流转状态不正确，无法退回！";
                 }
@@ -266,12 +270,79 @@ namespace BugChang.DES.Application.Letters
                         OperatorId = operatorId,
                         OperationTime = DateTime.Now
                     };
+                    var barcodeLog = new BarcodeLog
+                    {
+                        BarcodeNumber = barcode.BarcodeNo,
+                        BarcodeStatus = EnumBarcodeStatus.申请退回,
+                        CurrentObjectId = barcode.CurrentObjectId,
+                        CurrentPlaceId = barcode.CurrentPlaceId,
+                        DepartmentId = letter.ReceiveDepartmentId,
+                        OperationTime = DateTime.Now,
+                        OperatorId = operatorId,
+                        Remark = "文件已申请退回"
+                    };
+                    await _barcodeLogRepository.AddAsync(barcodeLog);
                     await _backLetterRepository.AddAsync(backLetter);
                     await _unitOfWork.CommitAsync();
                     result.Success = true;
                 }
             }
 
+            return result;
+        }
+
+        public async Task<PageResultModel<LetterCancelListDto>> GetCancelLetters(PageSearchCommonModel pageSearchModel)
+        {
+            var letters = await _cancelLetterRepository.GetCancelLetters(pageSearchModel);
+            return Mapper.Map<PageResultModel<LetterCancelListDto>>(letters);
+        }
+
+        public async Task<PageResultModel<LetterCancelListDto>> GetCancelLettersForSearch(PageSearchCommonModel pageSearchModel)
+        {
+            var letters = await _letterRepository.GetCancelLettersForSearch(pageSearchModel);
+            return Mapper.Map<PageResultModel<LetterCancelListDto>>(letters);
+        }
+
+        public async Task<ResultEntity> CancelLetter(int letterId, int departmentId, int operatorId, int applicantId)
+        {
+            var result = new ResultEntity();
+            var letter = await _letterRepository.GetByIdAsync(letterId);
+            var barcode = await _barcodeRepository.GetByNoAsync(letter.BarcodeNo);
+            if (barcode == null || barcode.Status != EnumBarcodeStatus.已投递)
+            {
+                result.Message = "流转状态不正确，无法勘误！";
+            }
+            else
+            {
+                barcode.Status = EnumBarcodeStatus.已勘误;
+                var cancelLetter = new CancelLetter
+                {
+                    LetterId = letterId,
+                    OperationDepartmentId = departmentId,
+                    OperatorId = operatorId,
+                    ApplicantId = applicantId,
+                    OperationTime = DateTime.Now
+                };
+                var barcodeLog = new BarcodeLog
+                {
+                    BarcodeNumber = barcode.BarcodeNo,
+                    BarcodeStatus = EnumBarcodeStatus.已勘误,
+                    CurrentObjectId = barcode.CurrentObjectId,
+                    CurrentPlaceId = barcode.CurrentPlaceId,
+                    DepartmentId = letter.ReceiveDepartmentId,
+                    OperationTime = DateTime.Now,
+                    OperatorId = applicantId,
+                    Remark = "文件已勘误"
+                };
+
+                result = await _boxManager.Cancel(barcode.CurrentObjectId);
+                if (result.Success)
+                {
+                    await _barcodeLogRepository.AddAsync(barcodeLog);
+                    await _cancelLetterRepository.AddAsync(cancelLetter);
+                    await _unitOfWork.CommitAsync();
+                }
+            }
             return result;
         }
     }

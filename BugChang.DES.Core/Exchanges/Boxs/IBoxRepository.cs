@@ -10,6 +10,6 @@ namespace BugChang.DES.Core.Exchanges.Boxs
 
     public interface IBoxObjectRepository : IBaseRepository<BoxObject>
     {
-        Task<IList<Box>> GetBoxsByObjectId(int objectId);
+        Task<Box> GetBoxByObjectId(int objectId);
     }
 }

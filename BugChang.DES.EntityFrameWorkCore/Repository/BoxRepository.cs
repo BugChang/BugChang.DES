@@ -39,9 +39,10 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             _dbContext = dbContext;
         }
 
-        public Task<IList<Box>> GetBoxsByObjectId(int objectId)
+        public async Task<Box> GetBoxByObjectId(int objectId)
         {
-            throw new System.NotImplementedException();
+            var box = await _dbContext.BoxObjects.Where(a => a.ExchangeObjectId == objectId).Select(a => a.Box).FirstOrDefaultAsync();
+            return box;
         }
     }
 }

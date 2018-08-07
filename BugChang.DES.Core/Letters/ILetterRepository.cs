@@ -20,6 +20,8 @@ namespace BugChang.DES.Core.Letters
         Task<PageResultModel<Letter>> GetBackLettersForSearch(PageSearchCommonModel pageSearchModel);
 
         Task<PageResultModel<Letter>> GetBackLettersForManagerSearch(PageSearchCommonModel pageSearchModel);
+
+        Task<PageResultModel<Letter>> GetCancelLettersForSearch(PageSearchCommonModel pageSearchModel);
     }
 
     public interface IBackLetterRepository : IBaseRepository<BackLetter>
@@ -29,6 +31,7 @@ namespace BugChang.DES.Core.Letters
 
     public interface ICancelLetterRepository : IBaseRepository<CancelLetter>
     {
-
+        Task<PageResultModel<Letter>> GetCancelLetters(PageSearchCommonModel pageSerch);
+        
     }
 }

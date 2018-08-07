@@ -416,7 +416,7 @@ namespace BugChang.DES.Core.Monitor
                 barCode.BarcodeType = barCode.AnalysisBarcodeType(barCodeNo);
                 await _barcodeRepository.AddAsync(barCode);
             }
-
+            barCode.UpdateTime = DateTime.Now;
             switch (barCode.Status)
             {
                 case EnumBarcodeStatus.已就绪:
@@ -486,15 +486,20 @@ namespace BugChang.DES.Core.Monitor
                 foreach (var barcode in barcodes)
                 {
                     barcode.Status = EnumBarcodeStatus.已签收;
-                    var barcodeLog = new BarcodeLog
+                    if (barcode.UpdateTime != null)
                     {
-                        BarcodeNumber = barcode.BarcodeNo,
-                        BarcodeStatus = EnumBarcodeStatus.已签收,
-                        DepartmentId = user.DepartmentId,
-                        OperationTime = DateTime.Now,
-                        OperatorId = user.Id
-                    };
-                    await _barcodeLogRepository.AddAsync(barcodeLog);
+                        var barcodeLog = new BarcodeLog
+                        {
+                            BarcodeNumber = barcode.BarcodeNo,
+                            BarcodeStatus = EnumBarcodeStatus.已签收,
+                            BarcodeSubStatus = barcode.SubStatus,
+                            LastOperationTime = barcode.UpdateTime.Value,
+                            DepartmentId = user.DepartmentId,
+                            OperationTime = DateTime.Now,
+                            OperatorId = user.Id
+                        };
+                        await _barcodeLogRepository.AddAsync(barcodeLog);
+                    }
 
                     var firtExchangeObject = boxObjects.FirstOrDefault();
                     if (firtExchangeObject == null || firtExchangeObject.ObjectType != EnumObjectType.渠道) continue;

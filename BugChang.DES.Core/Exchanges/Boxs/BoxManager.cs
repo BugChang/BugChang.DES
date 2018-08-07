@@ -83,6 +83,12 @@ namespace BugChang.DES.Core.Exchanges.Boxs
             //添加新数据
             foreach (var objectId in objectIds)
             {
+                var oldBox = await _boxObjectRepository.GetBoxByObjectId(objectId);
+                if (oldBox.Id == boxId)
+                {
+                    result.Message = "同一个流转对象只能分配一个箱格，请检查数据";
+                    return result;
+                }
                 var boxObject = new BoxObject
                 {
                     BoxId = boxId,
@@ -93,6 +99,22 @@ namespace BugChang.DES.Core.Exchanges.Boxs
 
             result.Success = true;
             result.Message = $"箱格【{box.Name}】已成功分配流转对象";
+            return result;
+        }
+
+        public async Task<ResultEntity> Cancel(int objectId)
+        {
+            var result = new ResultEntity();
+            var box = await _boxObjectRepository.GetBoxByObjectId(objectId);
+            if (box == null)
+            {
+                result.Message = "该流转对象不存在箱格，无法勘误";
+            }
+            else
+            {
+                box.FileCount -= 1;
+                result.Success = true;
+            }
             return result;
         }
     }

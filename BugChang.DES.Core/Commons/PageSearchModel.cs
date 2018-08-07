@@ -15,6 +15,7 @@ namespace BugChang.DES.Core.Commons
     {
         public string Keywords { get; set; }
 
+        public int UserId { get; set; }
         public int DepartmentId { get; set; }
         public int? ParentId { get; set; }
     }

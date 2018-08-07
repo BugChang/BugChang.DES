@@ -6,6 +6,7 @@ using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Groups;
 using BugChang.DES.Application.Letters;
 using BugChang.DES.Application.Letters.Dtos;
+using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Web.Mvc.Filters;
@@ -20,11 +21,13 @@ namespace BugChang.DES.Web.Mvc.Controllers
         private readonly ILetterAppService _letterAppService;
         private readonly IDepartmentAppService _departmentAppService;
         private readonly IGroupAppService _groupAppService;
-        public LetterController(ILetterAppService letterAppService, IDepartmentAppService departmentAppService, IGroupAppService groupAppService)
+        private readonly IUserAppService _userAppService;
+        public LetterController(ILetterAppService letterAppService, IDepartmentAppService departmentAppService, IGroupAppService groupAppService, IUserAppService userAppService)
         {
             _letterAppService = letterAppService;
             _departmentAppService = departmentAppService;
             _groupAppService = groupAppService;
+            _userAppService = userAppService;
         }
 
         #region 收信
@@ -290,6 +293,67 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public IActionResult Cancel()
         {
             return View();
+        }
+
+        public async Task<IActionResult> GetCancelLetters(int draw, int start, int length)
+        {
+            var keywords = Request.Query["search[value]"];
+            var pageSearchDto = new PageSearchCommonModel
+            {
+                DepartmentId = CurrentUser.DepartmentId,
+                UserId = CurrentUser.UserId,
+                Keywords = keywords,
+                Take = length,
+                Skip = start
+            };
+            var pagereslut = await _letterAppService.GetCancelLetters(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
+        }
+
+        public async Task<IActionResult> SearchCancelLetters(int draw, int start, int length)
+        {
+            var pageSearchDto = new PageSearchCommonModel
+            {
+                DepartmentId = CurrentUser.DepartmentId,
+                Keywords = Request.Query["letterNo"],
+                Take = length,
+                Skip = start
+            };
+
+            var pagereslut = string.IsNullOrWhiteSpace(pageSearchDto.Keywords) ? new PageResultModel<LetterBackListDto> { Rows = new List<LetterBackListDto>() } : await _letterAppService.GetBackLettersForSearch(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CancelLetter(int id, int applicantId)
+        {
+            var result = await _letterAppService.CancelLetter(id, CurrentUser.DepartmentId, CurrentUser.UserId, applicantId);
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await _userAppService.GetUsersAsync();
+            var json = users.Select(a => new SelectViewModel
+            {
+                Id = a.Id,
+                Text = a.DisplayName
+            });
+            return Json(json);
         }
 
         #endregion

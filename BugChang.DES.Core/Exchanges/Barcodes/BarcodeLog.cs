@@ -17,6 +17,16 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         public EnumBarcodeStatus BarcodeStatus { get; set; }
 
         /// <summary>
+        /// 条码子状态
+        /// </summary>
+        public EnumBarcodeSubStatus BarcodeSubStatus { get; set; }
+
+        /// <summary>
+        /// 前一个操作时间
+        /// </summary>
+        public DateTime LastOperationTime { get; set; }
+
+        /// <summary>
         /// 操作时间
         /// </summary>
         public DateTime OperationTime { get; set; }
@@ -47,6 +57,10 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         /// </summary>
         public string Remark { get; set; }
 
+        /// <summary>
+        /// 清单是否同步
+        /// </summary>
+        public bool IsSynBill { get; set; }
 
         public bool IsDeleted { get; set; }
     }

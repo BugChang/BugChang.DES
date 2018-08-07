@@ -28,7 +28,14 @@ namespace BugChang.DES.Application.Letters
         Task<PageResultModel<LetterBackListDto>> GetBackLetters(PageSearchCommonModel pageSearchModel);
 
         Task<PageResultModel<LetterBackListDto>> GetBackLettersForSearch(PageSearchCommonModel pageSearchModel);
+
         Task<ResultEntity> BackLetter(int letterId, int departmentId, int operatorId);
+
+        Task<PageResultModel<LetterCancelListDto>> GetCancelLetters(PageSearchCommonModel pageSearchModel);
+
+        Task<PageResultModel<LetterCancelListDto>> GetCancelLettersForSearch(PageSearchCommonModel pageSearchModel);
+
+        Task<ResultEntity> CancelLetter(int letterId, int departmentId, int operatorId, int applicantId);
 
     }
 }

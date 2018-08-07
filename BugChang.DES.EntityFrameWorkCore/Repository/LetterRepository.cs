@@ -166,6 +166,16 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
                 Total = await query.CountAsync()
             };
         }
+
+        public async Task<PageResultModel<Letter>> GetCancelLettersForSearch(PageSearchCommonModel pageSearchModel)
+        {
+            var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords));
+            return new PageResultModel<Letter>
+            {
+                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync(),
+                Total = await query.CountAsync()
+            };
+        }
     }
 
     public class BackLetterRepository : BaseRepository<BackLetter>, IBackLetterRepository
@@ -197,8 +207,28 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
     public class CancelLetterRepository : BaseRepository<CancelLetter>, ICancelLetterRepository
     {
+        private readonly DesDbContext _dbContext;
         public CancelLetterRepository(DesDbContext dbContext) : base(dbContext)
         {
+            _dbContext = dbContext;
+        }
+
+        public async Task<PageResultModel<Letter>> GetCancelLetters(PageSearchCommonModel pageSerch)
+        {
+            var query = from letter in _dbContext.Letters.Include(a => a.CreateUser).Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment)
+                        join cancelLetter in _dbContext.CancelLetters on letter.Id equals cancelLetter.LetterId
+                        where cancelLetter.OperationDepartmentId == pageSerch.DepartmentId || cancelLetter.ApplicantId == pageSerch.UserId
+                        select letter;
+            if (!string.IsNullOrWhiteSpace(pageSerch.Keywords))
+            {
+                query = query.Where(a => a.LetterNo.Contains(pageSerch.Keywords));
+            }
+
+            return new PageResultModel<Letter>
+            {
+                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSerch.Skip).Take(pageSerch.Take).ToListAsync(),
+                Total = await query.Select(a => a).CountAsync()
+            };
         }
     }
 }
