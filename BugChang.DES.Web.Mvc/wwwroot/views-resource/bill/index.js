@@ -39,7 +39,8 @@
             function (result) {
                 if (result.success) {
                     if (result.data.length === 1) {
-                        alert("就一个直接打印吧");
+                        var objectId = result.data[0].id;
+                        printReceive(objectId);
                     } else {
                         $("#SelectObjectModal .modal-body").html("");
                         var html = '<div class="row">';
@@ -65,7 +66,8 @@
             function (result) {
                 if (result.success) {
                     if (result.data.length === 1) {
-                        alert("就一个直接打印吧");
+                        var objectId = result.data[0].id;
+                        printSend(objectId);
                     } else {
                         $("#SelectObjectModal .modal-body").html("");
                         var html = '<div class="row">';
@@ -86,16 +88,49 @@
     }
 
     function checkReceiveSend() {
-
+        $.post("/Bill/CheckSend",
+            { deviceCode: deviceCode },
+            function (result) {
+                if (result.success) {
+                    printReceiveSend();
+                } else {
+                    window.toastr.error(result.message);
+                }
+            });
     }
 
     function printReceive(objectId) {
         $('body').loading();
-        setTimeout('location.href = "/Account/Logout"', 5000);
+        $.post("/Bill/CreateReceiveBill", { objectId: objectId, deviceCode: deviceCode }, function (result) {
+            if (result.success) {
+                location.href = "/Bill/Detail/" + result.data;
+            } else {
+                window.toastr.error(result.message);
+            }
+        });
     }
 
     function printSend(departmentId) {
         $('body').loading();
+        $.post("/Bill/CreateSendBill", { departmentId: departmentId, deviceCode: deviceCode }, function (result) {
+            if (result.success) {
+                location.href = "/Bill/Detail/" + result.data;
+            } else {
+                window.toastr.error(result.message);
+            }
+        });
+    }
+
+
+    function printReceiveSend() {
+        $('body').loading();
+        $.post("/Bill/CreateReceiveSendBill", { deviceCode: deviceCode }, function (result) {
+            if (result.success) {
+                location.href = "/Bill/Detail/" + result.data;
+            } else {
+                window.toastr.error(result.message);
+            }
+        });
     }
 
     function initSocket() {

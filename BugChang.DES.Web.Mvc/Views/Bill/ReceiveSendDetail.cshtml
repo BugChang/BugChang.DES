@@ -1,0 +1,142 @@
+﻿<div class="col-md-12">
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <h3 class="box-title">发件清单</h3>
+            <div class="pull-right">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <a class="btn btn-primary" id="btnPrintAndExit"><i class="fa fa-print"></i>打印并退出</a>
+                        <a class="btn btn-info" id="btnPrintAndReturn"><i class="fa fa-print"></i>打印并返回</a>
+                        <a class="btn btn-default" asp-controller="Bill" asp-action="List"><i class="fa fa-print"></i>查看清单列表</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-body">
+            <div id="divHeader">
+                <div style="line-height: 30px" align="center">
+                    <strong>
+                        <span style="font-size: 24px">
+                            收发件回执清单
+                        </span>
+                    </strong>
+                </div>
+                <table style="border: none;width:100%">
+                    <tbody>
+                        <tr>
+                            <td style="width: 80%">
+                                <span style="font-size: 20px">交换单位：北京市国家安全局</span>
+                            </td>
+                            <td rowspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>清 单 号 ：12316541651</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>打印时间：@DateTime.Now</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="divBody">
+                <table class="table table-bordered" style="width: 100%">
+                    <tr>
+                        <td colspan="9">
+                            <span style="float:left">收件清单</span>
+                            <span style="float:right"> 收件总数：120</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:6%">
+                            <b>序号</b>
+                        </td>
+                        <td style="width:24%">
+                            <b>发件单位</b>
+                        </td>
+                        <td style="width:13%">
+                            <b>条码编号</b>
+                        </td>
+                        <td style="width:15%">
+                            <b>时间</b>
+                        </td>
+                        <td style="width:6%">
+                            <b>密级</b>
+                        </td>
+                        <td style="width:6%">
+                            <b>缓急</b>
+                        </td>
+                        <td style="width:20%">
+                            <b>备注/机要号</b>
+                        </td>
+                        <td style="width: 10%">
+                            <b>签收</b>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="font-size:10px;line-height:12px"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="8">
+                            <span style="float:left">发件清单</span>
+                            <span style="float:right"> 发件总数：100</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 6%">
+                            <b>序号</b>
+                        </td>
+                        <td style="width: 24%">
+                            <b>收件单位</b>
+                        </td>
+                        <td style="width: 13%">
+                            <b>条码编号</b>
+                        </td>
+                        <td style="width: 15%">
+                            <b>时间</b>
+                        </td>
+                        <td style="width: 6%">
+                            <b>密级</b>
+                        </td>
+                        <td style="width: 6%">
+                            <b>缓急</b>
+                        </td>
+                        <td style="width: 30%" colspan="2">
+                            <b>备注/机要号</b>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="2" style="font-size:10px;line-height:12px"></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="divFooter" class="visible-print-block">
+                <table style="width: 100%">
+                    <tr>
+                        <td style="width: 33%; text-align: left"><span>交换人:张三</span></td>
+                        <td style="width: 33%; text-align: center"><span color='#0000ff'><span tdata='pageNO'>第##页</span>/<span tdata='pageCount'>共##页</span></span></td>
+                        <td style="width: 33%; text-align: right"><span>北京市国家安全局制</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

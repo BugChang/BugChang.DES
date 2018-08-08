@@ -36,9 +36,20 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
-        public IActionResult Detail()
+        public IActionResult Detail(int id)
         {
-            return View();
+            switch (id)
+            {
+                case 1:
+                    return View("ReceiveDetail");
+                case 2:
+                    return View("SendDetail");
+                case 3:
+                    return View("ReceiveSendDetail");
+                case 4:
+                    return View("InsideDetail");
+            }
+            return View("ReceiveDetail");
         }
 
         public IActionResult List()
@@ -46,6 +57,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
+        [HttpPost]
         public async Task<IActionResult> CheckReceive(string deviceCode)
         {
             var result = new ResultEntity();
@@ -83,6 +95,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(result);
         }
 
+        [HttpPost]
         public async Task<IActionResult> CheckSend(string deviceCode)
         {
             var result = new ResultEntity();
@@ -121,24 +134,65 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(result);
         }
 
-        public IActionResult CheckSendAndReceive(string deviceCode)
+        [HttpPost]
+        public async Task<IActionResult> CheckSendAndReceive(string deviceCode)
         {
-            return Json(null);
+            var result = new ResultEntity();
+            var departments = new List<DepartmentEditDto>();
+            var department = await _departmentAppService.GetForEditByIdAsync(CurrentUser.DepartmentId);
+            departments.Add(department);
+            var client = await _clientAppService.GetClient(deviceCode);
+            if (client == null)
+            {
+                result.Message = "未注册的客户端无法使用此功能";
+            }
+            else
+            {
+                if (client.ClientType == EnumClientType.个人终端)
+                {
+                    result.Message = "请在自助终端使用打印功能";
+                }
+                else
+                {
+                    var isPlaceWarden = await _placeAppService.IsPlaceWarden(CurrentUser.UserId, client.PlaceId);
+                    if (isPlaceWarden)
+                    {
+                        result.Message = "场所管理员请单独使用收发件打印功能";
+                    }
+                    else
+                    {
+                        result.Success = true;
+                    }
+                }
+            }
+            return Json(result);
         }
 
-        public async Task<IActionResult> CreateReceiveBill(int objectId)
+        [HttpPost]
+        public async Task<IActionResult> CreateReceiveBill(int objectId, string deviceCode)
         {
-            return Json(null);
+            var client = await _clientAppService.GetClient(deviceCode);
+            var result = await _billAppService.CreateReceiveBill(client.PlaceId, objectId, CurrentUser.UserId,
+                CurrentUser.DepartmentId);
+            return Json(result);
         }
 
-        public async Task<IActionResult> CreateSendBill(int departmentId)
+        [HttpPost]
+        public async Task<IActionResult> CreateSendBill(int departmentId, string deviceCode)
         {
-            return Json(null);
+            var client = await _clientAppService.GetClient(deviceCode);
+            var result = await _billAppService.CreateSendBill(client.PlaceId, CurrentUser.UserId,
+                CurrentUser.DepartmentId);
+            return Json(result);
         }
 
-        public async Task<IActionResult> CreateReceiveSendBill()
+        [HttpPost]
+        public async Task<IActionResult> CreateReceiveSendBill(string deviceCode)
         {
-            return Json(null);
+            var client = await _clientAppService.GetClient(deviceCode);
+            var result = await _billAppService.CreateReceiveSendBill(client.PlaceId, CurrentUser.UserId,
+                CurrentUser.DepartmentId);
+            return Json(result);
         }
 
 

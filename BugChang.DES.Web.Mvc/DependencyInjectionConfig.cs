@@ -1,5 +1,6 @@
 ﻿using BugChang.DES.Application.Accounts;
 using BugChang.DES.Application.Barcodes;
+using BugChang.DES.Application.Bills;
 using BugChang.DES.Application.Boxs;
 using BugChang.DES.Application.Cards;
 using BugChang.DES.Application.Channels;
@@ -27,6 +28,7 @@ using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
+using BugChang.DES.Core.Exchanges.Bill;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
@@ -87,6 +89,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<ICardAppService, CardAppService>();
             services.AddScoped<IHardWareAppService, HardWareAppService>();
             services.AddScoped<IClientAppService, ClientAppService>();
+            services.AddScoped<IBillAppService, BillAppService>();
 
             #endregion
 
@@ -144,6 +147,8 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<IBackLetterRepository, BackLetterRepository>();
             services.AddScoped<ICancelLetterRepository, CancelLetterRepository>();
+            services.AddScoped<IExchangeListRepository, ExchangeListRepository>();
+            services.AddScoped<IExchangeListDetailRepository, ExchangeListDetailRepository>();
 
             #endregion
 

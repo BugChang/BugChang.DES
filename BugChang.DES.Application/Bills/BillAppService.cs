@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Bill;
 using BugChang.DES.Core.Letters;
@@ -29,50 +30,223 @@ namespace BugChang.DES.Application.Bills
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> CreateReceiveBill(int placeId, int objectId, int userId, int departmentId)
+        /// <summary>
+        /// 生成收件清单
+        /// </summary>
+        /// <param name="placeId">场所ID</param>
+        /// <param name="objectId">流转对象ID</param>
+        /// <param name="userId">用户ID</param>
+        /// <param name="departmentId">收件单位ID</param>
+        /// <returns></returns>
+        public async Task<ResultEntity> CreateReceiveBill(int placeId, int objectId, int userId, int departmentId)
         {
+            var result = new ResultEntity();
             var barcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
                 !a.IsSynBill && a.CurrentPlaceId == placeId && a.CurrentObjectId == objectId &&
                 a.BarcodeStatus == EnumBarcodeStatus.已签收).ToListAsync();
-            var letters = _letterRepository.GetQueryable()
-                .Where(a => barcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
-            //清单全局使用一个流水，防止串号
-            var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
-            var exchangeList = new ExchangeList
+            if (barcodeLogs.Count > 0)
             {
-                CreateBy = userId,
-                CreateTime = DateTime.Now,
-                DepartmentId = departmentId,
-                ObjectId = objectId,
-                Printed = false,
-                Type = EnumListType.收件清单
-            };
-            exchangeList.ListNo = exchangeList.GetListNo(serialNo);
-            await _exchangeListRepository.AddAsync(exchangeList);
-
-            foreach (var letter in letters)
-            {
-                var barcodeLog = barcodeLogs.FirstOrDefault(a => a.BarcodeNumber == letter.BarcodeNo);
-                if (barcodeLog != null)
+                var letters = _letterRepository.GetQueryable()
+                    .Where(a => barcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
+                //清单全局使用一个流水，防止串号
+                var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
+                var exchangeList = new ExchangeList
                 {
-                    var exchangeListDetail = new ExchangeListDetail
+                    CreateBy = userId,
+                    CreateTime = DateTime.Now,
+                    DepartmentId = departmentId,
+                    ObjectId = objectId,
+                    Printed = false,
+                    Type = EnumListType.收件清单
+                };
+                exchangeList.ListNo = exchangeList.GetListNo(serialNo);
+                await _exchangeListRepository.AddAsync(exchangeList);
+
+                foreach (var letter in letters)
+                {
+                    var barcodeLog = barcodeLogs.FirstOrDefault(a => a.BarcodeNumber == letter.BarcodeNo);
+                    if (barcodeLog != null)
                     {
-                        BarcodeNo = letter.BarcodeNo,
-                        CustomData = letter.CustomData,
-                        DetailType = barcodeLog.BarcodeSubStatus == EnumBarcodeSubStatus.退回 ? EnumListDetailType.收退件 : EnumListDetailType.收件,
-                        ExchangeListId = exchangeList.Id,
-                        ReceiveDepartmentName = letter.ReceiveDepartment.FullName,
-                        SendDepartmentName = letter.SendDepartment.FullName,
-                        SecSecretLevelText = letter.GetSecretLevel(letter.BarcodeNo).ToString(),
-                        UrgencyLevelText = letter.GetUrgencyLevel(letter.BarcodeNo).ToString(),
-                        Time = barcodeLog.LastOperationTime
-                    };
-                    await _exchangeListDetailRepository.AddAsync(exchangeListDetail);
+                        var exchangeListDetail = new ExchangeListDetail
+                        {
+                            BarcodeNo = letter.BarcodeNo,
+                            CustomData = letter.CustomData,
+                            DetailType = barcodeLog.BarcodeSubStatus == EnumBarcodeSubStatus.退回 ? EnumListDetailType.收退件 : EnumListDetailType.收件,
+                            ExchangeListId = exchangeList.Id,
+                            ReceiveDepartmentName = letter.ReceiveDepartment.FullName,
+                            SendDepartmentName = letter.SendDepartment.FullName,
+                            SecSecretLevelText = letter.GetSecretLevel(letter.BarcodeNo).ToString(),
+                            UrgencyLevelText = letter.GetUrgencyLevel(letter.BarcodeNo).ToString(),
+                            Time = barcodeLog.LastOperationTime
+                        };
+                        await _exchangeListDetailRepository.AddAsync(exchangeListDetail);
+                        result.Success = true;
+                        result.Data = exchangeList.Id;
+                    }
                 }
+
+                await _unitOfWork.CommitAsync();
+            }
+            else
+            {
+                result.Message = "暂无收件清单";
             }
 
-            await _unitOfWork.CommitAsync();
-            return exchangeList.Id;
+            return result;
+        }
+
+        /// <summary>
+        /// 生成发件清单
+        /// </summary>
+        /// <param name="placeId">场所ID</param>
+        /// <param name="userId">用户ID</param>
+        /// <param name="departmentId">发件单位ID</param>
+        /// <returns></returns>
+        public async Task<ResultEntity> CreateSendBill(int placeId, int userId, int departmentId)
+        {
+            var result = new ResultEntity();
+            var barcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                !a.IsSynBill && a.CurrentPlaceId == placeId && a.DepartmentId == departmentId &&
+                a.BarcodeStatus == EnumBarcodeStatus.已签收).ToListAsync();
+            if (barcodeLogs.Count > 0)
+            {
+                var letters = _letterRepository.GetQueryable()
+                    .Where(a => barcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
+                //清单全局使用一个流水，防止串号
+                var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
+                var exchangeList = new ExchangeList
+                {
+                    CreateBy = userId,
+                    CreateTime = DateTime.Now,
+                    DepartmentId = departmentId,
+                    Printed = false,
+                    Type = EnumListType.发件清单
+                };
+                exchangeList.ListNo = exchangeList.GetListNo(serialNo);
+                await _exchangeListRepository.AddAsync(exchangeList);
+
+                foreach (var letter in letters)
+                {
+                    var barcodeLog = barcodeLogs.FirstOrDefault(a => a.BarcodeNumber == letter.BarcodeNo);
+                    if (barcodeLog != null)
+                    {
+                        var exchangeListDetail = new ExchangeListDetail
+                        {
+                            BarcodeNo = letter.BarcodeNo,
+                            CustomData = letter.CustomData,
+                            DetailType = barcodeLog.BarcodeSubStatus == EnumBarcodeSubStatus.退回 ? EnumListDetailType.发退件 : EnumListDetailType.发件,
+                            ExchangeListId = exchangeList.Id,
+                            ReceiveDepartmentName = letter.ReceiveDepartment.FullName,
+                            SendDepartmentName = letter.SendDepartment.FullName,
+                            SecSecretLevelText = letter.GetSecretLevel(letter.BarcodeNo).ToString(),
+                            UrgencyLevelText = letter.GetUrgencyLevel(letter.BarcodeNo).ToString(),
+                            Time = barcodeLog.OperationTime
+                        };
+                        await _exchangeListDetailRepository.AddAsync(exchangeListDetail);
+                    }
+                }
+                await _unitOfWork.CommitAsync();
+                result.Data = exchangeList.Id;
+                result.Success = true;
+            }
+            else
+            {
+                result.Message = "暂无发件清单";
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 生成收发清单
+        /// </summary>
+        /// <param name="placeId">场所ID</param>
+        /// <param name="userId">用户ID</param>
+        /// <param name="departmentId">单位ID</param>
+        /// <returns></returns>
+        public async Task<ResultEntity> CreateReceiveSendBill(int placeId, int userId, int departmentId)
+        {
+            var result = new ResultEntity();
+
+            var receiveBarcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                !a.IsSynBill && a.CurrentPlaceId == placeId && a.DepartmentId == departmentId &&
+                a.BarcodeStatus == EnumBarcodeStatus.已签收).ToListAsync();
+            var sendBarcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                !a.IsSynBill && a.CurrentPlaceId == placeId && a.DepartmentId == departmentId &&
+                a.BarcodeStatus == EnumBarcodeStatus.已投递).ToListAsync();
+            if (receiveBarcodeLogs.Count > 0 || sendBarcodeLogs.Count > 0)
+            {
+                //清单全局使用一个流水，防止串号
+                var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
+                var receiveLettesr = _letterRepository.GetQueryable()
+                    .Where(a => receiveBarcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
+                var sendLettesr = _letterRepository.GetQueryable()
+                    .Where(a => sendBarcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
+                //添加主清单
+                var exchangeList = new ExchangeList
+                {
+                    CreateBy = userId,
+                    CreateTime = DateTime.Now,
+                    DepartmentId = departmentId,
+                    Printed = false,
+                    Type = EnumListType.收发清单
+                };
+                exchangeList.ListNo = exchangeList.GetListNo(serialNo);
+                await _exchangeListRepository.AddAsync(exchangeList);
+
+                //添加收件详情
+                foreach (var letter in receiveLettesr)
+                {
+                    var barcodeLog = receiveBarcodeLogs.FirstOrDefault(a => a.BarcodeNumber == letter.BarcodeNo);
+                    if (barcodeLog != null)
+                    {
+                        var exchangeListDetail = new ExchangeListDetail
+                        {
+                            BarcodeNo = letter.BarcodeNo,
+                            CustomData = letter.CustomData,
+                            DetailType = barcodeLog.BarcodeSubStatus == EnumBarcodeSubStatus.退回 ? EnumListDetailType.收退件 : EnumListDetailType.收件,
+                            ExchangeListId = exchangeList.Id,
+                            ReceiveDepartmentName = letter.ReceiveDepartment.FullName,
+                            SendDepartmentName = letter.SendDepartment.FullName,
+                            SecSecretLevelText = letter.GetSecretLevel(letter.BarcodeNo).ToString(),
+                            UrgencyLevelText = letter.GetUrgencyLevel(letter.BarcodeNo).ToString(),
+                            Time = barcodeLog.LastOperationTime
+                        };
+                        await _exchangeListDetailRepository.AddAsync(exchangeListDetail);
+                    }
+                }
+                //添加发件详情
+                foreach (var letter in sendLettesr)
+                {
+                    var barcodeLog = receiveBarcodeLogs.FirstOrDefault(a => a.BarcodeNumber == letter.BarcodeNo);
+                    if (barcodeLog != null)
+                    {
+                        var exchangeListDetail = new ExchangeListDetail
+                        {
+                            BarcodeNo = letter.BarcodeNo,
+                            CustomData = letter.CustomData,
+                            DetailType = barcodeLog.BarcodeSubStatus == EnumBarcodeSubStatus.退回 ? EnumListDetailType.发退件 : EnumListDetailType.发件,
+                            ExchangeListId = exchangeList.Id,
+                            ReceiveDepartmentName = letter.ReceiveDepartment.FullName,
+                            SendDepartmentName = letter.SendDepartment.FullName,
+                            SecSecretLevelText = letter.GetSecretLevel(letter.BarcodeNo).ToString(),
+                            UrgencyLevelText = letter.GetUrgencyLevel(letter.BarcodeNo).ToString(),
+                            Time = barcodeLog.OperationTime
+                        };
+                        await _exchangeListDetailRepository.AddAsync(exchangeListDetail);
+                    }
+                }
+
+                await _unitOfWork.CommitAsync();
+                result.Success = true;
+                result.Data = exchangeList.Id;
+            }
+            else
+            {
+                result.Message = "暂无收发清单数据";
+            }
+
+            return result;
         }
     }
 }
