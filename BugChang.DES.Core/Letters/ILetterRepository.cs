@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Exchanges.Channel;
 
 namespace BugChang.DES.Core.Letters
 {
@@ -22,6 +23,8 @@ namespace BugChang.DES.Core.Letters
         Task<PageResultModel<Letter>> GetBackLettersForManagerSearch(PageSearchCommonModel pageSearchModel);
 
         Task<PageResultModel<Letter>> GetCancelLettersForSearch(PageSearchCommonModel pageSearchModel);
+
+        Task<PageResultModel<Letter>> GetNoSortingLetters(EnumChannel channel);
     }
 
     public interface IBackLetterRepository : IBaseRepository<BackLetter>
@@ -32,6 +35,6 @@ namespace BugChang.DES.Core.Letters
     public interface ICancelLetterRepository : IBaseRepository<CancelLetter>
     {
         Task<PageResultModel<Letter>> GetCancelLetters(PageSearchCommonModel pageSerch);
-        
+
     }
 }

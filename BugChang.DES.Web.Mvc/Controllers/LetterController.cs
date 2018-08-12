@@ -8,6 +8,7 @@ using BugChang.DES.Application.Letters;
 using BugChang.DES.Application.Letters.Dtos;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Exchanges.Channel;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
@@ -372,6 +373,59 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public IActionResult Sorting()
         {
             return View();
+        }
+
+        /// <returns></returns>
+        public async Task<IActionResult> GetTcjhNoSortingLetters(string search, int limit, int offset)
+        {
+            var pagereslut = await _letterAppService.GetNoSortingLetters(EnumChannel.同城交换);
+            return Json(pagereslut);
+        }
+
+        public async Task<IActionResult> GetJytxNoSortingLetters()
+        {
+            var pagereslut = await _letterAppService.GetNoSortingLetters(EnumChannel.机要通信);
+            return Json(pagereslut);
+        }
+
+        public async Task<IActionResult> GetZsNoSortingLetters()
+        {
+            var pagereslut = await _letterAppService.GetNoSortingLetters(EnumChannel.直送);
+            return Json(pagereslut);
+        }
+
+        public async Task<IActionResult> CreateTcjhList(string letterIds)
+        {
+            var lstLetterId = letterIds.Split(',').ToList().Select(x => Convert.ToInt32(x)).ToList();
+            var result = await _letterAppService.CreateSortingList(EnumChannel.同城交换, lstLetterId);
+            return Json(result);
+        }
+
+
+        public async Task<IActionResult> CreateJytxList(string letterIds)
+        {
+            var lstLetterId = letterIds.Split(',').ToList().Select(x => Convert.ToInt32(x)).ToList();
+            var result = await _letterAppService.CreateSortingList(EnumChannel.机要通信, lstLetterId);
+            return Json(result);
+        }
+
+        public async Task<IActionResult> CreateZsList(string letterIds)
+        {
+            var lstLetterId = letterIds.Split(',').ToList().Select(x => Convert.ToInt32(x)).ToList();
+            var result = await _letterAppService.CreateSortingList(EnumChannel.直送, lstLetterId);
+            return Json(result);
+        }
+
+        public async Task<IActionResult> Change2Jytx(int id)
+        {
+            var result = await _letterAppService.Change2Jytx(id);
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetWriteCpuCardData(int id)
+        {
+            var result = await _letterAppService.GetWriteCpuCardData(id);
+            return Json(result);
         }
 
         #endregion

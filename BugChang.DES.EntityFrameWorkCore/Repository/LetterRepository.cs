@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Barcodes;
+using BugChang.DES.Core.Exchanges.Channel;
 using BugChang.DES.Core.Letters;
 using Microsoft.EntityFrameworkCore;
 
@@ -174,6 +175,19 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             {
                 Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync(),
                 Total = await query.CountAsync()
+            };
+        }
+
+        public async Task<PageResultModel<Letter>> GetNoSortingLetters(EnumChannel channel)
+        {
+            var letters = from letter in _dbContext.Letters
+                          join sorting in _dbContext.Sortings on letter.BarcodeNo equals sorting.BarcodeNo
+                          where sorting.Sorted == false && sorting.Channel == channel
+                          select letter;
+            return new PageResultModel<Letter>
+            {
+                Rows = await letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).ToListAsync(),
+                Total = await letters.CountAsync()
             };
         }
     }

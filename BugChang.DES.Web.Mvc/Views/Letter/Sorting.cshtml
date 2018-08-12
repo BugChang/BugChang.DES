@@ -1,5 +1,64 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab_tcjh" data-toggle="tab" id="btnTcjh">同城交换</a></li>
+        <li><a href="#tab_jytx" data-toggle="tab" id="btnJytx">机要通信</a></li>
+        <li><a href="#tab_zs" data-toggle="tab" id="btnZs">直送</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_tcjh">
+            <div class="btn-group" id="tcjh-toolbar">
+                <a class="btn btn-success" id="btnWriteCpuCard">写卡</a>
+                <a class="btn btn-primary" id="btnPrintTcjhBill">打印清单</a>
+                <a class="btn btn-default" id="btnReloadTcjhTable">刷新列表</a>
+            </div>
+            <p></p>
+            <div class="table-responsive">
+                <table id="tcjhTable" class="table table-bordered table-hover text-nowrap"></table>
+            </div>
+        </div>
+        <!-- /.tab-pane -->
+        <div class="tab-pane" id="tab_jytx">
+            <div class="btn-group" id="jytx-toolbar">
+                <a class="btn btn-primary" id="btnPrintJytxBill">打印交寄单</a>
+                <a class="btn btn-default" id="btnReloadJytxTable">刷新列表</a>
+            </div>
+            <p></p>
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="table-responsive">
+                        <table id="jytxTable" class="table table-bordered table-hover text-nowrap"></table>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="table-responsive">
+                        <table id="jytxScanTable" class="table table-bordered table-hover text-nowrap"></table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane" id="tab_zs">
+            <div class="btn-group" id="zs-toolbar">
+                <a class="btn btn-primary" id="btnPrintZsBill">打印直送清单</a>
+                <a class="btn btn-default" id="btnReloadZsTable">刷新列表</a>
+            </div>
+            <p></p>
+            <div class="table-responsive">
+                <table id="zsTable" class="table table-bordered table-hover text-nowrap"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section css
+    {
+    <link href="~/lib/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+}
+
+@section scripts
+    {
+    <script src="~/js/LodopFuncs.js"></script>
+    <script src="~/lib/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="~/lib/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/views-resource/letter/sorting.js" asp-append-version="true"></script>
 }

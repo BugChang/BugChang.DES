@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using BugChang.DES.Application.Bills.Dtos;
+using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Bill;
+using BugChang.DES.Core.Exchanges.ExchangeObjects;
+using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SerialNumbers;
 using BugChang.DES.EntityFrameWorkCore;
@@ -18,9 +25,13 @@ namespace BugChang.DES.Application.Bills
         private readonly ILetterRepository _letterRepository;
         private readonly IExchangeListRepository _exchangeListRepository;
         private readonly IExchangeListDetailRepository _exchangeListDetailRepository;
+        private readonly IExchangeObjectRepository _exchangeObjectRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IPlaceWardenRepository _placeWardenRepository;
         private readonly UnitOfWork _unitOfWork;
 
-        public BillAppService(IBarcodeLogRepository barcodeLogRepository, SerialNumberManager serialNumberManager, ILetterRepository letterRepository, IExchangeListDetailRepository exchangeListDetailRepository, IExchangeListRepository exchangeListRepository, UnitOfWork unitOfWork)
+        public BillAppService(IBarcodeLogRepository barcodeLogRepository, SerialNumberManager serialNumberManager, ILetterRepository letterRepository, IExchangeListDetailRepository exchangeListDetailRepository, IExchangeListRepository exchangeListRepository, UnitOfWork unitOfWork, IExchangeObjectRepository exchangeObjectRepository, IUserRepository userRepository, IDepartmentRepository departmentRepository, IPlaceWardenRepository placeWardenRepository)
         {
             _barcodeLogRepository = barcodeLogRepository;
             _serialNumberManager = serialNumberManager;
@@ -28,6 +39,10 @@ namespace BugChang.DES.Application.Bills
             _exchangeListDetailRepository = exchangeListDetailRepository;
             _exchangeListRepository = exchangeListRepository;
             _unitOfWork = unitOfWork;
+            _exchangeObjectRepository = exchangeObjectRepository;
+            _userRepository = userRepository;
+            _departmentRepository = departmentRepository;
+            _placeWardenRepository = placeWardenRepository;
         }
 
         /// <summary>
@@ -46,6 +61,8 @@ namespace BugChang.DES.Application.Bills
                 a.BarcodeStatus == EnumBarcodeStatus.已签收).ToListAsync();
             if (barcodeLogs.Count > 0)
             {
+                var exchangeObject = await _exchangeObjectRepository.GetByIdAsync(objectId);
+                var user = await _userRepository.GetByIdAsync(userId);
                 var letters = _letterRepository.GetQueryable()
                     .Where(a => barcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
                 //清单全局使用一个流水，防止串号
@@ -55,6 +72,9 @@ namespace BugChang.DES.Application.Bills
                     CreateBy = userId,
                     CreateTime = DateTime.Now,
                     DepartmentId = departmentId,
+                    ObjectName = exchangeObject.Name,
+                    ExchangeUserId = userId,
+                    ExchangeUserName = user.DisplayName,
                     ObjectId = objectId,
                     Printed = false,
                     Type = EnumListType.收件清单
@@ -110,6 +130,8 @@ namespace BugChang.DES.Application.Bills
                 a.BarcodeStatus == EnumBarcodeStatus.已签收).ToListAsync();
             if (barcodeLogs.Count > 0)
             {
+                var department = await _departmentRepository.GetByIdAsync(departmentId);
+                var user = await _userRepository.GetByIdAsync(userId);
                 var letters = _letterRepository.GetQueryable()
                     .Where(a => barcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
                 //清单全局使用一个流水，防止串号
@@ -119,6 +141,9 @@ namespace BugChang.DES.Application.Bills
                     CreateBy = userId,
                     CreateTime = DateTime.Now,
                     DepartmentId = departmentId,
+                    ObjectName = department.Name,
+                    ExchangeUserId = userId,
+                    ExchangeUserName = user.DisplayName,
                     Printed = false,
                     Type = EnumListType.发件清单
                 };
@@ -182,10 +207,15 @@ namespace BugChang.DES.Application.Bills
                     .Where(a => receiveBarcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
                 var sendLettesr = _letterRepository.GetQueryable()
                     .Where(a => sendBarcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
+                var department = await _departmentRepository.GetByIdAsync(departmentId);
+                var user = await _userRepository.GetByIdAsync(userId);
                 //添加主清单
                 var exchangeList = new ExchangeList
                 {
                     CreateBy = userId,
+                    ObjectName = department.Name,
+                    ExchangeUserId = userId,
+                    ExchangeUserName = user.DisplayName,
                     CreateTime = DateTime.Now,
                     DepartmentId = departmentId,
                     Printed = false,
@@ -247,6 +277,43 @@ namespace BugChang.DES.Application.Bills
             }
 
             return result;
+        }
+
+        public async Task<BillDto> GetBill(int id)
+        {
+            var bill = await _exchangeListRepository.GetByIdAsync(id);
+            return Mapper.Map<BillDto>(bill);
+        }
+
+        public async Task<IList<BillDetailDto>> GetBillDetails(int billId)
+        {
+            var billDetails = await _exchangeListDetailRepository.GetQueryable().Where(a => a.ExchangeListId == billId)
+                .ToListAsync();
+            return Mapper.Map<IList<BillDetailDto>>(billDetails);
+        }
+
+        public async Task<PageResultModel<BillDto>> GetBills(PageSearchCommonModel pageSearch)
+        {
+            var departmentIds = new List<int> { pageSearch.DepartmentId };
+            var warden = await _placeWardenRepository.GetQueryable().Include(a => a.Place).FirstOrDefaultAsync(a => a.UserId == pageSearch.UserId);
+            if (warden != null)
+            {
+                departmentIds.Add(warden.Place.DepartmentId);
+            }
+
+            var queryable = _exchangeListRepository.GetQueryable().Where(a => departmentIds.Contains(a.DepartmentId));
+            if (!string.IsNullOrWhiteSpace(pageSearch.Keywords))
+            {
+                queryable = queryable.Where(a =>
+                    a.ListNo.Contains(pageSearch.Keywords) || a.ObjectName.Contains(pageSearch.Keywords) ||
+                    a.ExchangeUserName.Contains(pageSearch.Keywords));
+            }
+            var pageResult = new PageResultModel<ExchangeList>
+            {
+                Rows = await queryable.OrderByDescending(a => a.Id).Skip(pageSearch.Skip).Take(pageSearch.Take).ToListAsync(),
+                Total = await queryable.CountAsync()
+            };
+            return Mapper.Map<PageResultModel<BillDto>>(pageResult);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿<div class="col-md-12">
+﻿@model BugChang.DES.Web.Mvc.Models.Bill.DeatailViewModel
+<div class="col-md-12">
     <div class="box box-solid">
         <div class="box-header with-border">
             <h3 class="box-title">内部交寄清单</h3>
@@ -25,18 +26,20 @@
                     <tbody>
                         <tr>
                             <td style="width: 80%">
-                                <span style="font-size: 20px">交换单位：北京市国家安全局</span>
+                                <span style="font-size: 20px">
+                                    交换对象：@Model.Bill.ObjectName
+                                </span>
                             </td>
                             <td rowspan="4"></td>
                         </tr>
                         <tr>
                             <td>
-                                <span>清 单 号 ：14456456456</span>
+                                <span>清 单 号 ：@Model.Bill.ListNo</span>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <span> 总数：100</span>
+                                <span> 总数：@Model.BillDetails.Count</span>
                             </td>
                         </tr>
                         <tr>
@@ -78,18 +81,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                &nbsp;
-                            </td>
-                        </tr>
+                        @for (int i = 0; i < Model.BillDetails.Count; i++)
+                        {
+                            var detail = Model.BillDetails[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@detail.ReceiveDepartmentName</td>
+                                <td>@detail.BarcodeNo</td>
+                                <td>@detail.Time</td>
+                                <td>@detail.SecSecretLevelText</td>
+                                <td>@detail.UrgencyLevelText</td>
+                                <td>@detail.SendDepartmentName</td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        }
+
                     </tbody>
                 </table>
             </div>
@@ -97,7 +105,7 @@
             <div id="divFooter" class="visible-print-block">
                 <table style="width: 100%">
                     <tr>
-                        <td style="width: 33%; text-align: left"><span>交换人:张三</span></td>
+                        <td style="width: 33%; text-align: left"><span>交换人:@Model.Bill.ExchangeUserName</span></td>
                         <td style="width: 33%; text-align: center"><span color='#0000ff'><span tdata='pageNO'>第##页</span>/<span tdata='pageCount'>共##页</span></span></td>
                         <td style="width: 33%; text-align: right"><span>北京市国家安全局制</span></td>
                     </tr>
@@ -106,3 +114,9 @@
         </div>
     </div>
 </div>
+
+@section scripts
+    {
+    <script src="~/js/LodopFuncs.js"></script>
+    <script src="~/views-resource/bill/detail.js" asp-append-version="true"></script>
+}

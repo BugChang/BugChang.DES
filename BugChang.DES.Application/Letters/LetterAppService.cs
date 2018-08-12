@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,6 +12,7 @@ using BugChang.DES.Core.Exchanges.Channel;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.SerialNumbers;
+using BugChang.DES.Core.Sortings;
 using BugChang.DES.Core.Tools;
 using BugChang.DES.Core.UrgentLevels;
 using BugChang.DES.EntityFrameWorkCore;
@@ -29,11 +31,14 @@ namespace BugChang.DES.Application.Letters
         private readonly IBarcodeLogRepository _barcodeLogRepository;
         private readonly IBackLetterRepository _backLetterRepository;
         private readonly ICancelLetterRepository _cancelLetterRepository;
+        private readonly ISortingRepository _sortingRepository;
+        private readonly ISortingListRepository _sortingListRepository;
+        private readonly ISortingListDetailRepository _sortingListDetailRepository;
         private readonly BoxManager _boxManager;
         private readonly UnitOfWork _unitOfWork;
         private readonly IOptions<CommonSettings> _commonSettings;
 
-        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository, ICancelLetterRepository cancelLetterRepository, BoxManager boxManager)
+        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository, ICancelLetterRepository cancelLetterRepository, BoxManager boxManager, ISortingListDetailRepository sortingListDetailRepository, ISortingListRepository sortingListRepository, ISortingRepository sortingRepository)
         {
             _departmentManager = departmentManager;
             _serialNumberManager = serialNumberManager;
@@ -46,6 +51,9 @@ namespace BugChang.DES.Application.Letters
             _backLetterRepository = backLetterRepository;
             _cancelLetterRepository = cancelLetterRepository;
             _boxManager = boxManager;
+            _sortingListDetailRepository = sortingListDetailRepository;
+            _sortingListRepository = sortingListRepository;
+            _sortingRepository = sortingRepository;
         }
 
         public Task<ReceiveLetterEditDto> GetReceiveLetter(int letterId)
@@ -344,6 +352,107 @@ namespace BugChang.DES.Application.Letters
                 }
             }
             return result;
+        }
+
+        public async Task<PageResultModel<LetterSortingDto>> GetNoSortingLetters(EnumChannel channel)
+        {
+            var letters = await _letterRepository.GetNoSortingLetters(channel);
+            return Mapper.Map<PageResultModel<LetterSortingDto>>(letters);
+        }
+
+        public async Task<ResultEntity> CreateSortingList(EnumChannel channel, List<int> letterIds)
+        {
+            var result = new ResultEntity();
+            var letters = await _letterRepository.GetQueryable().Where(a => letterIds.Contains(a.Id)).ToListAsync();
+            var sortings = _sortingRepository.GetQueryable().Where(a => letters.Any(b => b.BarcodeNo == a.BarcodeNo));
+            foreach (var sorting in sortings)
+            {
+                sorting.Sorted = true;
+            }
+
+            var serialNumber = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.分拣);
+            var sortingList = new SortingList
+            {
+                Channel = channel,
+                ListNo = DateTime.Now.Year + serialNumber.ToString("00000000")
+            };
+            await _sortingListRepository.AddAsync(sortingList);
+            foreach (var letterId in letterIds)
+            {
+                var listDetail = new SortingListDetail
+                {
+                    LetterId = letterId,
+                    SortingListId = sortingList.Id
+                };
+                await _sortingListDetailRepository.AddAsync(listDetail);
+            }
+
+            if (await _unitOfWork.CommitAsync() > 0)
+            {
+                result.Success = true;
+                result.Data = sortingList.Id;
+            }
+            return result;
+        }
+
+        public async Task<ResultEntity> Change2Jytx(int letterId)
+        {
+
+            var letter = await _letterRepository.GetByIdAsync(letterId);
+            var sorting = await _sortingRepository.GetQueryable().FirstOrDefaultAsync(a => a.BarcodeNo == letter.BarcodeNo);
+            sorting.Channel = EnumChannel.机要通信;
+            await _unitOfWork.CommitAsync();
+            return new ResultEntity { Success = true };
+        }
+
+        public async Task<ResultEntity> GetWriteCpuCardData(int id)
+        {
+
+            var list = await _sortingListRepository.GetByIdAsync(id);
+            var listDetails = await _sortingListDetailRepository.GetQueryable().Where(a => a.SortingListId == id)
+                .ToListAsync();
+            var letters = await _letterRepository.GetQueryable().Where(a => listDetails.Any(b => b.LetterId == a.Id))
+                .ToListAsync();
+            //1.存储标识头
+            var head = "";
+            //1)标识头
+            head += "JH$";
+            //2)写卡单位
+            head += _commonSettings.Value.UseDepartmentCode + "$";
+            //3)读卡单位
+            head += _commonSettings.Value.ReadCardDepartmentCode + "$";
+            //4)操作时间
+            head += DateTime.Now.ToString("yyyyMMddHHmm") + "$";
+            //5)多张卡时需要，暂时忽略
+            head += "$" + "1$" + "1$";
+            //6)数据存储格式:0.原格式1.压缩格式
+            head += "0$";
+            //7)数据长度
+
+
+            //2.存储数据格式 
+            var body = "YF$";
+            body += Convert.ToInt32(list.ListNo.Substring(4)) + "$";
+            body += DateTime.Now.ToString("yyMMdd") + "^";
+
+            foreach (var detail in letters)
+            {
+                body += detail.BarcodeNo;
+                if (detail != letters[letters.Count - 1])
+                {
+                    body += "$";
+                }
+            }
+
+            var bodyByte = System.Text.Encoding.Default.GetBytes(body);
+            head += bodyByte.LongLength;
+
+            var writeCardData = head + "|" + body + "||";
+            return new ResultEntity
+            {
+                Success = true,
+                Data = writeCardData
+            };
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿<div class="col-md-12">
+﻿@using BugChang.DES.Core.Exchanges.Bill
+@model BugChang.DES.Web.Mvc.Models.Bill.DeatailViewModel
+<div class="col-md-12">
     <div class="box box-solid">
         <div class="box-header with-border">
             <h3 class="box-title">发件清单</h3>
@@ -23,22 +25,22 @@
                 </div>
                 <table style="border: none;width:100%">
                     <tbody>
-                        <tr>
-                            <td style="width: 80%">
-                                <span style="font-size: 20px">交换单位：北京市国家安全局</span>
-                            </td>
-                            <td rowspan="4"></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>清 单 号 ：12316541651</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>打印时间：@DateTime.Now</span>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td style="width: 80%">
+                            <span style="font-size: 20px">交换单位：@Model.Bill.ObjectName</span>
+                        </td>
+                        <td rowspan="4"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>清 单 号 ：@Model.Bill.ListNo</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span>打印时间：@DateTime.Now</span>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -47,7 +49,7 @@
                     <tr>
                         <td colspan="9">
                             <span style="float:left">收件清单</span>
-                            <span style="float:right"> 收件总数：120</span>
+                            <span style="float:right"> 收件总数：@(Model.BillDetails.Count(a => a.DetailType == EnumListDetailType.收件))</span>
                         </td>
                     </tr>
                     <tr>
@@ -76,21 +78,31 @@
                             <b>签收</b>
                         </td>
                     </tr>
-
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td style="font-size:10px;line-height:12px"></td>
-                        <td></td>
-                    </tr>
+                    @{
+                        var receiveDetails = Model.BillDetails.Where(a => a.DetailType == EnumListDetailType.收件).ToList();
+                        for (int i = 0; i < receiveDetails.Count; i++)
+                        {
+                            var detail = receiveDetails[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@detail.SendDepartmentName</td>
+                                <td>@detail.BarcodeNo</td>
+                                <td>@detail.Time</td>
+                                <td>@detail.SecSecretLevelText</td>
+                                <td>@detail.UrgencyLevelText</td>
+                                <td style="font-size:10px;line-height:12px">
+                                    @(detail.CustomData == null ? "" : detail.CustomData.Length > 45 ? detail.CustomData.Substring(0, 45) + "..." : detail.CustomData)
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        }
+                    }
                     <tr>
                         <td colspan="8">
                             <span style="float:left">发件清单</span>
-                            <span style="float:right"> 发件总数：100</span>
+                            <span style="float:right"> 发件总数：@(Model.BillDetails.Count(a => a.DetailType == EnumListDetailType.发件))</span>
                         </td>
                     </tr>
                     <tr>
@@ -117,21 +129,33 @@
                         </td>
                     </tr>
 
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td colspan="2" style="font-size:10px;line-height:12px"></td>
-                    </tr>
+                    @{
+                        var sendDetails = Model.BillDetails.Where(a => a.DetailType == EnumListDetailType.发件).ToList();
+                        for (int i = 0; i < sendDetails.Count; i++)
+                        {
+                            var detail = sendDetails[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@detail.ReceiveDepartmentName</td>
+                                <td>@detail.BarcodeNo</td>
+                                <td>@detail.Time</td>
+                                <td>@detail.SecSecretLevelText</td>
+                                <td>@detail.UrgencyLevelText</td>
+                                <td style="font-size:10px;line-height:12px">
+                                    @(detail.CustomData == null ? "" : detail.CustomData.Length > 45 ? detail.CustomData.Substring(0, 45) + "..." : detail.CustomData)
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        }
+                    }
                 </table>
             </div>
             <div id="divFooter" class="visible-print-block">
                 <table style="width: 100%">
                     <tr>
-                        <td style="width: 33%; text-align: left"><span>交换人:张三</span></td>
+                        <td style="width: 33%; text-align: left"><span>交换人:@Model.Bill.ExchangeUserName</span></td>
                         <td style="width: 33%; text-align: center"><span color='#0000ff'><span tdata='pageNO'>第##页</span>/<span tdata='pageCount'>共##页</span></span></td>
                         <td style="width: 33%; text-align: right"><span>北京市国家安全局制</span></td>
                     </tr>
@@ -140,3 +164,8 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script src="~/js/LodopFuncs.js"></script>
+    <script src="~/views-resource/bill/detail.js" asp-append-version="true"></script>
+}

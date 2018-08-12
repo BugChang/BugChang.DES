@@ -5,9 +5,6 @@ namespace BugChang.DES.Core.Sortings
 {
     public class SortingList : BaseEntity<int>, ISoftDelete
     {
-
-        public int DepartmentId { get; set; }
-
         public string ListNo { get; set; }
 
         public EnumChannel Channel { get; set; }

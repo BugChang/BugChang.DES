@@ -191,26 +191,26 @@
                 {
                     targets: 8,
                     render: function (data, type, row) {
-                        var secretLevelText;
+                        var urgencyLevelText;
                         switch (row.urgencyLevel) {
 
                             case 0:
-                                secretLevelText = '<label class="label label-default"> 无</label>';
+                                urgencyLevelText = '<label class="label label-default"> 无</label>';
                                 break;
                             case 1:
-                                secretLevelText = '<label class="label label-info"> 紧急</label>';
+                                urgencyLevelText = '<label class="label label-info"> 紧急</label>';
                                 break;
                             case 2:
-                                secretLevelText = '<label class="label label-warning">特急</label>';
+                                urgencyLevelText = '<label class="label label-warning">特急</label>';
                                 break;
                             case 3:
-                                secretLevelText = '<label class="label label-danger"> 限时</label>';
+                                urgencyLevelText = '<label class="label label-danger"> 限时</label>';
                                 break;
                             default:
-                                secretLevelText = "未知";
+                                urgencyLevelText = "未知";
                                 break;
                         }
-                        return secretLevelText;
+                        return urgencyLevelText;
                     }
                 },
                 {

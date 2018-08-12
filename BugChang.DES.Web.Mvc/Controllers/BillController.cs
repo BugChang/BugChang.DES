@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Bills;
@@ -9,6 +10,9 @@ using BugChang.DES.Application.ExchangeObjects;
 using BugChang.DES.Application.Places;
 using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Exchanges.Bill;
+using BugChang.DES.Core.Exchanges.Channel;
+using BugChang.DES.Web.Mvc.Models.Bill;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,20 +40,44 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            switch (id)
+            var bill = await _billAppService.GetBill(id);
+            if (bill != null)
             {
-                case 1:
-                    return View("ReceiveDetail");
-                case 2:
-                    return View("SendDetail");
-                case 3:
-                    return View("ReceiveSendDetail");
-                case 4:
-                    return View("InsideDetail");
+                var billDetails = await _billAppService.GetBillDetails(id);
+                var model = new DeatailViewModel
+                {
+                    Bill = bill,
+                    BillDetails = billDetails
+                };
+                if (bill.DepartmentId != CurrentUser.DepartmentId)
+                {
+                    return View("InsideDetail", model);
+                }
+
+                if (bill.ObjectId != null)
+                {
+                    var exchangeObject = await _exchangeObjectAppService.GetForEditByIdAsync(bill.ObjectId.Value);
+                    if (exchangeObject.ObjectType == (int)EnumChannel.内部)
+                    {
+                        return View("InsideDetail", model);
+                    }
+                }
+
+                switch (bill.Type)
+                {
+                    case EnumListType.收件清单:
+                        return View("ReceiveDetail", model);
+                    case EnumListType.发件清单:
+                        return View("SendDetail", model);
+                    case EnumListType.收发清单:
+                        return View("ReceiveSendDetail", model);
+                    default:
+                        throw new ArgumentOutOfRangeException($"清单类型无效");
+                }
             }
-            return View("ReceiveDetail");
+            throw new ArgumentOutOfRangeException($"无效清单");
         }
 
         public IActionResult List()
@@ -195,8 +223,27 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(result);
         }
 
-
-
+        public async Task<IActionResult> GetBills(int draw, int start, int length)
+        {
+            var keywords = Request.Query["search[value]"];
+            var pageSearchDto = new PageSearchCommonModel
+            {
+                UserId = CurrentUser.UserId,
+                DepartmentId = CurrentUser.DepartmentId,
+                Keywords = keywords,
+                Take = length,
+                Skip = start
+            };
+            var pagereslut = await _billAppService.GetBills(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
+        }
 
     }
 }
