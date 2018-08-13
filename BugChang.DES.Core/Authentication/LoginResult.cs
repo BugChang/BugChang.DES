@@ -55,6 +55,7 @@ namespace BugChang.DES.Core.Authentication
         用户名或密码错误,
         强制修改密码,
         账号已锁定,
-        账号已停用
+        账号已停用,
+        UKey与用户不匹配
     }
 }

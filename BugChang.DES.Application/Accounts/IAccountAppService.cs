@@ -6,7 +6,7 @@ namespace BugChang.DES.Application.Accounts
 {
     public interface IAccountAppService
     {
-        Task<LoginResult> LoginAsync(string userName, string password);
+        Task<LoginResult> LoginAsync(string userName, string password,string usbKeyNo);
 
         Task<ResultEntity> ChangePassword(int userId, string password, string oldPassword);
     }

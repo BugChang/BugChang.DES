@@ -50,6 +50,11 @@ namespace BugChang.DES.Core.Authorization.Users
         public bool Locked { get; set; }
 
         /// <summary>
+        /// UKey编码
+        /// </summary>
+        public string UsbKeyNo { get; set; }
+
+        /// <summary>
         /// 移动电话
         /// </summary>
         [Phone]

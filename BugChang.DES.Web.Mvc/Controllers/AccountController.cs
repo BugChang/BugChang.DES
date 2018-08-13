@@ -48,8 +48,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                var loginResult = await _accountAppService.LoginAsync(model.UserName, HashHelper.Md5(model.Password));
+                var usbKeyNo = Request.Cookies["KOAL_CERT_CN"].Trim();
+                var loginResult = await _accountAppService.LoginAsync(model.UserName, HashHelper.Md5(model.Password), usbKeyNo);
 
                 switch (loginResult.Result)
                 {
