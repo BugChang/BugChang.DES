@@ -8,5 +8,7 @@ namespace BugChang.DES.Application.Cards
     public interface ICardAppService : ICurdAppService<CardEditDto, CardListDto>
     {
         Task<ResultEntity> ChangeEnabled(int cardId, int operatorId);
+
+        Task<CardEditDto> GetCardByNo(string cardNo);
     }
 }

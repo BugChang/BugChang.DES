@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Accounts;
+using BugChang.DES.Application.Cards;
 using BugChang.DES.Application.Clients;
+using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Tools;
@@ -22,11 +24,15 @@ namespace BugChang.DES.Web.Mvc.Controllers
         private readonly IAccountAppService _accountAppService;
         private readonly IOptions<AccountSettings> _loginSettings;
         private readonly IClientAppService _clientAppService;
-        public AccountController(IAccountAppService accountAppService, IOptions<AccountSettings> loginSettings, IClientAppService clientAppService)
+        private readonly ICardAppService _cardAppService;
+        private readonly IUserAppService _userAppService;
+        public AccountController(IAccountAppService accountAppService, IOptions<AccountSettings> loginSettings, IClientAppService clientAppService, ICardAppService cardAppService, IUserAppService userAppService)
         {
             _accountAppService = accountAppService;
             _loginSettings = loginSettings;
             _clientAppService = clientAppService;
+            _cardAppService = cardAppService;
+            _userAppService = userAppService;
         }
 
         [AllowAnonymous]
@@ -78,6 +84,45 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 ?.ErrorMessage;
 
             return View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> LoginWithCard(string deviceCode, string cardNo)
+        {
+            var result = new ResultEntity();
+            var card = await _cardAppService.GetCardByNo(cardNo);
+            if (!card.Enabled)
+            {
+                result.Message = "该卡片尚未启用，无法登录";
+            }
+            else
+            {
+                var user = await _userAppService.GetForEditByIdAsync(card.UserId);
+            
+                var loginResult = await _accountAppService.LoginAsync(user.UserName, user.Password);
+                switch (loginResult.Result)
+                {
+                    case EnumLoginResult.登录成功:
+                    case EnumLoginResult.强制修改密码:
+                        var client = await _clientAppService.GetClient(deviceCode);
+                        if (client != null)
+                        {
+                            result.Data = client.HomePage;
+                        }
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, loginResult.ClaimsPrincipal, new AuthenticationProperties
+                        {
+                            ExpiresUtc = DateTimeOffset.Now.AddMinutes(_loginSettings.Value.ExpiryTime)
+                        });
+                        result.Data = string.IsNullOrEmpty(result.Data) ? "/Home/Index" : result.Data;
+                        break;
+                    default:
+                        result.Message = result.Message;
+                        break;
+                }
+            }
+
+            return Json(result);
         }
 
 

@@ -12,5 +12,6 @@ namespace BugChang.DES.Application.Commons
         Task<TEditDto> GetForEditByIdAsync(int id);
 
         Task<PageResultModel<TListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto);
+
     }
 }

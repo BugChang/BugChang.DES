@@ -6,6 +6,7 @@ using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace BugChang.DES.Application.Cards
@@ -81,6 +82,12 @@ namespace BugChang.DES.Application.Cards
                     reult.Message, JsonConvert.SerializeObject(reult.Data), operatorId);
             }
             return reult;
+        }
+
+        public async Task<CardEditDto> GetCardByNo(string cardNo)
+        {
+            var card = await _cardRepository.GetQueryable().FirstOrDefaultAsync(a => a.Value == cardNo);
+            return Mapper.Map<CardEditDto>(card);
         }
     }
 }
