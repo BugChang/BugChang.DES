@@ -99,8 +99,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
             else
             {
                 var user = await _userAppService.GetForEditByIdAsync(card.UserId);
-            
-                var loginResult = await _accountAppService.LoginAsync(user.UserName, user.Password);
+                var usbKeyNo = Request.Cookies["KOAL_CERT_CN"].Trim();
+                var loginResult = await _accountAppService.LoginAsync(user.UserName, user.Password, usbKeyNo);
                 switch (loginResult.Result)
                 {
                     case EnumLoginResult.登录成功:

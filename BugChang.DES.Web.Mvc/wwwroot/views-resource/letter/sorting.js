@@ -37,6 +37,11 @@
             createTcjhList();
         });
 
+        $("#btnWriteCpuCard").click(function () {
+            createTcjhList();
+        });
+
+
     });
 
     //初始化WebSocket
@@ -61,6 +66,12 @@
                     window.toastr.success("扫描枪已就绪");
                 } else {
                     window.toastr.error("连接扫描枪出现错误");
+                }
+            } else if (obj.Method === "WriteCpuCard") {
+                if (obj.Data) {
+                    window.toastr.success("写卡成功");
+                } else {
+                    window.toastr.error("写卡失败");
                 }
             }
         };
@@ -471,27 +482,41 @@
     }
 
     //生成同城交换清单
-    function createTcjhList() {
-        var selections = tcjhTable.bootstrapTable('getSelections');
-        if (selections.length > 0) {
-            var letterIds = '';
-            for (var i = 0; i < selections.length; i++) {
-                letterIds += ',' + selections[i].id;
+    function createTcjhList(nextFunc) {
+        if (tcjhListId != undefined) {
+            if (nextFunc === "writeCpuCard") {
+                writeCpuCard();
+            } else if (nextFunc === "printTcjhBill") {
+                printTcjhBill();
             }
-            letterIds = letterIds.substring(1);
-            $.post("/Letter/CreateTcjhList",
-                { letterIds: letterIds },
-                function (result) {
-                    if (result.success) {
-                        tcjhListId = result.data;
-                    } else {
-                        window.toastr.error(result.message);
-                    }
-                });
-
         } else {
-            window.toastr.error("未选中任何记录");
+            var selections = tcjhTable.bootstrapTable('getSelections');
+            if (selections.length > 0) {
+                var letterIds = '';
+                for (var i = 0; i < selections.length; i++) {
+                    letterIds += ',' + selections[i].id;
+                }
+                letterIds = letterIds.substring(1);
+                $.post("/Letter/CreateTcjhList",
+                    { letterIds: letterIds },
+                    function (result) {
+                        if (result.success) {
+                            tcjhListId = result.data;
+                            if (nextFunc === "writeCpuCard") {
+                                writeCpuCard();
+                            } else if (nextFunc === "printTcjhBill") {
+                                printTcjhBill();
+                            }
+                        } else {
+                            window.toastr.error(result.message);
+                        }
+                    });
+
+            } else {
+                window.toastr.error("未选中任何记录");
+            }
         }
+
     }
 
     //转市机
@@ -507,6 +532,26 @@
                     window.toastr.error(result.message);
                 }
             });
+    }
+
+    //写卡
+    function writeCpuCard() {
+        $.get("/Letter/GetWriteCpuCardData/" + tcjhListId,
+            function (result) {
+                if (result.success) {
+                    $.get("/HardWare/GetCpuReadCard",
+                        { deviceCode: deviceCode },
+                        function (data) {
+                            var row = { command: 'WriteCpuCard', port: data.value.replace("COM", ""), rate: data.baudRate, text: result.data };
+                            socket.send(JSON.stringify(row));
+                        });
+                }
+            });
+    }
+
+    //打印同城交换清单
+    function printTcjhBill() {
+
     }
 
 })();
