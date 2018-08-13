@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Authorization.Users;
@@ -23,8 +24,9 @@ namespace BugChang.DES.Core.Authentication
         /// </summary>
         /// <param name="userName">用户名</param>
         /// <param name="password">密码</param>
+        /// <param name="usbKeyNo">UKey编码</param>
         /// <returns></returns>
-        public async Task<LoginResult> LoginAysnc(string userName, string password)
+        public async Task<LoginResult> LoginAysnc(string userName, string password, string usbKeyNo)
         {
             var loginResult = new LoginResult();
             var user = await _userRepository.GetAsync(userName, password);
@@ -47,43 +49,52 @@ namespace BugChang.DES.Core.Authentication
             }
             else
             {
-                if (user.LoginErrorCount >= _accountSettings.Value.LoginErrorCount2Lock)
+                if (_accountSettings.Value.ValidateUsbKeyNo && user.UsbKeyNo != usbKeyNo)
                 {
-                    loginResult.Result = EnumLoginResult.账号已锁定;
-                }
-                else if (!user.Enabled)
-                {
-                    loginResult.Result = EnumLoginResult.账号已停用;
+                    loginResult.Result = EnumLoginResult.UKey与用户不匹配;
+                    loginResult.Message = "UKey与用户不匹配";
                 }
                 else
                 {
-                    if (user.Password == User.DefaultPassword.MD5() && _accountSettings.Value.ForceChangePassword)
+                    if (user.LoginErrorCount >= _accountSettings.Value.LoginErrorCount2Lock)
                     {
-                        loginResult.Result = EnumLoginResult.强制修改密码;
+                        loginResult.Result = EnumLoginResult.账号已锁定;
+                    }
+                    else if (!user.Enabled)
+                    {
+                        loginResult.Result = EnumLoginResult.账号已停用;
                     }
                     else
                     {
-                        loginResult.Result = EnumLoginResult.登录成功;
-                    }
+                        if (user.Password == User.DefaultPassword.MD5() && _accountSettings.Value.ForceChangePassword)
+                        {
+                            loginResult.Result = EnumLoginResult.强制修改密码;
+                        }
+                        else
+                        {
+                            loginResult.Result = EnumLoginResult.登录成功;
+                        }
 
-                    ClearErrorCount(user);
-                    var claims = new List<Claim>
-                    {
-                        new Claim("Id",user.Id.ToString()),
-                        new Claim("UserName",user.UserName),
-                        new Claim("DisplayName",user.DisplayName),
-                        new Claim("DepartmentId",user.DepartmentId.ToString()),
-                        new Claim("NeedChangePassword",(loginResult.Result== EnumLoginResult.强制修改密码?1:0).ToString())
-                    };
-                    foreach (var role in user.UserRoles)
-                    {
-                        claims.Add(new Claim("RoleId", role.Role.Id.ToString()));
-                        claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
+                        ClearErrorCount(user);
+                        var claims = new List<Claim>
+                        {
+                            new Claim("Id",user.Id.ToString()),
+                            new Claim("UserName",user.UserName),
+                            new Claim("DisplayName",user.DisplayName),
+                            new Claim("DepartmentId",user.DepartmentId.ToString()),
+                            new Claim("NeedChangePassword",(loginResult.Result== EnumLoginResult.强制修改密码?1:0).ToString())
+                        };
+                        foreach (var role in user.UserRoles)
+                        {
+                            claims.Add(new Claim("RoleId", role.Role.Id.ToString()));
+                            claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
+                        }
+                        var claimsIdentity = new ClaimsIdentity("BugChang.DES.Cookies");
+                        claimsIdentity.AddClaims(claims);
+                        loginResult.ClaimsPrincipal = new ClaimsPrincipal(claimsIdentity);
                     }
-                    var claimsIdentity = new ClaimsIdentity("BugChang.DES.Cookies");
-                    claimsIdentity.AddClaims(claims);
-                    loginResult.ClaimsPrincipal = new ClaimsPrincipal(claimsIdentity);
                 }
+
             }
             return loginResult;
         }

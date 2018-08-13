@@ -10,6 +10,8 @@ namespace BugChang.DES.Application.Users.Dtos
 
         public string DepartmentName { get; set; }
 
+        public string UsbKeyNo { get; set; }
+
         public bool Enabled { get; set; }
 
         public bool Locked { get; set; }

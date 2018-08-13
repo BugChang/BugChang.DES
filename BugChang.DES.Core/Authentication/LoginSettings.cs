@@ -23,5 +23,7 @@
         /// </summary>
         public bool ForceChangePassword { get; set; }
 
+        public bool ValidateUsbKeyNo { get; set; }
+
     }
 }

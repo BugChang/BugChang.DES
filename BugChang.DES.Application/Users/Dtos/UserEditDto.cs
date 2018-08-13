@@ -20,6 +20,8 @@ namespace BugChang.DES.Application.Users.Dtos
 
         public int Enabled { get; set; }
 
+        public string UsbKeyNo { get; set; }
+
         [Phone]
         public string Phone { get; set; }
 

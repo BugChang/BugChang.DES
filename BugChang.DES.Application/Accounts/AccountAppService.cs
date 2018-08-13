@@ -5,6 +5,7 @@ using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
+using Microsoft.Extensions.Options;
 
 namespace BugChang.DES.Application.Accounts
 {
@@ -14,6 +15,7 @@ namespace BugChang.DES.Application.Accounts
         private readonly UnitOfWork _unitOfWork;
         private readonly LogManager _logManager;
         private readonly UserManager _userManager;
+       
 
         public AccountAppService(UnitOfWork mainUnitOfWork, LoginManager loginManager, LogManager logManager, UserManager userManager)
         {
@@ -23,9 +25,9 @@ namespace BugChang.DES.Application.Accounts
             _userManager = userManager;
         }
 
-        public async Task<LoginResult> LoginAsync(string userName, string password)
+        public async Task<LoginResult> LoginAsync(string userName, string password, string usbKeyNo)
         {
-            var loginResult = await _loginManager.LoginAysnc(userName, password);
+            var loginResult = await _loginManager.LoginAysnc(userName, password,usbKeyNo);
 
             if (loginResult.Result == EnumLoginResult.登录成功 || loginResult.Result == EnumLoginResult.强制修改密码)
             {
