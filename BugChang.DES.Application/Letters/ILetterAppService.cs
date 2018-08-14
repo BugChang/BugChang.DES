@@ -45,7 +45,10 @@ namespace BugChang.DES.Application.Letters
 
         Task<ResultEntity> Change2Jytx(int letterId);
 
-        Task<ResultEntity> GetWriteCpuCardData(int id);
+        Task<ResultEntity> GetWriteCpuCardData(string listNo);
 
+        Task<IList<LetterSortingDto>> GetSortListDetails(string listNo);
+
+        Task<int> GetLetterIdByBarcodeNo(string barcodeNo);
     }
 }

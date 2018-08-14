@@ -54,7 +54,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var usbKeyNo = Request.Cookies["KOAL_CERT_CN"].Trim();
+                var usbKeyNo = Request.Cookies["KOAL_CERT_CN"]?.Trim();
                 var loginResult = await _accountAppService.LoginAsync(model.UserName, HashHelper.Md5(model.Password), usbKeyNo);
 
                 switch (loginResult.Result)
@@ -99,7 +99,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             else
             {
                 var user = await _userAppService.GetForEditByIdAsync(card.UserId);
-                var usbKeyNo = Request.Cookies["KOAL_CERT_CN"].Trim();
+                var usbKeyNo = Request.Cookies["KOAL_CERT_CN"]?.Trim();
                 var loginResult = await _accountAppService.LoginAsync(user.UserName, user.Password, usbKeyNo);
                 switch (loginResult.Result)
                 {

@@ -1,4 +1,6 @@
-﻿using BugChang.DES.Core.Commons;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Letters;
 
 namespace BugChang.DES.Core.Sortings
 {
@@ -9,5 +11,11 @@ namespace BugChang.DES.Core.Sortings
         public int LetterId { get; set; }   
 
         public bool IsDeleted { get; set; }
+
+        [ForeignKey("SortingListId")]
+        public virtual SortingList SortingList { get; set; }
+
+        [ForeignKey("LetterId")]
+        public virtual Letter Letter { get; set; }
     }
 }

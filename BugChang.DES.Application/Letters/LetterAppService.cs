@@ -382,7 +382,7 @@ namespace BugChang.DES.Application.Letters
                 var listDetail = new SortingListDetail
                 {
                     LetterId = letterId,
-                    SortingListId = sortingList.Id
+                    SortingList = sortingList
                 };
                 await _sortingListDetailRepository.AddAsync(listDetail);
             }
@@ -390,7 +390,7 @@ namespace BugChang.DES.Application.Letters
             if (await _unitOfWork.CommitAsync() > 0)
             {
                 result.Success = true;
-                result.Data = sortingList.Id;
+                result.Data = sortingList.ListNo;
             }
             return result;
         }
@@ -405,11 +405,11 @@ namespace BugChang.DES.Application.Letters
             return new ResultEntity { Success = true };
         }
 
-        public async Task<ResultEntity> GetWriteCpuCardData(int id)
+        public async Task<ResultEntity> GetWriteCpuCardData(string listNo)
         {
 
-            var list = await _sortingListRepository.GetByIdAsync(id);
-            var listDetails = await _sortingListDetailRepository.GetQueryable().Where(a => a.SortingListId == id)
+            var list = await _sortingListRepository.GetQueryable().FirstOrDefaultAsync(a => a.ListNo == listNo);
+            var listDetails = await _sortingListDetailRepository.GetQueryable().Where(a => a.SortingListId == list.Id)
                 .ToListAsync();
             var letters = await _letterRepository.GetQueryable().Where(a => listDetails.Any(b => b.LetterId == a.Id))
                 .ToListAsync();
@@ -453,6 +453,25 @@ namespace BugChang.DES.Application.Letters
                 Success = true,
                 Data = writeCardData
             };
+        }
+
+        public async Task<IList<LetterSortingDto>> GetSortListDetails(string listNo)
+        {
+            var list = await _sortingListRepository.GetQueryable().FirstOrDefaultAsync(a => a.ListNo == listNo);
+            var listDetails = await _sortingListDetailRepository.GetQueryable().Where(a => a.SortingListId == list.Id).Select(a => a.Letter).Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
+                .ToListAsync();
+            return Mapper.Map<IList<LetterSortingDto>>(listDetails);
+        }
+
+        public async Task<int> GetLetterIdByBarcodeNo(string barcodeNo)
+        {
+            var letter = await _letterRepository.GetQueryable().FirstOrDefaultAsync(a => a.BarcodeNo == barcodeNo);
+            if (letter == null)
+            {
+                return 0;
+            }
+
+            return letter.Id;
         }
     }
 }
