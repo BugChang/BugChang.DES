@@ -39,6 +39,7 @@ using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.Monitor;
 using BugChang.DES.Core.SerialNumbers;
+using BugChang.DES.Core.Sortings;
 using BugChang.DES.EntityFrameWorkCore;
 using BugChang.DES.EntityFrameWorkCore.Repository;
 using BugChang.DES.Web.Mvc.Filters;
@@ -149,6 +150,9 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<ICancelLetterRepository, CancelLetterRepository>();
             services.AddScoped<IExchangeListRepository, ExchangeListRepository>();
             services.AddScoped<IExchangeListDetailRepository, ExchangeListDetailRepository>();
+            services.AddScoped<ISortingRepository, SortingRepository>();
+            services.AddScoped<ISortingListRepository, SortingListRepository>();
+            services.AddScoped<ISortingListDetailRepository, SortingListDetailRepository>();
 
             #endregion
 

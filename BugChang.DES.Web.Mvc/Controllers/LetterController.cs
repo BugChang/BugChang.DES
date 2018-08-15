@@ -372,6 +372,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public IActionResult Sorting()
         {
+            ViewBag.CurrentUser = CurrentUser;
             return View();
         }
 
@@ -422,10 +423,22 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(result);
         }
 
-        public async Task<IActionResult> GetWriteCpuCardData(int id)
+        public async Task<IActionResult> GetWriteCpuCardData(string listNo)
         {
-            var result = await _letterAppService.GetWriteCpuCardData(id);
+            var result = await _letterAppService.GetWriteCpuCardData(listNo);
             return Json(result);
+        }
+
+        public async Task<IActionResult> GetSortingListDetails(string listNo)
+        {
+            var letters = await _letterAppService.GetSortListDetails(listNo);
+            return Json(letters);
+        }
+
+        public async Task<IActionResult> GetLetterIdByBarcodeNo(string barcodeNo)
+        {
+            var letterId = await _letterAppService.GetLetterIdByBarcodeNo(barcodeNo);
+            return Json(letterId);
         }
 
         #endregion
