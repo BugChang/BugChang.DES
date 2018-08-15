@@ -82,6 +82,7 @@ namespace BugChang.DES.Core.Authentication
                             new Claim("UserName",user.UserName),
                             new Claim("DisplayName",user.DisplayName),
                             new Claim("DepartmentId",user.DepartmentId.ToString()),
+                            new Claim("UsbKeyNo",user.UsbKeyNo),
                             new Claim("NeedChangePassword",(loginResult.Result== EnumLoginResult.强制修改密码?1:0).ToString())
                         };
                         foreach (var role in user.UserRoles)

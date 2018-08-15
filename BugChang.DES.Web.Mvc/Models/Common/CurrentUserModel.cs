@@ -11,5 +11,7 @@
         public string DisplayName { get; set; }
 
         public bool NeedChangePassword { get; set; }
+
+        public string UsbKeyNo { get; set; }
     }
 }

@@ -167,5 +167,10 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             return View();
         }
+
+        public IActionResult UsbKeyNotMacthed()
+        {
+            return View();
+        }
     }
 }
