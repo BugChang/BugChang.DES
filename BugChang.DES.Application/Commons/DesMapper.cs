@@ -29,6 +29,7 @@ using BugChang.DES.Core.Groups;
 using BugChang.DES.Core.HardWares;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.Logs;
+using BugChang.DES.Core.Sortings;
 using BugChang.DES.Core.Tools;
 
 namespace BugChang.DES.Application.Commons
@@ -233,6 +234,10 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
                     .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
                     .ForMember(a => a.UrgencyTime, b => b.MapFrom(c => c.UrgencyTime == null ? "-" : c.UrgencyTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+
+                cfg.CreateMap<SortingList, SortingListDto>()
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")));
 
                 #endregion
 

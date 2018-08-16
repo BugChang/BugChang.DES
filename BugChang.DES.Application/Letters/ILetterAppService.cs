@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BugChang.DES.Application.Bills.Dtos;
 using BugChang.DES.Application.Letters.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Channel;
@@ -41,14 +42,18 @@ namespace BugChang.DES.Application.Letters
 
         Task<PageResultModel<LetterSortingDto>> GetNoSortingLetters(EnumChannel channel);
 
-        Task<ResultEntity> CreateSortingList(EnumChannel channel, List<int> letterIds);
+        Task<ResultEntity> CreateSortingList(EnumChannel channel, List<int> letterIds, int userId);
 
         Task<ResultEntity> Change2Jytx(int letterId);
 
-        Task<ResultEntity> GetWriteCpuCardData(string listNo);
+        Task<ResultEntity> GetWriteCpuCardData(int listId);
 
-        Task<IList<LetterSortingDto>> GetSortListDetails(string listNo);
+        Task<IList<LetterSortingDto>> GetSortListDetails(int listId);
 
         Task<int> GetLetterIdByBarcodeNo(string barcodeNo);
+
+        Task<SortingListDto> GetSortingList(int listId);
+
+        Task<PageResultModel<SortingListDto>> GetSortingLists(PageSearchCommonModel pageSearch);
     }
 }

@@ -12,6 +12,7 @@ using BugChang.DES.Core.Exchanges.Channel;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
+using BugChang.DES.Web.Mvc.Models.Letter;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -398,7 +399,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> CreateTcjhList(string letterIds)
         {
             var lstLetterId = letterIds.Split(',').ToList().Select(x => Convert.ToInt32(x)).ToList();
-            var result = await _letterAppService.CreateSortingList(EnumChannel.同城交换, lstLetterId);
+            var result = await _letterAppService.CreateSortingList(EnumChannel.同城交换, lstLetterId, CurrentUser.UserId);
             return Json(result);
         }
 
@@ -406,14 +407,14 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> CreateJytxList(string letterIds)
         {
             var lstLetterId = letterIds.Split(',').ToList().Select(x => Convert.ToInt32(x)).ToList();
-            var result = await _letterAppService.CreateSortingList(EnumChannel.机要通信, lstLetterId);
+            var result = await _letterAppService.CreateSortingList(EnumChannel.机要通信, lstLetterId, CurrentUser.UserId);
             return Json(result);
         }
 
         public async Task<IActionResult> CreateZsList(string letterIds)
         {
             var lstLetterId = letterIds.Split(',').ToList().Select(x => Convert.ToInt32(x)).ToList();
-            var result = await _letterAppService.CreateSortingList(EnumChannel.直送, lstLetterId);
+            var result = await _letterAppService.CreateSortingList(EnumChannel.直送, lstLetterId, CurrentUser.UserId);
             return Json(result);
         }
 
@@ -423,15 +424,15 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(result);
         }
 
-        public async Task<IActionResult> GetWriteCpuCardData(string listNo)
+        public async Task<IActionResult> GetWriteCpuCardData(int listId)
         {
-            var result = await _letterAppService.GetWriteCpuCardData(listNo);
+            var result = await _letterAppService.GetWriteCpuCardData(listId);
             return Json(result);
         }
 
-        public async Task<IActionResult> GetSortingListDetails(string listNo)
+        public async Task<IActionResult> GetSortingListDetails(int listId)
         {
-            var letters = await _letterAppService.GetSortListDetails(listNo);
+            var letters = await _letterAppService.GetSortListDetails(listId);
             return Json(letters);
         }
 
@@ -439,6 +440,53 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             var letterId = await _letterAppService.GetLetterIdByBarcodeNo(barcodeNo);
             return Json(letterId);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SortingPrintTcjh(int id)
+        {
+            var model = new PrintSortingModel
+            {
+                SortingList = await _letterAppService.GetSortingList(id),
+                LetterSortings = await _letterAppService.GetSortListDetails(id)
+            };
+            return PartialView("_Sorting_Print_Tcjh", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SortingPrintZs(int id)
+        {
+            var model = new PrintSortingModel
+            {
+                SortingList = await _letterAppService.GetSortingList(id),
+                LetterSortings = await _letterAppService.GetSortListDetails(id)
+            };
+            return PartialView("_Sorting_Print_Zs", model);
+        }
+
+        public async Task<IActionResult> GetSortingLists(int draw, int start, int length)
+        {
+            var keywords = Request.Query["search[value]"];
+            var pageSearchDto = new PageSearchCommonModel
+            {
+                Keywords = keywords,
+                Take = length,
+                Skip = start
+            };
+            var pagereslut = await _letterAppService.GetSortingLists(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
+        }
+
+        public IActionResult SortingList()
+        {
+            return View();
         }
 
         #endregion

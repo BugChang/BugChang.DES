@@ -1,0 +1,103 @@
+﻿@model BugChang.DES.Web.Mvc.Models.Letter.PrintSortingModel
+<table style="border-collapse: collapse; border: 1px black solid; width: 100%;border-spacing: 0">
+    <caption style="font-size: 24px">
+        <b>交换站交寄清单</b>
+    </caption>
+    <thead>
+        <tr>
+            <td colspan="7">发件单位：北京市国家安全局</td>
+        </tr>
+        <tr>
+            <td colspan="7">
+                <div style="float: left">
+                    打印时间：@DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+                </div>
+                <div style="float: right">
+                    第 @Model.SortingList.ListNo 号 第<span tdata="PageNO" format="0" color="blue">##</span>页
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>序号</th>
+            <th>收件单位名称</th>
+            <th>发件部门名称</th>
+            <th>信件编号</th>
+            <th>秘密等级</th>
+            <th>缓急程度</th>
+            <th>原始编号</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.LetterSortings.Count; i++)
+        {
+            var letter = Model.LetterSortings[i];
+            <tr>
+                <td>@(i + 1)</td>
+                <td>@letter.ReceiveDepartmentName</td>
+                <td>@letter.SendDepartmentName</td>
+                <td>@letter.LetterNo</td>
+                @{
+                    var secretText = "未知";
+                    switch (letter.SecretLevel)
+                    {
+                        case 0:
+                            secretText = "无";
+                            break;
+                        case 1:
+                            secretText = "秘密";
+                            break;
+                        case 2:
+                            secretText = "机密";
+                            break;
+                        case 3:
+                            secretText = "绝密";
+                            break;
+                    }
+                }
+                <td>@secretText</td>
+                @{
+                    var urgebcyText = "未知";
+                    switch (letter.UrgencyLevel)
+                    {
+                        case 0:
+                            urgebcyText = "无";
+                            break;
+                        case 1:
+                            urgebcyText = "加急";
+                            break;
+                        case 2:
+                            urgebcyText = "特急";
+                            break;
+                        case 3:
+                            urgebcyText = "限时";
+                            break;
+                    }
+                }
+                <td>@urgebcyText</td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="7">
+                <div style="float: left">
+                    本页合计<span tdata="SubCount" format="0" color="blue">##</span>件
+                </div>
+                <div style="float: right">
+                    本号单共计<span tdata="PageCount" format="0" color="blue">##</span>页 <span tdata="AllCount" format="0" color="blue">@Model.LetterSortings.Count</span>件
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="7">
+                <div style="float: left">
+                    打印人：@Model.SortingList.CreateUserName
+                </div>
+                <div style="float: right">
+                    北京市国家安全局制
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>

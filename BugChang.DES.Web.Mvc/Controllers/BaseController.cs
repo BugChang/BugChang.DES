@@ -13,7 +13,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
     public class BaseController : Controller
     {
         protected CurrentUserModel CurrentUser = new CurrentUserModel();
-        public IOptions<AccountSettings> AccountSettings { get; set; }
+        //private readonly IOptions<AccountSettings> _accountSettings;
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -27,14 +27,14 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 CurrentUser.DisplayName = Convert.ToString(HttpContext.User.FindFirst("DisplayName").Value);
                 CurrentUser.NeedChangePassword = Convert.ToInt32(HttpContext.User.FindFirst("NeedChangePassword").Value) > 0;
                 CurrentUser.UsbKeyNo = Convert.ToString(HttpContext.User.FindFirst("UsbKeyNo"));
-                if (AccountSettings.Value.ValidateUsbKeyNo)
-                {
-                    var usbKeyNo = Request.Cookies["KOAL_CERT_CN"].Trim();
-                    if (usbKeyNo != CurrentUser.UsbKeyNo)
-                    {
-                        context.Result = new RedirectToActionResult("UsbKeyNotMacthed", "Account", new { });
-                    }
-                }
+                //if (_accountSettings.Value.ValidateUsbKeyNo)
+                //{
+                //    var usbKeyNo = Request.Cookies["KOAL_CERT_CN"].Trim();
+                //    if (usbKeyNo != CurrentUser.UsbKeyNo)
+                //    {
+                //        context.Result = new RedirectToActionResult("UsbKeyNotMacthed", "Account", new { });
+                //    }
+                //}
                 if (CurrentUser.NeedChangePassword && !ForceChangePasswordWhiteList().Contains(currentUrl))
                 {
                     context.Result = new RedirectToActionResult("ForceChangePassword", "Account", new { });

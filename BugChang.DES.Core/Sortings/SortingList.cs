@@ -3,7 +3,7 @@ using BugChang.DES.Core.Exchanges.Channel;
 
 namespace BugChang.DES.Core.Sortings
 {
-    public class SortingList : BaseEntity<int>, ISoftDelete
+    public class SortingList : BaseEntity, ISoftDelete
     {
         public string ListNo { get; set; }
 

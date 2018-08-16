@@ -1,12 +1,12 @@
 ﻿(function () {
-    var macAddress;
+    var deviceCode;
     var socket;
     var tcjhTable = $("#tcjhTable");
     var jytxTable = $("#jytxTable");
     var zsTable = $("#zsTable");
     var jytxScanTable = $("#jytxScanTable");
-    var tcjhListNo;
-    var zsListNo;
+    var tcjhListId;
+    var zsListId;
     var currentPage = 0;
     $(function () {
 
@@ -96,7 +96,7 @@
         socket.onmessage = function (e) {
             var obj = JSON.parse(e.data);
             if (obj.Method === "GetMacAddress") {
-                macAddress = obj.Data;
+                deviceCode = obj.Data;
                 openScanGun();
             } else if (obj.Method === "OpenSerialPort") {
                 if (obj.Data) {
@@ -536,7 +536,7 @@
 
     //生成同城交换清单
     function createTcjhList(nextFunc) {
-        if (tcjhListNo !== undefined) {
+        if (tcjhListId !== undefined) {
             if (nextFunc === "writeCpuCard") {
                 writeCpuCard();
             } else if (nextFunc === "printTcjhBill") {
@@ -554,7 +554,7 @@
                     { letterIds: letterIds },
                     function (result) {
                         if (result.success) {
-                            tcjhListNo = result.data;
+                            tcjhListId = result.data;
                             if (nextFunc === "writeCpuCard") {
                                 writeCpuCard();
                             } else if (nextFunc === "printTcjhBill") {
@@ -572,12 +572,12 @@
 
     }
 
-    //生成同城交换清单
+    //生成直送清单
     function createZsList() {
-        if (tcjhListNo !== undefined) {
+        if (zsListId !== undefined) {
             printZsBill();
         } else {
-            var selections = tcjhTable.bootstrapTable('getSelections');
+            var selections = zsTable.bootstrapTable('getSelections');
             if (selections.length > 0) {
                 var letterIds = '';
                 for (var i = 0; i < selections.length; i++) {
@@ -588,7 +588,7 @@
                     { letterIds: letterIds },
                     function (result) {
                         if (result.success) {
-                            tcjhListNo = result.data;
+                            zsListId = result.data;
                             printZsBill();
                         } else {
                             window.toastr.error(result.message);
@@ -620,7 +620,7 @@
     //写卡
     function writeCpuCard() {
         $.get("/Letter/GetWriteCpuCardData/",
-            { listNo: tcjhListNo },
+            { listId: tcjhListId },
             function (result) {
                 if (result.success) {
                     $.get("/HardWare/GetCpuReadCard",
@@ -635,162 +635,24 @@
 
     //打印同城交换清单
     function printTcjhBill() {
-        $("#jh-table tbody").html(""); //先清空
-        $.get("/Letter/GetSortingListDetails",
-            { listNo: tcjhListNo },
-            function (result) {
-                for (var i = 0; i < result.length; i++) {
-                    var secretText;
-                    var urgenclyText;
-                    switch (result[i].secretLevel) {
-                        case 0:
-                            secretText = "无";
-                            break;
-                        case 1:
-                            secretText = "秘密";
-                            break;
-                        case 2:
-                            secretText = "机密";
-                            break;
-                        case 3:
-                            secretText = "绝密";
-                            break;
-                        default:
-                            secretText = "未知";
-                            break;
-                    }
-                    switch (result[i].urgencyLevel) {
-                        case 0:
-                            urgenclyText = "无";
-                            break;
-                        case 1:
-                            urgenclyText = "加急";
-                            break;
-                        case 2:
-                            urgenclyText = "特急";
-                            break;
-                        case 3:
-                            urgenclyText = "限时";
-                            break;
-                        default:
-                            urgenclyText = "未知";
-                            break;
-                    }
-                    var trHtml = '<tr><td>' +
-                        (i + 1) +
-                        '</td><td>' +
-                        result[i].receiveDepartmentName +
-                        '</td><td>' +
-                        result[i].sendDepartmentName +
-                        '</td><td>' +
-                        result[i].letterNo +
-                        '</td><td>'
-                        + secretText +
-                        '</td><td>' +
-                        urgenclyText +
-                        '</td><td></td></tr>';
-                    $("#jh-table tbody").append(trHtml); //在table最后面添加一行
-                }
+        $.post("/Letter/SortingPrintTcjh/" + tcjhListId,
+            function (html) {
                 var lodop = getLodop();
                 lodop.PRINT_INIT("");
-                $("#jh-listNo").text(tcjhListNo);
-                $("#tcAllCount").text(result.length);
-
-                lodop.ADD_PRINT_HTM("2%", "5%", "90%", '12%', document.getElementById("jh-header").innerHTML);
-                lodop.SET_PRINT_STYLEA(0, "ItemType", 1);
-                var strStyle =
-                    "<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>";
-                lodop.ADD_PRINT_TABLE("10%",
-                    "5%",
-                    "90%",
-                    "75%",
-                    strStyle + document.getElementById("jh-body").innerHTML);
-                lodop.ADD_PRINT_HTM("91%", "5%", "90%", '10%', document.getElementById("jh-footer").innerHTML);
-                lodop.SET_PRINT_STYLEA(0, "ItemType", 1);
+                var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
+                lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
                 lodop.PRINT();
             });
     }
 
     //打印直送交换清单
     function printZsBill() {
-        $("#zs-table tbody").html("");
-        $.get("/Letter/GetSortingListDetails",
-            { listNo: zsListNo },
-            function (result) {
-                for (var i = 0; i < result.length; i++) {
-                    var secretText;
-                    var urgenclyText;
-                    switch (result[i].secretLevel) {
-                        case 0:
-                            secretText = "无";
-                            break;
-                        case 1:
-                            secretText = "秘密";
-                            break;
-                        case 2:
-                            secretText = "机密";
-                            break;
-                        case 3:
-                            secretText = "绝密";
-                            break;
-                        default:
-                            secretText = "未知";
-                            break;
-                    }
-                    switch (result[i].urgencyLevel) {
-                        case 0:
-                            urgenclyText = "无";
-                            break;
-                        case 1:
-                            urgenclyText = "加急";
-                            break;
-                        case 2:
-                            urgenclyText = "特急";
-                            break;
-                        case 3:
-                            urgenclyText = "限时";
-                            break;
-                        default:
-                            urgenclyText = "未知";
-                            break;
-                    }
-                    var trHtml = '    <tr><td>' +
-                        (i + 1) +
-                        '</td>' +
-                        '<td>' +
-                        result[i].receiveDepartmentName +
-                        '</td>' +
-                        '<td>' +
-                        result[i].sendDepartmentName.replace("北京市国家安全局", "") +
-                        '</td>' +
-                        '<td>' +
-                        result[i].letterNo +
-                        '</td>' +
-                        '<td>' +
-                        secretText +
-                        '</td>' +
-                        '<td>' +
-                        urgenclyText +
-                        '</td>' +
-                        '<td>' +
-                        '</td>' +
-                        '<td></td></tr>';
-                    $("#zs-table tbody").append(trHtml); //在table最后面添加一行
-                }
+        $.post("/Letter/SortingPrintZs/" + zsListId,
+            function (html) {
                 var lodop = getLodop();
                 lodop.PRINT_INIT("");
-                $("#zs-listNo").text(zsListNo);
-                lodop.ADD_PRINT_HTM("2%", "5%", "90%", '12%', document.getElementById("zs-header").innerHTML);
-                lodop.SET_PRINT_STYLEA(0, "ItemType", 1);
-                var strStyle =
-                    "<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>";
-                lodop.ADD_PRINT_TABLE("10%",
-                    "5%",
-                    "90%",
-                    "75%",
-                    strStyle + document.getElementById("zs-body").innerHTML);
-                lodop.ADD_PRINT_HTM("91%", "5%", "90%", '10%', document.getElementById("zs-footer").innerHTML);
-                lodop.SET_PRINT_STYLEA(0, "ItemType", 1);
+                var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
+                lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
                 lodop.PRINT();
             });
     }

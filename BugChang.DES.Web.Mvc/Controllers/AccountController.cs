@@ -22,14 +22,14 @@ namespace BugChang.DES.Web.Mvc.Controllers
     {
 
         private readonly IAccountAppService _accountAppService;
-        private readonly IOptions<AccountSettings> _loginSettings;
+        private readonly IOptions<AccountSettings> _accountSettings;
         private readonly IClientAppService _clientAppService;
         private readonly ICardAppService _cardAppService;
         private readonly IUserAppService _userAppService;
-        public AccountController(IAccountAppService accountAppService, IOptions<AccountSettings> loginSettings, IClientAppService clientAppService, ICardAppService cardAppService, IUserAppService userAppService)
+        public AccountController(IAccountAppService accountAppService, IOptions<AccountSettings> accountSettings, IClientAppService clientAppService, ICardAppService cardAppService, IUserAppService userAppService)
         {
             _accountAppService = accountAppService;
-            _loginSettings = loginSettings;
+            _accountSettings = accountSettings;
             _clientAppService = clientAppService;
             _cardAppService = cardAppService;
             _userAppService = userAppService;
@@ -55,6 +55,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 var usbKeyNo = Request.Cookies["KOAL_CERT_CN"]?.Trim();
+                usbKeyNo = usbKeyNo ?? "";
                 var loginResult = await _accountAppService.LoginAsync(model.UserName, HashHelper.Md5(model.Password), usbKeyNo);
 
                 switch (loginResult.Result)
@@ -69,7 +70,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, loginResult.ClaimsPrincipal, new AuthenticationProperties
                         {
                             IsPersistent = model.RememberMe,
-                            ExpiresUtc = DateTimeOffset.Now.AddMinutes(_loginSettings.Value.ExpiryTime)
+                            ExpiresUtc = DateTimeOffset.Now.AddMinutes(_accountSettings.Value.ExpiryTime)
                         });
                         returnUrl = string.IsNullOrEmpty(returnUrl) ? "/Home/Index" : returnUrl;
                         return Redirect(returnUrl);
@@ -100,6 +101,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             {
                 var user = await _userAppService.GetForEditByIdAsync(card.UserId);
                 var usbKeyNo = Request.Cookies["KOAL_CERT_CN"]?.Trim();
+                usbKeyNo = usbKeyNo ?? "";
                 var loginResult = await _accountAppService.LoginAsync(user.UserName, user.Password, usbKeyNo);
                 switch (loginResult.Result)
                 {
@@ -112,7 +114,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
                         }
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, loginResult.ClaimsPrincipal, new AuthenticationProperties
                         {
-                            ExpiresUtc = DateTimeOffset.Now.AddMinutes(_loginSettings.Value.ExpiryTime)
+                            ExpiresUtc = DateTimeOffset.Now.AddMinutes(_accountSettings.Value.ExpiryTime)
                         });
                         result.Data = string.IsNullOrEmpty(result.Data) ? "/Home/Index" : result.Data;
                         break;

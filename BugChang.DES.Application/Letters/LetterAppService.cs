@@ -360,7 +360,7 @@ namespace BugChang.DES.Application.Letters
             return Mapper.Map<PageResultModel<LetterSortingDto>>(letters);
         }
 
-        public async Task<ResultEntity> CreateSortingList(EnumChannel channel, List<int> letterIds)
+        public async Task<ResultEntity> CreateSortingList(EnumChannel channel, List<int> letterIds, int userId)
         {
             var result = new ResultEntity();
             var letters = await _letterRepository.GetQueryable().Where(a => letterIds.Contains(a.Id)).ToListAsync();
@@ -374,7 +374,9 @@ namespace BugChang.DES.Application.Letters
             var sortingList = new SortingList
             {
                 Channel = channel,
-                ListNo = DateTime.Now.Year + serialNumber.ToString("00000000")
+                ListNo = DateTime.Now.Year + serialNumber.ToString("00000000"),
+                CreateBy = userId,
+                CreateTime = DateTime.Now
             };
             await _sortingListRepository.AddAsync(sortingList);
             foreach (var letterId in letterIds)
@@ -390,7 +392,7 @@ namespace BugChang.DES.Application.Letters
             if (await _unitOfWork.CommitAsync() > 0)
             {
                 result.Success = true;
-                result.Data = sortingList.ListNo;
+                result.Data = sortingList.Id;
             }
             return result;
         }
@@ -405,10 +407,10 @@ namespace BugChang.DES.Application.Letters
             return new ResultEntity { Success = true };
         }
 
-        public async Task<ResultEntity> GetWriteCpuCardData(string listNo)
+        public async Task<ResultEntity> GetWriteCpuCardData(int listId)
         {
 
-            var list = await _sortingListRepository.GetQueryable().FirstOrDefaultAsync(a => a.ListNo == listNo);
+            var list = await _sortingListRepository.GetQueryable().FirstOrDefaultAsync(a => a.Id == listId);
             var listDetails = await _sortingListDetailRepository.GetQueryable().Where(a => a.SortingListId == list.Id)
                 .ToListAsync();
             var letters = await _letterRepository.GetQueryable().Where(a => listDetails.Any(b => b.LetterId == a.Id))
@@ -455,9 +457,9 @@ namespace BugChang.DES.Application.Letters
             };
         }
 
-        public async Task<IList<LetterSortingDto>> GetSortListDetails(string listNo)
+        public async Task<IList<LetterSortingDto>> GetSortListDetails(int listId)
         {
-            var list = await _sortingListRepository.GetQueryable().FirstOrDefaultAsync(a => a.ListNo == listNo);
+            var list = await _sortingListRepository.GetQueryable().FirstOrDefaultAsync(a => a.Id == listId);
             var listDetails = await _sortingListDetailRepository.GetQueryable().Where(a => a.SortingListId == list.Id).Select(a => a.Letter).Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
                 .ToListAsync();
             return Mapper.Map<IList<LetterSortingDto>>(listDetails);
@@ -472,6 +474,28 @@ namespace BugChang.DES.Application.Letters
             }
 
             return letter.Id;
+        }
+
+        public async Task<SortingListDto> GetSortingList(int listId)
+        {
+            var sortingList = await _sortingListRepository.GetQueryable().Include(a => a.CreateUser)
+                .FirstOrDefaultAsync(a => a.Id == listId);
+            return Mapper.Map<SortingListDto>(sortingList);
+        }
+
+        public async Task<PageResultModel<SortingListDto>> GetSortingLists(PageSearchCommonModel pageSearch)
+        {
+            var sortings = _sortingListRepository.GetQueryable().Include(a => a.CreateUser).Include(a => a.UpdateUser).Where(a => true);
+            if (!string.IsNullOrWhiteSpace(pageSearch.Keywords))
+            {
+                sortings = sortings.Where(a => a.ListNo.Contains(pageSearch.Keywords));
+            }
+            var pageResult = new PageResultModel<SortingList>
+            {
+                Rows = await sortings.OrderByDescending(a => a.Id).Skip(pageSearch.Skip).Take(pageSearch.Take).ToListAsync(),
+                Total = await sortings.CountAsync()
+            };
+            return Mapper.Map<PageResultModel<SortingListDto>>(pageResult);
         }
     }
 }
