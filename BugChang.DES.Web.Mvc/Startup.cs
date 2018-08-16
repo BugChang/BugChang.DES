@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
+using NLog.Web;
 
 namespace BugChang.DES.Web.Mvc
 {
@@ -61,7 +64,7 @@ namespace BugChang.DES.Web.Mvc
             services.Configure<AccountSettings>(Configuration.GetSection("AccountSettings"));
             services.Configure<CommonSettings>(Configuration.GetSection("CommonSettings"));
         }
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -73,6 +76,9 @@ namespace BugChang.DES.Web.Mvc
                 //报错指向路径
                 app.UseExceptionHandler("/Error/500");
             }
+
+            loggerFactory.AddNLog();//添加NLog
+            env.ConfigureNLog("nlog.config");//读取Nlog配置文件
 
             //其他错误代码指向路径
             app.UseStatusCodePagesWithReExecute("/Error/{0}");
