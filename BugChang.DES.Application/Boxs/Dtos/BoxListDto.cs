@@ -31,6 +31,10 @@ namespace BugChang.DES.Application.Boxs.Dtos
 
         public bool Enabled { get; set; }
 
+        public bool HasUrgent { get; set; }
+
+        public int FileCount { get; set; }
+
         public bool IsTwoLock { get; set; }
     }
 }

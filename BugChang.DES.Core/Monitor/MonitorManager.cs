@@ -61,46 +61,56 @@ namespace BugChang.DES.Core.Monitor
         {
 
             var checkBarcodeModel = new CheckBarcodeModel();
-            var barcode = await _barcodeRepository.GetByNoAsync(barcodeNo);
-            var letter = await _letterRepository.GetLetter(barcodeNo) ?? new Letter
+            if (barcodeNo.Length == 33 || barcodeNo.Length == 26)
             {
-                ReceiveDepartmentId = await _barcodeManager.GetReceiveDepartmentId(barcodeNo),
-                SendDepartmentId = await _barcodeManager.GetSendDepartmentId(barcodeNo),
-                //如果数据库中没有Letter记录，那么LetterType一定是收信
-                LetterType = EnumLetterType.收信
-            };
-
-            switch (barcode.Status)
-            {
-                case EnumBarcodeStatus.已签收:
-                    if (barcode.CurrentPlaceId == placeId && barcode.SubStatus == EnumBarcodeSubStatus.正常)
+                var barcode = await _barcodeRepository.GetByNoAsync(barcodeNo);
+                var letter = await _letterRepository.GetLetter(barcodeNo) ?? new Letter
+                {
+                    ReceiveDepartmentId = await _barcodeManager.GetReceiveDepartmentId(barcodeNo),
+                    SendDepartmentId = await _barcodeManager.GetSendDepartmentId(barcodeNo),
+                    //如果数据库中没有Letter记录，那么LetterType一定是收信
+                    LetterType = EnumLetterType.收信
+                };
+                if (barcode != null)
+                {
+                    switch (barcode.Status)
                     {
-                        //同一场所下，已签收的文件禁止再次投箱（勘误、退回件除外）
-                        checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
-                    }
-                    else
-                    {
-                        return await CheckBarcodeTypeCommon(letter, placeId);
-                    }
-                    break;
-                case EnumBarcodeStatus.已就绪:
-                case EnumBarcodeStatus.已勘误:
-                    return await CheckBarcodeTypeCommon(letter, placeId);
-                case EnumBarcodeStatus.已投递:
-                    checkBarcodeModel.Type = EnumCheckBarcodeType.条码已经投箱;
-                    break;
-                case EnumBarcodeStatus.申请退回:
-                    var receiveDepartmentId = letter.ReceiveDepartmentId;
-                    letter.ReceiveDepartmentId = letter.SendDepartmentId;
-                    letter.SendDepartmentId = receiveDepartmentId;
-                    return await CheckBarcodeTypeCommon(letter, placeId);
-                case EnumBarcodeStatus.已退回:
-                    checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
-                    break;
+                        case EnumBarcodeStatus.已签收:
+                            if (barcode.CurrentPlaceId == placeId && barcode.SubStatus == EnumBarcodeSubStatus.正常)
+                            {
+                                //同一场所下，已签收的文件禁止再次投箱（勘误、退回件除外）
+                                checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
+                            }
+                            else
+                            {
+                                return await CheckBarcodeTypeCommon(letter, placeId);
+                            }
+                            break;
+                        case EnumBarcodeStatus.已就绪:
+                        case EnumBarcodeStatus.已勘误:
+                            return await CheckBarcodeTypeCommon(letter, placeId);
+                        case EnumBarcodeStatus.已投递:
+                            checkBarcodeModel.Type = EnumCheckBarcodeType.条码已经投箱;
+                            break;
+                        case EnumBarcodeStatus.申请退回:
+                            var receiveDepartmentId = letter.ReceiveDepartmentId;
+                            letter.ReceiveDepartmentId = letter.SendDepartmentId;
+                            letter.SendDepartmentId = receiveDepartmentId;
+                            return await CheckBarcodeTypeCommon(letter, placeId);
+                        case EnumBarcodeStatus.已退回:
+                            checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
+                            break;
 
-                default:
-                    throw new ArgumentOutOfRangeException();
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+                else
+                {
+                    return await CheckBarcodeTypeCommon(letter, placeId);
+                }
             }
+
             return checkBarcodeModel;
         }
 

@@ -50,7 +50,8 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
         {
             //暂时不考虑B型箱
             var boxs = await _monitorAppService.GetAllBoxs(placeId);
-            var boxGroups = boxs.Select(a => new BoxGroupListDto { Name = a.Id.ToString(), FrontCameraBn = a.FrontBn, FrontDigitalVein = a.FrontBn, FrontReadCardBn = a.FrontBn, FrontScanBn = a.FrontBn, FrontShowBn = a.FrontBn, FrontSoundBn = a.FrontBn, Boxs = a.Id.ToString() }).ToList();
+            //var boxGroups = boxs.Select(a => new BoxGroupListDto { Name = a.Name.ToString(), FrontCameraBn = a.FrontBn, FrontDigitalVein = a.FrontBn, FrontReadCardBn = a.FrontBn, FrontScanBn = a.FrontBn, FrontShowBn = a.FrontBn, FrontSoundBn = a.FrontBn, Boxs = a.Id.ToString() }).ToList();
+            var boxGroups = boxs.Select(a => new BoxGroupListDto { Name = a.Name.ToString(), FrontCameraBn = "BN00198", FrontDigitalVein = "BN00198", FrontReadCardBn = "BN00198", FrontScanBn = "BN00198", FrontShowBn = "BN00198", FrontSoundBn = "BN00198", Boxs = a.Id.ToString() }).ToList();
             return Json(boxGroups);
         }
 
@@ -70,10 +71,11 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
         /// </summary>
         /// <param name="cardValue"></param>
         /// <param name="placeId"></param>
-        /// <param name="boxId"></param>
+        /// <param name="bn"></param>
         /// <returns></returns>
-        public async Task<IActionResult> CheckCardType(string cardValue, int placeId, int boxId)
+        public async Task<IActionResult> CheckCardType(string cardValue, int placeId, string bn)
         {
+            var boxId = 1;
             var result = await _monitorAppService.CheckCardType(placeId, boxId, cardValue);
             return Json(result);
         }
