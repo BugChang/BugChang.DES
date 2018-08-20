@@ -7,6 +7,7 @@
     var jytxScanTable = $("#jytxScanTable");
     var tcjhListId;
     var zsListId;
+    var jytxListId;
     var currentPage = 0;
     $(function () {
 
@@ -76,7 +77,9 @@
             createZsList();
         });
 
-
+        $("#btnPrintJytxBill").click(function () {
+            createJytxList();
+        });
 
 
     });
@@ -602,6 +605,35 @@
 
     }
 
+    //生成机要通信清单
+    function createJytxList() {
+        if (jytxListId !== undefined) {
+            printJytxBill();
+        } else {
+            var selections = jytxScanTable.bootstrapTable('getData');
+            if (selections.length > 0) {
+                var letterIds = '';
+                for (var i = 0; i < selections.length; i++) {
+                    letterIds += ',' + selections[i].id;
+                }
+                letterIds = letterIds.substring(1);
+                $.post("/Letter/CreateJytxList",
+                    { letterIds: letterIds },
+                    function (result) {
+                        if (result.success) {
+                            jytxListId = result.data;
+                            printJytxBill();
+                        } else {
+                            window.toastr.error(result.message);
+                        }
+                    });
+
+            } else {
+                window.toastr.error("未添加任何记录");
+            }
+        }
+    }
+
     //转市机
     function changeJytx(letterId) {
         $.post("/Letter/Change2Jytx/" + letterId,
@@ -656,6 +688,20 @@
                 lodop.PRINT();
             });
     }
+
+    //打印机要通信清单
+    function printJytxBill() {
+        $.post("/Letter/SortingPrintJytx/" + jytxListId,
+            function (html) {
+                var lodop = getLodop();
+                lodop.PRINT_INIT("");
+                var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
+                lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
+                lodop.PRINT();
+            });
+    }
+
+
 
     //市机排序
     function doSort(letterId) {

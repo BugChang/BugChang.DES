@@ -7,6 +7,7 @@ using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace BugChang.DES.Application.Boxs
@@ -74,6 +75,12 @@ namespace BugChang.DES.Application.Boxs
             }
 
             return result;
+        }
+
+        public async Task<BoxEditDto> GetBoxByPlaceBn(string bn, int placeId)
+        {
+            var box = await _boxRepository.GetQueryable().FirstOrDefaultAsync(a => a.FrontBn == bn && a.PlaceId == placeId);
+            return Mapper.Map<BoxEditDto>(box);
         }
     }
 }

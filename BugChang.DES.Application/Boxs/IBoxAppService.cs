@@ -11,5 +11,7 @@ namespace BugChang.DES.Application.Boxs
         Task<IList<int>> GetBoxObjectIds(int boxId);
 
         Task<ResultEntity> AssignObject(int boxId, List<int> objectIds, int operatorId);
+
+        Task<BoxEditDto> GetBoxByPlaceBn(string bn, int placeId);
     }
 }

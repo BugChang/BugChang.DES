@@ -464,6 +464,17 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return PartialView("_Sorting_Print_Zs", model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SortingPrintJytx(int id)
+        {
+            var model = new PrintSortingModel
+            {
+                SortingList = await _letterAppService.GetSortingList(id),
+                LetterSortings = await _letterAppService.GetSortListDetails(id)
+            };
+            return PartialView("_Sorting_Print_Jytx", model);
+        }
+
         public async Task<IActionResult> GetSortingLists(int draw, int start, int length)
         {
             var keywords = Request.Query["search[value]"];
