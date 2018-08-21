@@ -500,6 +500,34 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
+        public IActionResult SortingListDetail(int id)
+        {
+            ViewBag.ListId = id;
+            return PartialView("_SortingListDetail");
+        }
+
+
+        public async Task<IActionResult> GetSortingListDetailsForTable(int draw, int start, int length, int listId)
+        {
+            var letters = await _letterAppService.GetSortListDetails(listId);
+            var json = new
+            {
+                draw,
+                recordsTotal = letters.Count,
+                recordsFiltered = letters.Count,
+                data = letters
+            };
+            return Json(json);
+        }
+        #endregion
+
+        #region 核销
+
+        public IActionResult Check()
+        {
+            return View();
+        }
+
         #endregion
 
         #region 通用

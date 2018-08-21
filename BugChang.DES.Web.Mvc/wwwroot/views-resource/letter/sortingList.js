@@ -11,7 +11,7 @@
             'click',
             function () {
                 var listId = $(this).attr('data-list-id');
-
+                viewDtail(listId);
             });
 
         $('table').delegate('.print-bill-tcjh',
@@ -153,7 +153,14 @@
     }
 
     function printBillJytx(listId) {
-
+        $.post("/Letter/SortingPrintJytx/" + listId,
+            function (html) {
+                var lodop = getLodop();
+                lodop.PRINT_INIT("");
+                var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
+                lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
+                lodop.PRINT();
+            });
     }
 
     function printBillZs(listId) {
@@ -180,5 +187,14 @@
                         });
                 }
             });
+    }
+
+    function viewDtail(listId) {
+        $('#DetailViewModal .modal-content').load('/Letter/SortingListDetail/' + listId);
+        $('#DetailViewModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
     }
 })();

@@ -1,0 +1,10 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+@Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("查看清单详情"))
+<div class="modal-body">
+    <input type="hidden" id="DefaultValue" data-list-id="@ViewBag.ListId" />
+    <div class="table-responsive">
+        <table id="detailTable" class="table table-bordered table-hover text-nowrap"></table>
+    </div>
+</div>
+@Html.Partial("~/Views/Shared/Modals/_ModalFooterWithClose.cshtml")
+<script src="~/views-resource/letter/_sortingListDetail.js" asp-append-version="true"></script>

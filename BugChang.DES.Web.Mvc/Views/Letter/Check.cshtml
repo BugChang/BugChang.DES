@@ -1,0 +1,53 @@
+﻿@section css
+    {
+    <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">核销日期</h3>
+    </div>
+    <div class="box-body">
+        <div class="form-inline">
+            <div class="form-group">
+                <label>开始日期</label>
+                <input type="text" class="form-control search-time" id="beginTime" />
+            </div>
+            <div class="form-group">
+                <label>结束日期</label>
+                <input type="text" class="form-control search-time" id="endTime" />
+            </div>
+            <button type="button" id="btnSearch" class="btn btn-primary">开始核销</button>
+        </div>
+    </div>
+</div>
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">分析结果</h3>
+    </div>
+    <div class="box-body">
+        <ul>
+            <li>当前所在场所：XXXX</li>
+            <li>当前所在场所投箱数量：18</li>
+            <li>管理的场所：XXXX</li>
+            <li>管理的场所取件数量：18</li>
+            <li>所有信件都已投递</li>
+        </ul>
+    </div>
+</div>
+<div class="box box-warning">
+    <div class="box-header with-border">
+        <h3 class="box-title">存在问题信件</h3>
+    </div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table id="detailTable" class="table table-bordered table-hover text-nowrap"></table>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/lib/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script src="~/views-resource/letter/check.js" asp-append-version="true"></script>
+}
