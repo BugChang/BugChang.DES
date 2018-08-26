@@ -1,0 +1,94 @@
+﻿@model List<BugChang.DES.Application.Letters.Dtos.PlaceStatisticsDto>
+<table class="table table-bordered">
+    <tr>
+        <th>场所</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.PlaceName</th>
+        }
+    </tr>
+    <tr>
+        <th>收（包含外收）</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.Receive</th>
+        }
+    </tr>
+    <tr>
+        <th>发（包含外发）</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.Send</th>
+        }
+    </tr>
+    <tr>
+        <th>外收</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.ReceiveOut</th>
+        }
+    </tr>
+    <tr>
+        <th>外发</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.SendOut</th>
+        }
+    </tr>
+    <tr>
+        <th>普通</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.Sec0</th>
+        }
+    </tr>
+    <tr>
+        <th>秘密</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.Sec1</th>
+        }
+    </tr>
+    <tr>
+        <th>机密</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.Sec2</th>
+        }
+    </tr>
+    <tr>
+        <th>绝密</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.Sec3</th>
+        }
+    </tr>
+    <tr>
+        <th>普通</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.Urg0</th>
+        }
+    </tr>
+    <tr>
+        <th>加急</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.Urg1</th>
+        }
+    </tr>
+    <tr>
+        <th>特急</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.Urg2</th>
+        }
+    </tr>
+    <tr>
+        <th>限时</th>
+        @foreach (var m in Model)
+        {
+            <th>@m.Urg3</th>
+        }
+    </tr>
+</table>

@@ -1,5 +1,6 @@
 ﻿(function () {
     $(function () {
+
         $('#place').delegate('a',
             'click',
             function () {
