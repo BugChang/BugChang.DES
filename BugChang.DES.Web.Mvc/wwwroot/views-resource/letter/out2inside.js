@@ -1,81 +1,19 @@
 ﻿(function () {
-    var macAddress;
-    var socket;
     var table;
     $(function () {
 
-        initSocket();
+        initTable();
 
-        $('.search-time').datetimepicker({
-            format: 'yyyy-mm-dd',
-            language: 'zh-CN',
-            autoclose: true,
-            minView: 2
-        });
-
-        $("#CheckForm").submit(function (e) {
-            e.preventDefault();
-            var data = $(this).serialize();
-            $.post('/Letter/Check',
-                data,
-                function (result) {
-                    if (result.success) {
-                        $("#divInfo").html("");
-                        var html = '<ul>';
-                        for (var i = 0; i < result.data; i++) {
-                            html += '<li>' + result.data[i] + '</li>';
-                        }
-                        html += '</ul>';
-                        $("#divInfo").html(html);
-                        initTable();
-                    } else {
-                        window.toastr.error(result.message);
-                    }
-                });
-        });
     });
 
-    function initSocket() {
-        if (typeof (WebSocket) === "undefined") {
-            window.toastr.error("您的浏览器不支持WebSocket");
-        }
-
-        socket = new WebSocket("ws://localhost:8181");
-
-        socket.onopen = function () {
-            var getMacAddress = { command: 'GetMacAddress' };
-            socket.send(JSON.stringify(getMacAddress));
-        };
-        socket.onmessage = function (e) {
-            var obj = JSON.parse(e.data);
-            if (obj.Method === "GetMacAddress") {
-                macAddress = obj.Data;
-                $("#DeviceCode").val(macAddress);
-            }
-        };
-        socket.onerror = function () {
-            window.toastr.error("与SuperService连接出现错误");
-        };
-        socket.onclose = function () {
-            window.toastr.error("SuperService连接已关闭");
-        };
-    }
-
-
     function initTable() {
-        table = $('#backTable').DataTable({
+        table = $('#table').DataTable({
             ordering: false,
             processing: true,
             serverSide: true,
             autoWith: true,
             ajax: {
-                url: '/Letter/GetCheckLetters',
-                data: function (para) {
-                    //添加额外的参数传给服务器
-                    para.deviceCode = macAddress;
-                    para.beginTime = $("#BeginTime").val();
-                    para.endTime = $("#EndTime").val();
-                }
+                url: '/Letter/Out2InsideLetters'
             },
             stateSave: true,
             columns: [
@@ -189,5 +127,4 @@
             }
         });
     }
-
 })();

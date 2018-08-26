@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
@@ -15,6 +16,7 @@ using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.Sortings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace BugChang.DES.Core.Monitor
 {
@@ -35,10 +37,11 @@ namespace BugChang.DES.Core.Monitor
         private readonly IBarcodeLogRepository _barcodeLogRepository;
         private readonly IExchangeObjectRepository _objectRepository;
         private readonly ISortingRepository _sortingRepository;
+        private readonly IOptions<CommonSettings> _commonSettings;
         public MonitorManager(IPlaceRepository placeRepository, IBarcodeRepository barcodeRepository, IBoxObjectRepository boxObjectRepository,
             LogManager logManager, BarcodeManager barcodeManager, IBoxRepository boxRepository, ICardRepository cardRepository, IUserRepository userRepository, IPlaceWardenRepository placeWardenRepository,
             IExchangeObjectSignerRepository objectSignerRepository, ILetterRepository letterRepository, IBarcodeLogRepository barcodeLogRepository, IExchangeObjectRepository objectRepository,
-            IDepartmentRepository departmentRepository, ISortingRepository sortingRepository)
+            IDepartmentRepository departmentRepository, ISortingRepository sortingRepository, IOptions<CommonSettings> commonSettings)
         {
             _placeRepository = placeRepository;
             _barcodeRepository = barcodeRepository;
@@ -55,6 +58,7 @@ namespace BugChang.DES.Core.Monitor
             _objectRepository = objectRepository;
             _departmentRepository = departmentRepository;
             _sortingRepository = sortingRepository;
+            _commonSettings = commonSettings;
         }
 
         public async Task<CheckBarcodeModel> CheckBarcodeType(string barcodeNo, int placeId)
@@ -71,6 +75,7 @@ namespace BugChang.DES.Core.Monitor
                     //如果数据库中没有Letter记录，那么LetterType一定是收信
                     LetterType = EnumLetterType.收信
                 };
+                letter.LetterType = GetLetterType(barcodeNo);
                 if (barcode != null)
                 {
                     switch (barcode.Status)
@@ -354,6 +359,10 @@ namespace BugChang.DES.Core.Monitor
         {
 
             var card = await _cardRepository.GetQueryable().Where(a => a.Value == cardValue).FirstOrDefaultAsync();
+            if (card == null)
+            {
+                return new CheckCardTypeModel();
+            }
             var user = await _userRepository.GetQueryable().Include(a => a.Department).FirstOrDefaultAsync(a => a.Id == card.UserId);
             var objects = await _boxObjectRepository.GetQueryable().Where(a => a.BoxId == boxId).ToListAsync();
             var objectSigner = await _objectSignerRepository.GetQueryable().Where(a => objects.Any(b => b.ExchangeObjectId == a.ExchangeObjectId) && a.UserId == user.Id).FirstOrDefaultAsync();
@@ -527,6 +536,26 @@ namespace BugChang.DES.Core.Monitor
                 return 1;
             }
             return 0;
+        }
+
+        public EnumLetterType GetLetterType(string barcodeNo)
+        {
+            var useDepartmentCode = _commonSettings.Value.UseDepartmentCode;
+            if (barcodeNo.Length == 26)
+            {
+                return barcodeNo.Substring(1, 3) == useDepartmentCode ? EnumLetterType.发信 : EnumLetterType.收信;
+            }
+
+            if (barcodeNo.Length == 33)
+            {
+                if (barcodeNo.Substring(0, 3) == useDepartmentCode && barcodeNo.Substring(22, 3) == useDepartmentCode)
+                {
+                    return EnumLetterType.内交换;
+                }
+                return barcodeNo.Substring(0, 3) == useDepartmentCode ? EnumLetterType.发信 : EnumLetterType.收信;
+            }
+
+            return EnumLetterType.收信;
         }
     }
 }

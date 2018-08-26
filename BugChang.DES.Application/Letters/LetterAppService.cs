@@ -9,6 +9,7 @@ using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.Channel;
+using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.SerialNumbers;
@@ -35,10 +36,12 @@ namespace BugChang.DES.Application.Letters
         private readonly ISortingListRepository _sortingListRepository;
         private readonly ISortingListDetailRepository _sortingListDetailRepository;
         private readonly BoxManager _boxManager;
+        private readonly IPlaceRepository _placeRepository;
+        private readonly IPlaceWardenRepository _placeWardenRepository;
         private readonly UnitOfWork _unitOfWork;
         private readonly IOptions<CommonSettings> _commonSettings;
 
-        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository, ICancelLetterRepository cancelLetterRepository, BoxManager boxManager, ISortingListDetailRepository sortingListDetailRepository, ISortingListRepository sortingListRepository, ISortingRepository sortingRepository)
+        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository, ICancelLetterRepository cancelLetterRepository, BoxManager boxManager, ISortingListDetailRepository sortingListDetailRepository, ISortingListRepository sortingListRepository, ISortingRepository sortingRepository, IPlaceRepository placeRepository, IPlaceWardenRepository placeWardenRepository)
         {
             _departmentManager = departmentManager;
             _serialNumberManager = serialNumberManager;
@@ -54,6 +57,8 @@ namespace BugChang.DES.Application.Letters
             _sortingListDetailRepository = sortingListDetailRepository;
             _sortingListRepository = sortingListRepository;
             _sortingRepository = sortingRepository;
+            _placeRepository = placeRepository;
+            _placeWardenRepository = placeWardenRepository;
         }
 
         public Task<ReceiveLetterEditDto> GetReceiveLetter(int letterId)
@@ -496,6 +501,124 @@ namespace BugChang.DES.Application.Letters
                 Total = await sortings.CountAsync()
             };
             return Mapper.Map<PageResultModel<SortingListDto>>(pageResult);
+        }
+
+        public async Task<ResultEntity> GetCheckInfo(int userId, int placeId, DateTime beginTime, DateTime endTime)
+        {
+            var result = new ResultEntity();
+            var listInfo = new List<string>();
+            var managePlace = await _placeWardenRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == userId);
+            var place = await _placeRepository.GetQueryable().Include(a => a.Parent).FirstOrDefaultAsync(a => a.Id == placeId);
+            if (managePlace == null)
+            {
+                result.Message = "非场所管理员，无法使用此功能";
+                return result;
+            }
+
+            if (managePlace.PlaceId == placeId)
+            {
+                if (place.ParentId == null)
+                {
+                    result.Message = "使用场所错误，无法核销";
+                }
+                else
+                {
+                    var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                            a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == place.ParentId &&
+                            a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date)
+                        .ToListAsync();
+                    listInfo.Add($"场所【{place.Parent.Name}】取件【{receiveLogs.Count}】");
+                    var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                        a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == placeId &&
+                        a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date &&
+                        receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
+                    listInfo.Add($"场所【{place.Name}】投件【{sendLogs.Count}】");
+                    listInfo.Add(receiveLogs.Count == sendLogs.Count
+                        ? "成功！所有文件已成功投递"
+                        : $"警告！{receiveLogs.Count - sendLogs.Count}份文件尚未投递，请查看下方明细！");
+                }
+            }
+            else
+            {
+                var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                        a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == placeId &&
+                        a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date)
+                    .ToListAsync();
+                listInfo.Add($"场所【{place.Name}】取件【{receiveLogs.Count}】");
+                var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                    a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == place.ParentId &&
+                    a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date &&
+                    receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
+                listInfo.Add($"场所【{place.Parent.Name}】投件【{sendLogs.Count}】");
+                listInfo.Add(receiveLogs.Count == sendLogs.Count
+                    ? "成功！所有文件已成功投递"
+                    : $"警告！{receiveLogs.Count - sendLogs.Count}份文件尚未投递，请查看下方明细！");
+
+            }
+            result.Success = true;
+            result.Data = listInfo;
+            return result;
+        }
+
+        public async Task<PageResultModel<LetterCheckListDto>> GetCheckLetters(PageSearchDetailModel pageSearch)
+        {
+            List<Letter> letters;
+            var managePlace = await _placeWardenRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == pageSearch.UserId);
+            var place = await _placeRepository.GetQueryable().Include(a => a.Parent).FirstOrDefaultAsync(a => a.Id == pageSearch.PlaceId);
+
+            if (managePlace.PlaceId == pageSearch.PlaceId)
+            {
+
+                var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                        a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == place.ParentId &&
+                        a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date)
+                    .ToListAsync();
+
+                var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                    a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == pageSearch.PlaceId &&
+                    a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date &&
+                    receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
+                letters = await _letterRepository.GetQueryable()
+                    .Where(a => sendLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+            }
+            else
+            {
+                var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                        a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == pageSearch.PlaceId &&
+                        a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date)
+                    .ToListAsync();
+                var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                    a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == place.ParentId &&
+                    a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date &&
+                    receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
+                letters = await _letterRepository.GetQueryable()
+                    .Where(a => sendLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+            }
+            var pageLetters = new PageResultModel<Letter>
+            {
+                Rows = letters,
+                Total = letters.Count
+            };
+            return Mapper.Map<PageResultModel<LetterCheckListDto>>(pageLetters);
+        }
+
+        public async Task<PageResultModel<LetterReceiveListDto>> Out2InsideLetters(PageSearchCommonModel pageSearch)
+        {
+            var barcodeLogs =await _barcodeLogRepository.GetQueryable().Where(a =>
+                a.OperationTime.Date == DateTime.Now.Date &&
+                (a.DepartmentId == _commonSettings.Value.ReceiveDepartmentId ||
+                 a.DepartmentId == _commonSettings.Value.UseDepartmentId) && a.BarcodeStatus == EnumBarcodeStatus.已投递 &&
+                a.CurrentPlaceId == _commonSettings.Value.RootPlaceId).ToListAsync();
+
+            var letters =await _letterRepository.GetQueryable()
+                .Where(a => barcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+
+            var pageResult=new PageResultModel<Letter>
+            {
+                Rows = letters,
+                Total = letters.Count
+            };
+            return Mapper.Map<PageResultModel<LetterReceiveListDto>>(pageResult);
         }
     }
 }

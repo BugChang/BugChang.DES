@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BugChang.DES.Application.Clients;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Groups;
 using BugChang.DES.Application.Letters;
@@ -24,12 +25,14 @@ namespace BugChang.DES.Web.Mvc.Controllers
         private readonly IDepartmentAppService _departmentAppService;
         private readonly IGroupAppService _groupAppService;
         private readonly IUserAppService _userAppService;
-        public LetterController(ILetterAppService letterAppService, IDepartmentAppService departmentAppService, IGroupAppService groupAppService, IUserAppService userAppService)
+        private readonly IClientAppService _clientAppService;
+        public LetterController(ILetterAppService letterAppService, IDepartmentAppService departmentAppService, IGroupAppService groupAppService, IUserAppService userAppService, IClientAppService clientAppService)
         {
             _letterAppService = letterAppService;
             _departmentAppService = departmentAppService;
             _groupAppService = groupAppService;
             _userAppService = userAppService;
+            _clientAppService = clientAppService;
         }
 
         #region 收信
@@ -367,6 +370,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
+
+
         #endregion
 
         #region 分拣
@@ -526,6 +531,77 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public IActionResult Check()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Check(LetterCheckModel model)
+        {
+            var result = new ResultEntity();
+            var client = await _clientAppService.GetClient(model.DeviceCode);
+            if (client == null)
+            {
+                result.Message = "未登记的客户端，无法使用此功能";
+            }
+            else
+            {
+                var placeId = client.PlaceId;
+                result = await _letterAppService.GetCheckInfo(CurrentUser.UserId, placeId, model.BeginTime, model.EndTime);
+            }
+            return Json(result);
+        }
+
+        public async Task<IActionResult> GetCheckLetters(int draw, int start, int length, string deviceCode, DateTime beginTime, DateTime endTime)
+        {
+            var client = await _clientAppService.GetClient(deviceCode);
+            var pageSearchDto = new PageSearchDetailModel
+            {
+                Take = length,
+                Skip = start,
+                UserId = CurrentUser.UserId,
+                PlaceId = client.PlaceId,
+                BeginTime = beginTime,
+                EndTime = endTime
+            };
+
+            var pagereslut = await _letterAppService.GetCheckLetters(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
+        }
+
+        #endregion
+
+        #region 外收转内发
+
+        public IActionResult Out2Inside()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Out2InsideLetters(int draw, int start, int length)
+        {
+            var keywords = Request.Query["search[value]"];
+            var pageSearchDto = new PageSearchCommonModel
+            {
+                Keywords = keywords,
+                Take = length,
+                Skip = start,
+            };
+
+            var pagereslut = await _letterAppService.Out2InsideLetters(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
         }
 
         #endregion
