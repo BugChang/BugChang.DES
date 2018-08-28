@@ -7,6 +7,7 @@ using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Groups;
 using BugChang.DES.Application.Letters;
 using BugChang.DES.Application.Letters.Dtos;
+using BugChang.DES.Application.Places;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Channel;
@@ -26,13 +27,15 @@ namespace BugChang.DES.Web.Mvc.Controllers
         private readonly IGroupAppService _groupAppService;
         private readonly IUserAppService _userAppService;
         private readonly IClientAppService _clientAppService;
-        public LetterController(ILetterAppService letterAppService, IDepartmentAppService departmentAppService, IGroupAppService groupAppService, IUserAppService userAppService, IClientAppService clientAppService)
+        private readonly IPlaceAppService _placeAppService;
+        public LetterController(ILetterAppService letterAppService, IDepartmentAppService departmentAppService, IGroupAppService groupAppService, IUserAppService userAppService, IClientAppService clientAppService, IPlaceAppService placeAppService)
         {
             _letterAppService = letterAppService;
             _departmentAppService = departmentAppService;
             _groupAppService = groupAppService;
             _userAppService = userAppService;
             _clientAppService = clientAppService;
+            _placeAppService = placeAppService;
         }
 
         #region 收信
@@ -370,7 +373,24 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View();
         }
 
+        public async Task<IActionResult> StatisticsDepartment(int id, DateTime beginDate, DateTime endDate)
+        {
+            var model = await _letterAppService.GetDepartmentStatistics(id, beginDate, endDate);
+            return PartialView("_StatisticsDepartment", model);
+        }
 
+        public async Task<IActionResult> StatisticsPlace(DateTime beginDate, DateTime endDate)
+        {
+            var places = await _placeAppService.GetAllAsync();
+            var statisticsPlaces = new List<PlaceStatisticsDto>();
+            foreach (var place in places)
+            {
+                var statisticsPlace = await _letterAppService.GetPlaceStatistics(place.Id, beginDate, endDate);
+                statisticsPlaces.Add(statisticsPlace);
+            }
+
+            return PartialView("_StatisticsPlace", statisticsPlaces);
+        }
 
         #endregion
 

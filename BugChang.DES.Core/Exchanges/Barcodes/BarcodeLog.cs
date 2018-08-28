@@ -6,6 +6,9 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
     public class BarcodeLog : BaseEntity<int>, ISoftDelete
     {
 
+
+        public int BarcodeId { get; set; }
+
         /// <summary>
         /// 条码号
         /// </summary>
@@ -63,5 +66,7 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         public bool IsSynBill { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public virtual Barcode Barcode { get; set; }
     }
 }

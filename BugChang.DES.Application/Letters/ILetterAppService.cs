@@ -61,5 +61,9 @@ namespace BugChang.DES.Application.Letters
         Task<PageResultModel<LetterCheckListDto>> GetCheckLetters(PageSearchDetailModel pageSearch);
 
         Task<PageResultModel<LetterReceiveListDto>> Out2InsideLetters(PageSearchCommonModel pageSearch);
+
+        Task<DepartmentStatisticsDto> GetDepartmentStatistics(int departmentId, DateTime beginDate, DateTime endDate);
+
+        Task<PlaceStatisticsDto> GetPlaceStatistics(int placeId, DateTime beginDate, DateTime endDate);
     }
 }
