@@ -277,7 +277,7 @@
             lodop.ADD_PRINT_LINE("68.33mm", "24.77mm", "68.33mm", "119.76mm", 0, 1);
             lodop.ADD_PRINT_TEXT("6.56mm", "22.75mm", "24.45mm", "6.01mm", data.secretLevel);
             lodop.SET_PRINT_STYLEA(0, "FontSize", 16);
-            lodop.ADD_PRINT_TEXT("6.56mm", "46.67mm", "74.89mm", "6.01mm", "信封号：" + data.barcodeNo.substring(15, 22));
+            lodop.ADD_PRINT_TEXT("6.56mm", "46.67mm", "74.89mm", "6.01mm", "信封号：" + data.letterNo);
             lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
             lodop.ADD_PRINT_TEXT("13.86mm", "22.86mm", "44.6mm", "6.01mm", "缓急：" + data.urgencyLevel);
             lodop.SET_PRINT_STYLEA(0, "FontSize", 14);

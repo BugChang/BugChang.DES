@@ -7,6 +7,11 @@
         /// </summary>
         public string BarcodeNo { get; set; }
 
+        /// <summary>
+        /// 信封号
+        /// </summary>
+        public string LetterNo { get; set; }
+
         public string OldBarcodeNo { get; set; }
 
         /// <summary>
