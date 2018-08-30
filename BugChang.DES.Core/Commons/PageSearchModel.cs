@@ -18,15 +18,17 @@ namespace BugChang.DES.Core.Commons
         public int UserId { get; set; }
         public int DepartmentId { get; set; }
         public int? ParentId { get; set; }
+
+        public int PlaceId { get; set; }
     }
 
-    public class PageSearchDetailModel : PageSearchModelBase
+    public class PageSearchDetailModel : PageSearchCommonModel
     {
         public DateTime? BeginTime { get; set; }
 
         public DateTime? EndTime { get; set; }
 
-        public void SetTimeValue(string beginTime,string endTime)
+        public void SetTimeValue(string beginTime, string endTime)
         {
             if (string.IsNullOrWhiteSpace(beginTime))
             {

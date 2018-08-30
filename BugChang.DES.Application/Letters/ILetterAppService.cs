@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using BugChang.DES.Application.Bills.Dtos;
 using BugChang.DES.Application.Letters.Dtos;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Channel;
@@ -55,5 +55,15 @@ namespace BugChang.DES.Application.Letters
         Task<SortingListDto> GetSortingList(int listId);
 
         Task<PageResultModel<SortingListDto>> GetSortingLists(PageSearchCommonModel pageSearch);
+
+        Task<ResultEntity> GetCheckInfo(int userId, int placeId, DateTime beginTime, DateTime endTime);
+
+        Task<PageResultModel<LetterCheckListDto>> GetCheckLetters(PageSearchDetailModel pageSearch);
+
+        Task<PageResultModel<LetterReceiveListDto>> Out2InsideLetters(PageSearchCommonModel pageSearch);
+
+        Task<DepartmentStatisticsDto> GetDepartmentStatistics(int departmentId, DateTime beginDate, DateTime endDate);
+
+        Task<PlaceStatisticsDto> GetPlaceStatistics(int placeId, DateTime beginDate, DateTime endDate);
     }
 }

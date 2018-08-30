@@ -9,6 +9,7 @@ using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.Channel;
+using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.SerialNumbers;
@@ -35,10 +36,12 @@ namespace BugChang.DES.Application.Letters
         private readonly ISortingListRepository _sortingListRepository;
         private readonly ISortingListDetailRepository _sortingListDetailRepository;
         private readonly BoxManager _boxManager;
+        private readonly IPlaceRepository _placeRepository;
+        private readonly IPlaceWardenRepository _placeWardenRepository;
         private readonly UnitOfWork _unitOfWork;
         private readonly IOptions<CommonSettings> _commonSettings;
 
-        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository, ICancelLetterRepository cancelLetterRepository, BoxManager boxManager, ISortingListDetailRepository sortingListDetailRepository, ISortingListRepository sortingListRepository, ISortingRepository sortingRepository)
+        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository, ICancelLetterRepository cancelLetterRepository, BoxManager boxManager, ISortingListDetailRepository sortingListDetailRepository, ISortingListRepository sortingListRepository, ISortingRepository sortingRepository, IPlaceRepository placeRepository, IPlaceWardenRepository placeWardenRepository)
         {
             _departmentManager = departmentManager;
             _serialNumberManager = serialNumberManager;
@@ -54,6 +57,8 @@ namespace BugChang.DES.Application.Letters
             _sortingListDetailRepository = sortingListDetailRepository;
             _sortingListRepository = sortingListRepository;
             _sortingRepository = sortingRepository;
+            _placeRepository = placeRepository;
+            _placeWardenRepository = placeWardenRepository;
         }
 
         public Task<ReceiveLetterEditDto> GetReceiveLetter(int letterId)
@@ -497,5 +502,342 @@ namespace BugChang.DES.Application.Letters
             };
             return Mapper.Map<PageResultModel<SortingListDto>>(pageResult);
         }
+
+        public async Task<ResultEntity> GetCheckInfo(int userId, int placeId, DateTime beginTime, DateTime endTime)
+        {
+            var result = new ResultEntity();
+            var listInfo = new List<string>();
+            var managePlace = await _placeWardenRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == userId);
+            var place = await _placeRepository.GetQueryable().Include(a => a.Parent).FirstOrDefaultAsync(a => a.Id == placeId);
+            if (managePlace == null)
+            {
+                result.Message = "非场所管理员，无法使用此功能";
+                return result;
+            }
+
+            if (managePlace.PlaceId == placeId)
+            {
+                if (place.ParentId == null)
+                {
+                    result.Message = "使用场所错误，无法核销";
+                }
+                else
+                {
+                    var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                            a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == place.ParentId &&
+                            a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date)
+                        .ToListAsync();
+                    listInfo.Add($"场所【{place.Parent.Name}】取件【{receiveLogs.Count}】");
+                    var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                        a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == placeId &&
+                        a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date &&
+                        receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
+                    listInfo.Add($"场所【{place.Name}】投件【{sendLogs.Count}】");
+                    listInfo.Add(receiveLogs.Count == sendLogs.Count
+                        ? "成功！所有文件已成功投递"
+                        : $"警告！{receiveLogs.Count - sendLogs.Count}份文件尚未投递，请查看下方明细！");
+                }
+            }
+            else
+            {
+                var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                        a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == placeId &&
+                        a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date)
+                    .ToListAsync();
+                listInfo.Add($"场所【{place.Name}】取件【{receiveLogs.Count}】");
+                var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                    a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == place.ParentId &&
+                    a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date &&
+                    receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
+                listInfo.Add($"场所【{place.Parent.Name}】投件【{sendLogs.Count}】");
+                listInfo.Add(receiveLogs.Count == sendLogs.Count
+                    ? "成功！所有文件已成功投递"
+                    : $"警告！{receiveLogs.Count - sendLogs.Count}份文件尚未投递，请查看下方明细！");
+
+            }
+            result.Success = true;
+            result.Data = listInfo;
+            return result;
+        }
+
+        public async Task<PageResultModel<LetterCheckListDto>> GetCheckLetters(PageSearchDetailModel pageSearch)
+        {
+            List<Letter> letters;
+            var managePlace = await _placeWardenRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == pageSearch.UserId);
+            var place = await _placeRepository.GetQueryable().Include(a => a.Parent).FirstOrDefaultAsync(a => a.Id == pageSearch.PlaceId);
+
+            if (managePlace.PlaceId == pageSearch.PlaceId)
+            {
+
+                var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                        a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == place.ParentId &&
+                        a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date)
+                    .ToListAsync();
+
+                var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                    a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == pageSearch.PlaceId &&
+                    a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date &&
+                    receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
+                letters = await _letterRepository.GetQueryable()
+                    .Where(a => sendLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+            }
+            else
+            {
+                var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                        a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == pageSearch.PlaceId &&
+                        a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date)
+                    .ToListAsync();
+                var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                    a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == place.ParentId &&
+                    a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date &&
+                    receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
+                letters = await _letterRepository.GetQueryable()
+                    .Where(a => sendLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+            }
+            var pageLetters = new PageResultModel<Letter>
+            {
+                Rows = letters,
+                Total = letters.Count
+            };
+            return Mapper.Map<PageResultModel<LetterCheckListDto>>(pageLetters);
+        }
+
+        public async Task<PageResultModel<LetterReceiveListDto>> Out2InsideLetters(PageSearchCommonModel pageSearch)
+        {
+            var barcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
+                 a.OperationTime.Date == DateTime.Now.Date &&
+                 (a.DepartmentId == _commonSettings.Value.ReceiveDepartmentId ||
+                  a.DepartmentId == _commonSettings.Value.UseDepartmentId) && a.BarcodeStatus == EnumBarcodeStatus.已投递 &&
+                 a.CurrentPlaceId == _commonSettings.Value.RootPlaceId).ToListAsync();
+
+            var letters = await _letterRepository.GetQueryable()
+                .Where(a => barcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+
+            var pageResult = new PageResultModel<Letter>
+            {
+                Rows = letters,
+                Total = letters.Count
+            };
+            return Mapper.Map<PageResultModel<LetterReceiveListDto>>(pageResult);
+        }
+
+        public async Task<DepartmentStatisticsDto> GetDepartmentStatistics(int departmentId, DateTime beginDate, DateTime endDate)
+        {
+
+            var receive = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                          join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                          where barcodeLog.BarcodeStatus == EnumBarcodeStatus.已签收 &&
+                                barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                                barcodeLog.DepartmentId == departmentId
+                          select letter;
+
+            var receiveOut = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                             join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                             where barcodeLog.BarcodeStatus == EnumBarcodeStatus.已签收 &&
+                                   barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                                   barcodeLog.DepartmentId == departmentId
+                                   && letter.LetterType == EnumLetterType.收信
+                             select letter;
+
+            var send = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.BarcodeStatus == EnumBarcodeStatus.已投递 &&
+                             barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.DepartmentId == departmentId
+                       select letter;
+
+            var sendOut = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                          join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                          where barcodeLog.BarcodeStatus == EnumBarcodeStatus.已投递 &&
+                                barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                                barcodeLog.DepartmentId == departmentId
+                                && letter.LetterType == EnumLetterType.发信
+                          select letter;
+
+            var sec0 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.DepartmentId == departmentId
+                             && letter.SecretLevel == EnumSecretLevel.无
+                       select letter;
+
+            var sec1 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.DepartmentId == departmentId
+                             && letter.SecretLevel == EnumSecretLevel.秘密
+                       select letter;
+
+            var sec2 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.DepartmentId == departmentId
+                             && letter.SecretLevel == EnumSecretLevel.机密
+                       select letter;
+
+            var sec3 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.DepartmentId == departmentId
+                             && letter.SecretLevel == EnumSecretLevel.绝密
+                       select letter;
+
+            var urg0 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.DepartmentId == departmentId
+                             && letter.UrgencyLevel == EnumUrgentLevel.无
+                       select letter;
+
+            var urg1 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.DepartmentId == departmentId
+                             && letter.UrgencyLevel == EnumUrgentLevel.加急
+                       select letter;
+
+            var urg2 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.DepartmentId == departmentId
+                             && letter.UrgencyLevel == EnumUrgentLevel.特急
+                       select letter;
+
+            var urg3 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.DepartmentId == departmentId
+                             && letter.UrgencyLevel == EnumUrgentLevel.限时
+                       select letter;
+
+            var departmentStatistics = new DepartmentStatisticsDto
+            {
+                Receive = await receive.CountAsync(),
+                ReceiveOut = await receiveOut.CountAsync(),
+                Send = await send.CountAsync(),
+                SendOut = await sendOut.CountAsync(),
+                Sec0 = await sec0.CountAsync(),
+                Sec1 = await sec1.CountAsync(),
+                Sec2 = await sec2.CountAsync(),
+                Sec3 = await sec3.CountAsync(),
+                Urg0 = await urg0.CountAsync(),
+                Urg1 = await urg1.CountAsync(),
+                Urg2 = await urg2.CountAsync(),
+                Urg3 = await urg3.CountAsync()
+            };
+            return departmentStatistics;
+        }
+
+        public async Task<PlaceStatisticsDto> GetPlaceStatistics(int placeId, DateTime beginDate, DateTime endDate)
+        {
+
+            var place = await _placeRepository.GetByIdAsync(placeId);
+
+            var receive = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                          join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                          where barcodeLog.BarcodeStatus == EnumBarcodeStatus.已签收 &&
+                                barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                                barcodeLog.CurrentPlaceId == placeId
+                          select letter;
+
+            var receiveOut = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                             join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                             where barcodeLog.BarcodeStatus == EnumBarcodeStatus.已签收 &&
+                                   barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                                   barcodeLog.CurrentPlaceId == placeId
+                                   && letter.LetterType == EnumLetterType.收信
+                             select letter;
+
+            var send = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.BarcodeStatus == EnumBarcodeStatus.已投递 &&
+                             barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.CurrentPlaceId == placeId
+                       select letter;
+
+            var sendOut = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                          join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                          where barcodeLog.BarcodeStatus == EnumBarcodeStatus.已投递 &&
+                                barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                                barcodeLog.CurrentPlaceId == placeId
+                                && letter.LetterType == EnumLetterType.发信
+                          select letter;
+
+            var sec0 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.CurrentPlaceId == placeId
+                             && letter.SecretLevel == EnumSecretLevel.无
+                       select letter;
+
+            var sec1 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.CurrentPlaceId == placeId
+                             && letter.SecretLevel == EnumSecretLevel.秘密
+                       select letter;
+
+            var sec2 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.CurrentPlaceId == placeId
+                             && letter.SecretLevel == EnumSecretLevel.机密
+                       select letter;
+
+            var sec3 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.CurrentPlaceId == placeId
+                             && letter.SecretLevel == EnumSecretLevel.绝密
+                       select letter;
+
+            var urg0 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.CurrentPlaceId == placeId
+                             && letter.UrgencyLevel == EnumUrgentLevel.无
+                       select letter;
+
+            var urg1 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.CurrentPlaceId == placeId
+                             && letter.UrgencyLevel == EnumUrgentLevel.加急
+                       select letter;
+
+            var urg2 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.CurrentPlaceId == placeId
+                             && letter.UrgencyLevel == EnumUrgentLevel.特急
+                       select letter;
+
+            var urg3 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
+                             barcodeLog.CurrentPlaceId == placeId
+                             && letter.UrgencyLevel == EnumUrgentLevel.限时
+                       select letter;
+
+            var placeStatistics = new PlaceStatisticsDto
+            {
+                PlaceId = placeId,
+                PlaceName = place.Name,
+                Receive = await receive.CountAsync(),
+                ReceiveOut = await receiveOut.CountAsync(),
+                Send = await send.CountAsync(),
+                SendOut = await sendOut.CountAsync(),
+                Sec0 = await sec0.CountAsync(),
+                Sec1 = await sec1.CountAsync(),
+                Sec2 = await sec2.CountAsync(),
+                Sec3 = await sec3.CountAsync(),
+                Urg0 = await urg0.CountAsync(),
+                Urg1 = await urg1.CountAsync(),
+                Urg2 = await urg2.CountAsync(),
+                Urg3 = await urg3.CountAsync()
+            };
+            return placeStatistics;
+        }
+
     }
 }

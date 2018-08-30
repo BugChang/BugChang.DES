@@ -51,7 +51,6 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         /// </summary>
         public int CurrentPlaceId { get; set; }
 
-
         /// <summary>
         /// 备注
         /// </summary>

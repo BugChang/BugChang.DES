@@ -1,6 +1,10 @@
-﻿namespace BugChang.DES.Application.Letters.Dtos
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BugChang.DES.Application.Letters.Dtos
 {
-    public class LetterReceiveBarcodeDto
+    public class LetterCheckListDto
     {
         /// <summary>
         /// 条码号
@@ -12,20 +16,28 @@
         /// </summary>
         public string LetterNo { get; set; }
 
+        /// <summary>
+        /// 信件类型
+        /// </summary>
+        public string LetterType { get; set; }
+
+        /// <summary>
+        /// 原条码号
+        /// </summary>
         public string OldBarcodeNo { get; set; }
 
         /// <summary>
         /// 密级
         /// </summary>
-        public string SecretLevel { get; set; }
+        public int SecretLevel { get; set; }
 
         /// <summary>
         /// 紧急程度
         /// </summary>
-        public string UrgencyLevel { get; set; }
+        public int UrgencyLevel { get; set; }
 
         /// <summary>
-        /// 限时时间
+        ///限时时间
         /// </summary>
         public string UrgencyTime { get; set; }
 
@@ -35,11 +47,14 @@
         public string ReceiveDepartmentName { get; set; }
 
         /// <summary>
+        /// 收件人
+        /// </summary>
+        public string Receiver { get; set; }
+
+        /// <summary>
         /// 发件单位
         /// </summary>
         public string SendDepartmentName { get; set; }
-
-        public string OldSendDepartmentName { get; set; }
 
         /// <summary>
         /// 市机码
@@ -51,8 +66,9 @@
         /// </summary>
         public string CustomData { get; set; }
 
-        public string PrintDate { get; set; }
-
-        public string Receiver { get; set; }
+        /// <summary>
+        /// 原发单位名称
+        /// </summary>
+        public string OldSendDepartmentName { get; set; }
     }
 }

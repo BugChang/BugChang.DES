@@ -1,5 +1,173 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab_place" data-toggle="tab" id="btnPlace">按场所统计</a></li>
+        <li><a href="#tab_department" data-toggle="tab" id="btnDepartment">按部门统计</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_place">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="box-group" id="place">
+                        <div class="panel box box-info">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#place" href="#placeYear" data-id="year">
+                                        年度统计
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="placeYear" class="panel-collapse collapse">
+                                <div class="box-body">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel box box-info">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#place" href="#placeQuarter" data-id="quarter">
+                                        季度统计
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="placeQuarter" class="panel-collapse collapse">
+                                <div class="box-body">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel box box-info">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#place" href="#placeMonth" data-id="month">
+                                        月度统计
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="placeMonth" class="panel-collapse collapse">
+                                <div class="box-body">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel box box-info">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#place" href="#placeDay" data-id="day">
+                                        今日统计
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="placeDay" class="panel-collapse collapse">
+                                <div class="box-body">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel box box-info">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#place" href="#placeDiy" data-id="diy">
+                                        自定义统计
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="placeDiy" class="panel-collapse collapse">
+                                <div class="box-body">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="tab_department">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="box-group" id="department">
+                        <div class="panel box box-info">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#department" href="#departmentYear" data-id="year">
+                                        年度统计
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="departmentYear" class="panel-collapse collapse">
+                                <div class="box-body">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel box box-info">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#department" href="#departmentQuarter" data-id="quarter">
+                                        季度统计
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="departmentQuarter" class="panel-collapse collapse">
+                                <div class="box-body">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel box box-info">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#department" href="#departmentMonth" data-id="month">
+                                        月度统计
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="departmentMonth" class="panel-collapse collapse">
+                                <div class="box-body">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel box box-info">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#department" href="#departmentDay" data-id="day">
+                                        今日统计
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="departmentDay" class="panel-collapse collapse">
+                                <div class="box-body">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel box box-info">
+                            <div class="box-header with-border">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#department" href="#departmentDiy" data-id="diy">
+                                        自定义统计
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="departmentDiy" class="panel-collapse collapse">
+                                <div class="box-body">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/views-resource/letter/statistics.js" asp-append-version="true"></script>
 }

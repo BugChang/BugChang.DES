@@ -17,8 +17,8 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
     {
         private readonly IMonitorAppService _monitorAppService;
         private readonly IBoxAppService _boxAppService;
-        private readonly ILogger _logger;
-        public MonitorController(IMonitorAppService monitorAppService, IBoxAppService boxAppService, ILogger logger)
+        private readonly ILogger<MonitorController> _logger;
+        public MonitorController(IMonitorAppService monitorAppService, IBoxAppService boxAppService, ILogger<MonitorController> logger)
         {
             _monitorAppService = monitorAppService;
             _boxAppService = boxAppService;
@@ -122,8 +122,12 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
         {
             try
             {
+                var result = new CheckCardTypeModel();
                 var box = await _boxAppService.GetBoxByPlaceBn(bn, placeId);
-                var result = await _monitorAppService.CheckCardType(placeId, box.Id, cardValue);
+                if (box != null)
+                {
+                    result = await _monitorAppService.CheckCardType(placeId, box.Id, cardValue);
+                }
                 return Json(result);
             }
             catch (Exception e)
