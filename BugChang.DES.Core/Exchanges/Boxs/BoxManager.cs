@@ -84,11 +84,15 @@ namespace BugChang.DES.Core.Exchanges.Boxs
             foreach (var objectId in objectIds)
             {
                 var oldBox = await _boxObjectRepository.GetBoxByObjectId(objectId);
-                if (oldBox.Id == boxId)
+                if (oldBox!=null)
                 {
-                    result.Message = "同一个流转对象只能分配一个箱格，请检查数据";
-                    return result;
+                    if (oldBox.Id == boxId)
+                    {
+                        result.Message = "同一个流转对象只能分配一个箱格，请检查数据";
+                        return result;
+                    }
                 }
+               
                 var boxObject = new BoxObject
                 {
                     BoxId = boxId,
