@@ -42,6 +42,16 @@
                     loadDepartmentYear();
                 }
             });
+
+        $("#btnDepartment").click(function () {
+            initDepartmentSelect();
+        });
+
+        $(".department-select").on("change",
+            function () {
+                console.log($(".department-select").val());
+                $(".panel-collapse .collapse").removeClass("in");
+            });
     });
 
     function loadPlaceYear() {
@@ -152,7 +162,7 @@
 
     }
 
-
+    //日期格式化方法
     function dateFormat(date, fmt) { //author: meizz   
         var o = {
             "M+": date.getMonth() + 1,                 //月份   
@@ -171,5 +181,17 @@
                     fmt = fmt.replace(RegExp.$1,
                         (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
+    }
+
+    //加载单位下拉选择
+    function initDepartmentSelect() {
+        $.get('/Letter/GetDepartmentsForStatistics',
+            function (data) {
+                $('.department-select').select2({
+                    data: data,
+                    placeholder: '请选择机构',
+                    allowClear: false
+                });
+            });
     }
 })();

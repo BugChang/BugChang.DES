@@ -59,13 +59,17 @@ namespace BugChang.DES.Web.Mvc
                 //   .Build();
                 //config.Filters.Add(new AuthorizeFilter(policy));
             });
-
+            //Add TimedJob services
+            services.AddTimedJob();
             services.AddOptions();
             services.Configure<AccountSettings>(Configuration.GetSection("AccountSettings"));
             services.Configure<CommonSettings>(Configuration.GetSection("CommonSettings"));
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            //使用TimedJob
+            app.UseTimedJob();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

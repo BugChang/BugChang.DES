@@ -132,6 +132,12 @@ namespace BugChang.DES.Application.Letters
             return Mapper.Map<LetterReceiveBarcodeDto>(letter);
         }
 
+        public async Task<LetterSendBarcodeDto> GetSendBarcode(int letterId)
+        {
+            var letter = await _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment).SingleOrDefaultAsync(a => a.Id == letterId);
+            return Mapper.Map<LetterSendBarcodeDto>(letter);
+        }
+
         public async Task<PageResultModel<LetterReceiveListDto>> GetReceiveLetters(LetterPageSerchModel pageSearchModel)
         {
             PageResultModel<Letter> letters;

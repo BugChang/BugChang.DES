@@ -283,7 +283,7 @@
             lodop.ADD_PRINT_TEXT("68mm", "30mm", "48.1mm", "4.68mm", data.sendDepartmentName);
             lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
             lodop.SET_PRINT_STYLEA(0, "Bold", 1);
-            lodop.ADD_PRINT_TEXT("68mm", "81.86mm", "44.13mm", "4.68mm", data.CreateTime);
+            lodop.ADD_PRINT_TEXT("68mm", "81.86mm", "44.13mm", "4.68mm", data.printDate);
             lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
             lodop.SET_PRINT_STYLEA(0, "Alignment", 3);
             lodop.PRINT_DESIGN();

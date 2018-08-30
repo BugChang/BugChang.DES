@@ -1,6 +1,10 @@
-﻿namespace BugChang.DES.Application.Letters.Dtos
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BugChang.DES.Application.Letters.Dtos
 {
-    public class LetterReceiveBarcodeDto
+    public class LetterSendBarcodeDto
     {
         /// <summary>
         /// 条码号
@@ -11,11 +15,6 @@
         /// 信封号
         /// </summary>
         public string LetterNo { get; set; }
-
-        /// <summary>
-        /// 原始条码号
-        /// </summary>
-        public string OldBarcodeNo { get; set; }
 
         /// <summary>
         /// 密级
@@ -42,17 +41,6 @@
         /// </summary>
         public string SendDepartmentName { get; set; }
 
-        public string OldSendDepartmentName { get; set; }
-
-        /// <summary>
-        /// 市机码
-        /// </summary>
-        public string ShiJiCode { get; set; }
-
-        /// <summary>
-        /// 附加数据
-        /// </summary>
-        public string CustomData { get; set; }
 
         /// <summary>
         /// 打印日期
@@ -63,5 +51,16 @@
         /// 收件人
         /// </summary>
         public string Receiver { get; set; }
+
+        /// <summary>
+        /// 地址
+        /// </summary>
+        public string Address { get; set; }
+
+
+        /// <summary>
+        /// 箱号
+        /// </summary>
+        public string BoxNo { get; set; }
     }
 }

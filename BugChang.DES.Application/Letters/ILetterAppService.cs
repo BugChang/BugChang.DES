@@ -20,6 +20,8 @@ namespace BugChang.DES.Application.Letters
 
         Task<LetterReceiveBarcodeDto> GetReceiveBarcode(int letterId);
 
+        Task<LetterSendBarcodeDto> GetSendBarcode(int letterId);
+
         Task<PageResultModel<LetterReceiveListDto>> GetReceiveLetters(LetterPageSerchModel pageSearchModel);
 
         Task<ResultEntity> AddSendLetter(LetterSendEditDto sendLetter);

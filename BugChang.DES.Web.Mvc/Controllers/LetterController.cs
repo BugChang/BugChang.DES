@@ -225,6 +225,12 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(json);
         }
 
+        public async Task<IActionResult> GetSendBarcode(int id)
+        {
+            var letter = await _letterAppService.GetReceiveBarcode(id);
+            return Json(letter);
+        }
+
         #endregion
 
         #region 异形件
@@ -390,6 +396,17 @@ namespace BugChang.DES.Web.Mvc.Controllers
             }
 
             return PartialView("_StatisticsPlace", statisticsPlaces);
+        }
+
+        public async Task<IActionResult> GetDepartmentsForStatistics()
+        {
+            var departments = await _departmentAppService.GetAllAsync();
+            var json = departments.Select(a => new SelectViewModel
+            {
+                Id = a.Id,
+                Text = a.FullName
+            });
+            return Json(json);
         }
 
         #endregion

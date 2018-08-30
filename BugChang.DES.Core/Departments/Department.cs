@@ -28,6 +28,10 @@ namespace BugChang.DES.Core.Departments
         public string Code { get; set; }
 
         /// <summary>
+        /// 完整代码
+        /// </summary>
+        public string FullCode { get; set; }
+        /// <summary>
         /// 默认收件渠道
         /// </summary>
         public EnumChannel ReceiveChannel { get; set; }
@@ -70,6 +74,12 @@ namespace BugChang.DES.Core.Departments
                 return parentDepartment.FullName + Name;
             }
             return Name;
+        }
+
+
+        public string SetFullCode(Department parentDepartment)
+        {
+            return parentDepartment.FullCode + Code;
         }
     }
 }

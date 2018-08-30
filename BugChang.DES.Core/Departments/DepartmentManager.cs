@@ -49,6 +49,7 @@ namespace BugChang.DES.Core.Departments
                 {
                     var parentDepartment = await _departmentRepository.GetByIdAsync(department.ParentId.Value);
                     department.FullName = department.SetFullName(parentDepartment);
+                    department.FullName = department.SetFullCode(parentDepartment);
                 }
                 else
                 {
