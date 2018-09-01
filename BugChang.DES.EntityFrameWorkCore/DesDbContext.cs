@@ -5,6 +5,7 @@ using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.BackUps;
 using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
@@ -84,6 +85,6 @@ namespace BugChang.DES.EntityFrameWorkCore
         public DbSet<Client> Clients { get; set; }
         public DbSet<BackLetter> BackLetters { get; set; }
         public DbSet<CancelLetter> CancelLetters { get; set; }
-
+        public DbSet<DataBaseBackUp> DataBaseBackUps { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BugChang.DES.Application.Accounts;
+using BugChang.DES.Application.BackUps;
 using BugChang.DES.Application.Barcodes;
 using BugChang.DES.Application.Bills;
 using BugChang.DES.Application.Boxs;
@@ -25,6 +26,7 @@ using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Operations;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.BackUps;
 using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
@@ -91,6 +93,8 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IHardWareAppService, HardWareAppService>();
             services.AddScoped<IClientAppService, ClientAppService>();
             services.AddScoped<IBillAppService, BillAppService>();
+            services.AddScoped<IBackUpAppService, BackUpAppService>();
+            
 
             #endregion
 
@@ -153,6 +157,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<ISortingRepository, SortingRepository>();
             services.AddScoped<ISortingListRepository, SortingListRepository>();
             services.AddScoped<ISortingListDetailRepository, SortingListDetailRepository>();
+            services.AddScoped<IBackUpRepository, BackUpRepository>();
 
             #endregion
 

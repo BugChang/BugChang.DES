@@ -1,6 +1,7 @@
 ﻿using System;
 using BugChang.DES.Application.Commons;
 using BugChang.DES.Core.Authentication;
+using BugChang.DES.Core.BackUps;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.EntityFrameWorkCore;
 using BugChang.DES.Web.Mvc.Handler;
@@ -64,6 +65,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddOptions();
             services.Configure<AccountSettings>(Configuration.GetSection("AccountSettings"));
             services.Configure<CommonSettings>(Configuration.GetSection("CommonSettings"));
+            services.Configure<BackUpSettings>(Configuration.GetSection("BackUpSettings"));
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {

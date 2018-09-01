@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using BugChang.DES.Application.BackUps.Dtos;
 using BugChang.DES.Application.Boxs.Dtos;
 using BugChang.DES.Application.Cards.Dtos;
 using BugChang.DES.Application.Clients.Dtos;
@@ -18,6 +19,7 @@ using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Roles;
 using BugChang.DES.Core.Authorization.Users;
+using BugChang.DES.Core.BackUps;
 using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
@@ -267,6 +269,13 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
                     .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
                     .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+
+                #endregion
+
+                #region BackUp
+
+                cfg.CreateMap<DataBaseBackUp, BackUpListDto>();
+                cfg.CreateMap<BackUpEditDto, DataBaseBackUp>();
 
                 #endregion
             });

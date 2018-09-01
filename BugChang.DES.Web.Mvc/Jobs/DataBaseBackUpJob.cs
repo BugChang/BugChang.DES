@@ -2,13 +2,19 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using BugChang.DES.Core.BackUps;
+using Microsoft.Extensions.Options;
 using Pomelo.AspNetCore.TimedJob;
 
 namespace BugChang.DES.Web.Mvc.Jobs
 {
     public class DataBaseBackUpJob : Job
     {
-
+        private readonly IOptions<BackUpSettings> _backUpSettings;
+        public DataBaseBackUpJob(IOptions<BackUpSettings> backUpSettings)
+        {
+            _backUpSettings = backUpSettings;
+        }
 
         // Begin 起始时间；Interval执行时间间隔，单位是毫秒，建议使用以下格式，此处为3小时；
         //SkipWhileExecuting是否等待上一个执行完成，true为等待；
@@ -16,8 +22,14 @@ namespace BugChang.DES.Web.Mvc.Jobs
         public void Run()
         {
             //Job要执行的逻辑代码
-            //查找指定目录下的备份文件
+            //备份数据库
+            var fileName = DateTime.Now.ToString("yyyyMMddHHmm");
+            RunCmd(string.Format(_backUpSettings.Value.BackUpScript, _backUpSettings.Value.BackUpPath + "//Auto//", fileName));
+
             //获取备份文件的MD5并存入数据库
+            var fileFullName = _backUpSettings.Value.BackUpPath + "//Auto//bugchang.des_" + fileName + ".sql";
+            var fileMd5 = GetMd5HashFromFile(fileFullName);
+
             //将文件重命名并移动至归档备份
         }
 
@@ -69,13 +81,5 @@ namespace BugChang.DES.Web.Mvc.Jobs
             return strOuput;
         }
 
-        private static string CreateBackUpCmd(string dumpPath, string backupPath, string rootPassword)
-        {
-            var cmdBuilder = new StringBuilder();
-            cmdBuilder.AppendLine("@echo off");
-            cmdBuilder.AppendFormat(@"set ""Ymd=%date:~,4 %%date:~5,2%%date:~8,2% "" {0}--opt -u root--password={2} bugchang.des >{1}/bugchang.des_%Ymd%.sql", dumpPath, backupPath, rootPassword);
-            cmdBuilder.AppendLine("@echo on");
-            return cmdBuilder.ToString();
-        }
     }
 }
