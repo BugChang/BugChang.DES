@@ -4,6 +4,8 @@ namespace BugChang.DES.Application.BackUps.Dtos
 {
     public class BackUpListDto
     {
+
+        public int Id { get; set; }
         /// <summary>
         /// 文件名
         /// </summary>
@@ -28,5 +30,7 @@ namespace BugChang.DES.Application.BackUps.Dtos
         /// 类型：1自动，2手动
         /// </summary>
         public int Type { get; set; }
+
+        public string Remark { get; set; }
     }
 }

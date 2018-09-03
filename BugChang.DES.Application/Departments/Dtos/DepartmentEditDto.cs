@@ -17,6 +17,8 @@ namespace BugChang.DES.Application.Departments.Dtos
         [StringLength(3, ErrorMessage = "机构代码长度必须是3位")]
         public string Code { get; set; }
 
+        public string FullCode { get; set; }
+
         public int ReceiveChannel { get; set; }
 
         public int? ParentId { get; set; }

@@ -30,5 +30,10 @@ namespace BugChang.DES.Application.BackUps.Dtos
         /// 类型：1自动，2手动
         /// </summary>
         public int Type { get; set; }
+
+        /// <summary>
+        /// 备份说明
+        /// </summary>
+        public string Remark { get; set; }
     }
 }

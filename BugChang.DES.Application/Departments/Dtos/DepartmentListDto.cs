@@ -11,6 +11,8 @@ namespace BugChang.DES.Application.Departments.Dtos
 
         public string Code { get; set; }
 
+        public string FullCode { get; set; }
+
         public int? ParentId { get; set; }
 
         public bool IsDeleted { get; set; }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Barcodes.Dtos;
 using BugChang.DES.Core.Exchanges.Barcodes;
+using BugChang.DES.Core.SecretLevels;
+using BugChang.DES.Core.UrgentLevels;
 
 namespace BugChang.DES.Application.Barcodes
 {
@@ -31,9 +33,18 @@ namespace BugChang.DES.Application.Barcodes
             return barcodeTypeList;
         }
 
-        public async Task<string> MakeBarcodeNo(int recDepartmentId, int sendDepartmentId)
+        public string MakeBarcodeLength33(string sendDepartmentCode, string receiveDepartmentCode, EnumSecretLevel secretLevel,
+             EnumUrgentLevel urgentLevel, int serialNo)
         {
-            return await _barcodeManager.MakeInsideBarcode(recDepartmentId, sendDepartmentId);
+            return _barcodeManager.MakeBarcodeLength33(sendDepartmentCode, receiveDepartmentCode, secretLevel,
+                urgentLevel, serialNo);
+        }
+
+        public string MakeBarcodeLength26(string sendDepartmentCode, string receiveDepartmentCode,
+            EnumSecretLevel secretLevel, EnumUrgentLevel urgentLevel, int serialNo)
+        {
+            return _barcodeManager.MakeBarcodeLength26(sendDepartmentCode, receiveDepartmentCode, secretLevel,
+                urgentLevel, serialNo);
         }
     }
 }

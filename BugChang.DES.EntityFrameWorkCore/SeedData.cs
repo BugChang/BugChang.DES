@@ -19,7 +19,7 @@ namespace BugChang.DES.EntityFrameWorkCore
                 var dbContext = serviceScope.ServiceProvider.GetService<DesDbContext>();
 
 
-                dbContext.Database.EnsureDeleted();
+               //dbContext.Database.EnsureDeleted();
 
                 dbContext.Database.EnsureCreated();
 
@@ -184,6 +184,11 @@ namespace BugChang.DES.EntityFrameWorkCore
                                 Name = "硬件设置",
                                 Url = "/HardWare/Index"
                             }
+                            ,new Menu
+                            {
+                                Name = "数据库备份",
+                                Url = "/BackUp/Index"
+                            }
 
                         }
                     };
@@ -277,6 +282,11 @@ namespace BugChang.DES.EntityFrameWorkCore
                             {
                                 Name = "信件统计",
                                 Url = "/Letter/Statistics"
+                            },
+                            new Menu
+                            {
+                                Name = "外收转内发查询",
+                                Url = "/Letter/Out2Inside"
                             },
                         }
                     };

@@ -274,7 +274,8 @@ namespace BugChang.DES.Application.Commons
 
                 #region BackUp
 
-                cfg.CreateMap<DataBaseBackUp, BackUpListDto>();
+                cfg.CreateMap<DataBaseBackUp, BackUpListDto>()
+                    .ForMember(a => a.FileName, b => b.MapFrom(c => c.FileName.Substring(c.FileName.LastIndexOf('\\') + 1)));
                 cfg.CreateMap<BackUpEditDto, DataBaseBackUp>();
 
                 #endregion

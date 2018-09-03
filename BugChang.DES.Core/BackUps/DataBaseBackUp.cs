@@ -30,6 +30,10 @@ namespace BugChang.DES.Core.BackUps
         /// </summary>
         public int Type { get; set; }
 
+        /// <summary>
+        /// 备份说明
+        /// </summary>
+        public string Remark { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

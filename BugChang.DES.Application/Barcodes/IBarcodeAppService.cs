@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Barcodes.Dtos;
+using BugChang.DES.Core.SecretLevels;
+using BugChang.DES.Core.UrgentLevels;
 
 namespace BugChang.DES.Application.Barcodes
 {
@@ -8,6 +10,11 @@ namespace BugChang.DES.Application.Barcodes
     {
         IList<BarcodeTypeListDto> GetBarcodeTypes();
 
-        Task<string> MakeBarcodeNo(int recDepartmentId, int sendDepartmentId);
+        string MakeBarcodeLength33(string sendDepartmentCode, string receiveDepartmentCode, EnumSecretLevel secretLevel,
+            EnumUrgentLevel urgentLevel, int serialNo);
+
+        string MakeBarcodeLength26(string sendDepartmentCode, string receiveDepartmentCode,
+           EnumSecretLevel secretLevel,
+           EnumUrgentLevel urgentLevel, int serialNo);
     }
 }

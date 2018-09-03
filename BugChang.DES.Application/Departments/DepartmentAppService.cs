@@ -6,6 +6,7 @@ using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace BugChang.DES.Application.Departments
@@ -81,6 +82,12 @@ namespace BugChang.DES.Application.Departments
         {
             var departments = await _departmentManager.GetAllAsync();
             return Mapper.Map<IList<DepartmentListDto>>(departments);
+        }
+
+        public async Task<DepartmentEditDto> GetDepartmentByCode(string code)
+        {
+            var department = await _departmentRepository.GetQueryable().FirstOrDefaultAsync(a => a.Code == code);
+            return Mapper.Map<DepartmentEditDto>(department);
         }
 
         /// <summary>

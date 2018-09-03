@@ -11,5 +11,7 @@ namespace BugChang.DES.Application.Departments
 
         Task<IList<DepartmentListDto>> GetAllAsync();
 
+        Task<DepartmentEditDto> GetDepartmentByCode(string code);
+
     }
 }
