@@ -68,6 +68,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
             {
                 return Json(new ResultEntity { Message = "请求数据有误，修改数据空主键" });
             }
+
+            if ("sysadmin,secadmin,audadmin".Contains(user.UserName))
+            {
+                return Json(new ResultEntity { Message = "系统预设角色不允许更改" });
+            }
             return await CreateOrUpdate(user);
         }
 

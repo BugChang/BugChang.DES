@@ -86,6 +86,11 @@ namespace BugChang.DES.Application.Users
         {
             var result = new ResultEntity();
             var user = await _userRepository.GetByIdAsync(userId);
+            if ("sysadmin,secadmin,audadmin".Contains(user.UserName))
+            {
+                result.Message = "系统预设角色，不允许此操作";
+                return result;
+            }
             user.Enabled = !user.Enabled;
             result.Success = true;
             await _unitOfWork.CommitAsync();

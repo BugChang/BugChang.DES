@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Commons;
@@ -25,6 +22,11 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
                 query = query.Where(a =>
                     a.Number.Contains(pageSearchModel.Keywords) || a.Value.Contains(pageSearchModel.Keywords) ||
                     a.User.DisplayName.Contains(pageSearchModel.Keywords));
+            }
+
+            if (pageSearchModel.ParentId != null)
+            {
+                query = query.Where(a => a.User.DepartmentId == pageSearchModel.DepartmentId);
             }
             return new PageResultModel<Card>
             {

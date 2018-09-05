@@ -86,7 +86,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
             {
                 Keywords = keywords,
                 Take = length,
-                Skip = start
+                Skip = start,
+                UserId = CurrentUser.UserId
             };
             var pagereslut = await _cardAppService.GetPagingAysnc(pageSearchDto);
             var json = new

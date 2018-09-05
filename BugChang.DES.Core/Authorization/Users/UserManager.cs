@@ -71,6 +71,11 @@ namespace BugChang.DES.Core.Authorization.Users
         {
             var result = new ResultEntity();
             var user = await _userRepository.GetByIdAsync(userId);
+            if ("sysadmin,secadmin,audadmin".Contains(user.UserName))
+            {
+                result.Message = "系统预设角色，不允许删除";
+                return result;
+            }
             user.IsDeleted = true;
             result.Success = true;
             return result;
@@ -84,6 +89,12 @@ namespace BugChang.DES.Core.Authorization.Users
         public async Task<ResultEntity> AddUserRole(UserRole userRole)
         {
             var resultEntity = new ResultEntity();
+            var user = await _userRepository.GetByIdAsync(userRole.UserId);
+            if (user != null && "sysadmin,secadmin,audadmin".Contains(user.UserName))
+            {
+                resultEntity.Message = "系统预设角色，不允许此操作";
+                return resultEntity;
+            }
             if (await ExistUserRole(userRole))
             {
                 resultEntity.Message = "已经存在的角色，请勿重复添加！";
@@ -100,6 +111,12 @@ namespace BugChang.DES.Core.Authorization.Users
         public async Task<ResultEntity> DeleteUserRole(UserRole userRole)
         {
             var resultEntity = new ResultEntity();
+            var user = await _userRepository.GetByIdAsync(userRole.UserId);
+            if (user != null && "sysadmin,secadmin,audadmin".Contains(user.UserName))
+            {
+                resultEntity.Message = "系统预设角色，不允许此操作";
+                return resultEntity;
+            }
             var dataBaseUserRole = await _userRoleRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == userRole.UserId && a.RoleId == userRole.RoleId);
             if (dataBaseUserRole == null)
             {

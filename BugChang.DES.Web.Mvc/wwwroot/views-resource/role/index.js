@@ -61,13 +61,6 @@
                 editOperation(roleId);
             });
 
-        $('table').delegate('.edit-data',
-            'click',
-            function () {
-                var roleId = $(this).attr('data-role-id');
-                editData(roleId);
-            });
-
         $('table').delegate('.delete-role',
             'click',
             function () {
@@ -138,9 +131,6 @@
                         if (Common.hasOperation('Role.AssignmentsOperations')) {
                             strHtml += '<button class="btn btn-primary btn-xs edit-operation" data-role-id=' + row.id + '>操作权限</button>&nbsp;';
                         }
-                        if (Common.hasOperation('Role.DataPermissions')) {
-                            strHtml += '<button class="btn btn-primary btn-xs edit-data" data-role-id=' + row.id + '>数据权限</button>&nbsp;';
-                        }
                         if (Common.hasOperation('Role.Edit')) {
                             strHtml += '<button class="btn btn-info btn-xs edit-role" data-role-id=' + row.id + '>修改</button>&nbsp;';
                         }
@@ -209,12 +199,6 @@
             keyboard: false,
             show: true
         });
-    }
-
-    //数据权限分配
-    function editData(roleId) {
-        window.swal('信息', '此功能尚未开发完成，请耐心等待！', 'info');
-
     }
 
     //清空表单

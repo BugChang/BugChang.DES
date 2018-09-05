@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BugChang.DES.Application.Cards.Dtos;
+using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Authentication.Card;
+using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
 using Microsoft.EntityFrameworkCore;
@@ -16,13 +20,19 @@ namespace BugChang.DES.Application.Cards
         private readonly CardManager _cardManager;
         private readonly LogManager _logManager;
         private readonly ICardRepository _cardRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IPlaceWardenRepository _placeWardenRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
         private readonly UnitOfWork _unitOfWork;
-        public CardAppService(CardManager cardManager, LogManager logManager, ICardRepository cardRepository, UnitOfWork unitOfWork)
+        public CardAppService(CardManager cardManager, LogManager logManager, ICardRepository cardRepository, UnitOfWork unitOfWork, IPlaceWardenRepository placeWardenRepository, IUserRepository userRepository, IUserRoleRepository userRoleRepository)
         {
             _cardManager = cardManager;
             _logManager = logManager;
             _cardRepository = cardRepository;
             _unitOfWork = unitOfWork;
+            _placeWardenRepository = placeWardenRepository;
+            _userRepository = userRepository;
+            _userRoleRepository = userRoleRepository;
         }
 
         public async Task<ResultEntity> AddOrUpdateAsync(CardEditDto editDto)
@@ -68,6 +78,21 @@ namespace BugChang.DES.Application.Cards
 
         public async Task<PageResultModel<CardListDto>> GetPagingAysnc(PageSearchCommonModel pageSearchDto)
         {
+            var user = await _userRepository.GetByIdAsync(pageSearchDto.UserId);
+
+            if (!"sysadmin,secadmin,audadmin".Contains(user.UserName))
+            {
+                var placeWarden = await _placeWardenRepository.GetQueryable().Include(a => a.Place).Where(a => a.UserId == pageSearchDto.UserId)
+                    .FirstOrDefaultAsync();
+                if (placeWarden != null)
+                {
+                    pageSearchDto.DepartmentId = placeWarden.Place.DepartmentId;
+                }
+                else
+                {
+                    return new PageResultModel<CardListDto>();
+                }
+            }
             var cards = await _cardRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<CardListDto>>(cards);
         }
