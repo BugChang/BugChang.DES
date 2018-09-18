@@ -33,5 +33,10 @@
         /// 读卡单位
         /// </summary>
         public string ReadCardDepartmentCode { get; set; }
+
+        /// <summary>
+        /// Referer
+        /// </summary>
+        public string Referer { get; set; }
     }
 }

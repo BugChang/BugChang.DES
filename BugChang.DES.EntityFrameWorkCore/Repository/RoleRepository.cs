@@ -57,7 +57,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             var pageResult = new PageResultModel<Role>()
             {
                 Total = await query.CountAsync(),
-                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync()
+                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync()
             };
             return pageResult;
         }

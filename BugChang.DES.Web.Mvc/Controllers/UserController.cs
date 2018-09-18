@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using BugChang.DES.Application.Commons;
 using BugChang.DES.Application.Departments;
 using BugChang.DES.Application.Roles;
 using BugChang.DES.Application.Users;
@@ -14,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
+    [ServiceFilter(typeof(RefererFilter))]
     public class UserController : BaseController
     {
         private readonly IUserAppService _userAppService;

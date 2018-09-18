@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
+
+    [ServiceFilter(typeof(RefererFilter))]
     public class BoxController : BaseController
     {
         private readonly IPlaceAppService _placeAppService;

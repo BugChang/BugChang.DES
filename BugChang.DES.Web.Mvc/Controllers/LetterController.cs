@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
+    [ServiceFilter(typeof(RefererFilter))]
     public class LetterController : BaseController
     {
         private readonly ILetterAppService _letterAppService;

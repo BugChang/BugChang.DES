@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using BugChang.DES.Application.HardWares;
 using BugChang.DES.Application.HardWares.Dtos;
 using BugChang.DES.Core.HardWares;
+using BugChang.DES.Web.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
+    [ServiceFilter(typeof(RefererFilter))]
     public class HardWareController : BaseController
     {
         private readonly IHardWareAppService _hardWareAppService;

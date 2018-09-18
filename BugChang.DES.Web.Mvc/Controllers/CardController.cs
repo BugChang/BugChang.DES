@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
+    [ServiceFilter(typeof(RefererFilter))]
     public class CardController : BaseController
     {
         private readonly ICardAppService _cardAppService;
@@ -122,7 +123,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         [HttpPost]
         [TypeFilter(typeof(OperationFilter),
-            Arguments = new object[] { "Card.ChangeEnabled" })]
+            Arguments = new object[] { "Card.Enabled" })]
         public async Task<IActionResult> ChangeEnabled(int id)
         {
             var result = await _cardAppService.ChangeEnabled(id, CurrentUser.UserId);

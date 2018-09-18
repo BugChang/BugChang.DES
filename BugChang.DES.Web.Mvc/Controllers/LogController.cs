@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using BugChang.DES.Application.Logs;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Web.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
+    [ServiceFilter(typeof(RefererFilter))]
     public class LogController : BaseController
     {
 

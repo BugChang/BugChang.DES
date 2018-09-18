@@ -40,10 +40,16 @@
 
     //初始化操作列表
     function initOperations(module) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             async: false,
+            cache: false,
             data: { module: module },
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
             url: "/Role/GetRoleOperations",
             success: function (result) {
                 operationCodes = result;

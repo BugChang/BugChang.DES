@@ -30,7 +30,7 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             @*不影响排版，最多支持三级菜单*@
-            @foreach (var menu in Model.Menus)
+            @foreach (var menu in Model.Menus.Where(a => a.ParentId == null))
             {
                 if (menu.Items.Count > 0)
                 {

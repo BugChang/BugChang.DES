@@ -73,6 +73,7 @@
                 <section class="content">
                     @await RenderSectionAsync("tips", false)
                     <!-- Default box -->
+                    @Html.AntiForgeryToken()
                     @RenderBody()
                     <!-- /.box -->
                 </section>
@@ -105,6 +106,7 @@
     <script src="~/lib/select2/js/i18n/zh-CN.js"></script>
     <script src="~/lib/zTree/js/jquery.ztree.all.min.js"></script>
     <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="~/lib/jquery/jquery.cookie.js"></script>
     <script src="~/js/common.js" asp-append-version="true"></script>
     @await RenderSectionAsync("scripts", false)
 </body>

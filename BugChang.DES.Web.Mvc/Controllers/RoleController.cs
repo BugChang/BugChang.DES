@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
+    [ServiceFilter(typeof(RefererFilter))]
     public class RoleController : BaseController
     {
         private readonly IRoleAppService _roleAppService;
@@ -134,7 +135,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(treedata);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> GetTreeForRoleOperation(int id)
         {
             var roleMenus = await _menuAppService.GetAllByRoleIdAsync(id);
@@ -149,7 +150,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(treedata);
         }
 
-
+        [HttpGet]
         public IActionResult GetOperationsByUrl(string url, int roleId)
         {
             var operations = _operationAppService.GetOperationsByUrl(url, out string module);
@@ -179,8 +180,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return Json(result);
         }
 
-
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetRoleOperations(string module)
         {
             var roles = HttpContext.User.FindAll("RoleId").ToList();

@@ -2,7 +2,7 @@
 
 namespace BugChang.DES.Core.Departments
 {
-    public class DepartmentOperations : IOperations
+    public class CardOperations : IOperations
     {
         public const string Module = "Department";
 

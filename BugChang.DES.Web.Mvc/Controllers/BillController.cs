@@ -12,12 +12,14 @@ using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Bill;
 using BugChang.DES.Core.Exchanges.Channel;
+using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Bill;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
+    [ServiceFilter(typeof(RefererFilter))]
     public class BillController : BaseController
     {
         private readonly IClientAppService _clientAppService;

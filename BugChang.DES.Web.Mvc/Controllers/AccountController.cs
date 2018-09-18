@@ -56,7 +56,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             {
                 var usbKeyNo = Request.Cookies["KOAL_CERT_CN"]?.Trim();
                 usbKeyNo = usbKeyNo ?? "";
-                var loginResult = await _accountAppService.LoginAsync(model.UserName, HashHelper.Md5(model.Password), usbKeyNo);
+                var loginResult = await _accountAppService.LoginAsync(model.UserName, model.Password, usbKeyNo);
 
                 switch (loginResult.Result)
                 {

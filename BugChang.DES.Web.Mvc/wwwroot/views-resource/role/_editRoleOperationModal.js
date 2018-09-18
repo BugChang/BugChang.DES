@@ -33,20 +33,31 @@
 
     //初始化菜单树
     function initTree() {
-        $.get('/Role/GetTreeForRoleOperation/' + roleId,
-            function (nodes) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: null,
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Role/GetTreeForRoleOperation/" + roleId,
+            success: function (nodes) {
                 if (nodes.length === 0) {
                     $('#RoleOperationEditModal').modal('hide');
                     window.swal('警告', '没有相关数据，请先分配菜单！', 'warning');
                 } else {
                     zTreeObj = $.fn.zTree.init($('#roleOperationTree'), setting, nodes);
                 }
-            });
+            }
+        });
     }
 
     //zTree节点单击回调函数
     function zTreeBeforeClick(treeId, treeNode) {
-        $.post('/Role/GetOperationsByUrl',
+        $.get('/Role/GetOperationsByUrl',
             { url: treeNode.customData, roleId: roleId },
             function (result) {
                 $('#operationList').empty();
@@ -73,11 +84,23 @@
 
     //新增角色和操作关联
     function addRoleOperation(operationCode) {
-        $.post('/Role/AddRoleOperation', { roleId: roleId, operationCode: operationCode }, function (result) {
-            if (result.success) {
-                window.toastr.success('操作成功');
-            } else {
-                window.toastr.error(result.message);
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: { roleId: roleId, operationCode: operationCode },
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Role/AddRoleOperation",
+            success: function (result) {
+                if (result.success) {
+                    window.toastr.success('操作成功');
+                } else {
+                    window.toastr.error(result.message);
+                }
             }
         });
     }

@@ -54,7 +54,7 @@ namespace BugChang.DES.Core.Departments
                 else
                 {
                     department.FullName = department.Name;
-                    department.FullName = department.Code;
+                    department.FullCode = department.Code;
                 }
             }
 

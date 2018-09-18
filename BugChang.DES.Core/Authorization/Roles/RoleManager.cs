@@ -121,7 +121,7 @@ namespace BugChang.DES.Core.Authorization.Roles
         public IList<string> GetRoleOperationCodes(string module, List<int> lstRoleId)
         {
             var roleOperationCodes =
-                _roleOperationRepository.GetQueryable().Where(a => lstRoleId.Any(r => r == a.RoleId));
+                _roleOperationRepository.GetQueryable().Where(a => lstRoleId.Contains(a.RoleId));
             if (!string.IsNullOrWhiteSpace(module))
             {
                 roleOperationCodes = roleOperationCodes.Where(a => a.OperationCode.Contains(module));

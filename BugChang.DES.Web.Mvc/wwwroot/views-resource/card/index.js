@@ -130,7 +130,7 @@
                     targets: 4,
                     render: function (data, type, row) {
                         var strHtml = '';
-                        if (Common.hasOperation('Card.AssignPower')) {
+                        if (Common.hasOperation('Card.Enabled')) {
                             if (row.enabled) {
                                 strHtml += '<button class="btn btn-danger btn-xs change-enabled" data-card-id=' + row.id + '>禁用</button>';
                             } else {

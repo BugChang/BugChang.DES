@@ -8,6 +8,7 @@ using BugChang.DES.Web.Mvc.Handler;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -48,7 +49,9 @@ namespace BugChang.DES.Web.Mvc
             //防伪标识
             services.AddAntiforgery(options =>
             {
-                options.Cookie.Name = "BugChang.DES.Antiforgery";
+                options.Cookie.Name = "BugChang-CSRF-COOKIE";
+                options.FormFieldName = "BugChangFieldName";
+                options.HeaderName = "BugChang-CSRF-HEADER";
             });
 
             //mvc

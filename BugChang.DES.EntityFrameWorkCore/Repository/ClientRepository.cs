@@ -30,7 +30,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             }
             return new PageResultModel<Client>
             {
-                Rows = await query.Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync(),
+                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync(),
                 Total = await query.CountAsync()
             };
         }

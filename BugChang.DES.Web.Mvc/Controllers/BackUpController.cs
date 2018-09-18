@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.BackUps;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Web.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
+    [ServiceFilter(typeof(RefererFilter))]
     public class BackUpController : BaseController
     {
 

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using BugChang.DES.Core.Authentication;
+using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Options;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     [Authorize]
     public class BaseController : Controller
     {

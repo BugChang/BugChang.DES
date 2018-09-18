@@ -69,6 +69,7 @@ namespace BugChang.DES.Web.Mvc
             #endregion
 
             services.AddScoped<MenuFilter>();
+            services.AddScoped<RefererFilter>();
 
             #region AppService
 

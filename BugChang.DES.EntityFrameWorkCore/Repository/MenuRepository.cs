@@ -81,7 +81,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             var pageResultEntity = new PageResultModel<Menu>
             {
                 Total = await query.CountAsync(),
-                Rows = await query.Take(take).Skip(skip).OrderByDescending(a => a.Id).ToListAsync()
+                Rows = await query.OrderByDescending(a => a.Id).Take(take).Skip(skip).ToListAsync()
             };
 
             return pageResultEntity;

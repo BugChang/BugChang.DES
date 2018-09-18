@@ -11,6 +11,7 @@
             increaseArea: '20%' /* optional */
         });
         $('form').submit(function () {
+            $("#Password").val(hex_md5($("#Password").val()));
             $('body').loading();
         });
     });

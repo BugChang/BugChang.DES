@@ -22,9 +22,18 @@
         //监听表单提交事件
         $("#RoleMenuEditForm").submit(function (e) {
             e.preventDefault();
-            $.post('/Role/EditRoleMenu',
-                { roleId: roleId, strMenuId: getStrMenuId() },
-                function (result) {
+            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+            $.ajax({
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: { roleId: roleId, strMenuId: getStrMenuId() },
+                headers:
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
+                url: "/Role/EditRoleMenu",
+                success: function (result) {
                     if (result.success) {
                         //关闭模态
                         $("#RoleMenuEditModal").modal("hide");
@@ -34,7 +43,8 @@
                     } else {
                         window.toastr.error(result.message);
                     }
-                });
+                }
+            });
         });
     });
 

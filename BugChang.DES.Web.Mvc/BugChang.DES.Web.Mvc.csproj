@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="Views\Shared\Components\TopBar\" />
     <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\down\" />
   </ItemGroup>
 
 
