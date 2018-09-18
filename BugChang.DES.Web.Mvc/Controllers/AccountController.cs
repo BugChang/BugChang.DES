@@ -10,6 +10,7 @@ using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Tools;
+using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Account;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -148,6 +149,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
             return View(model);
         }
 
+        [ServiceFilter(typeof(RefererFilter))]
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel changePassword)
         {
