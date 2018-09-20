@@ -32,7 +32,7 @@ namespace BugChang.DES.Core.Commons
         {
             if (string.IsNullOrWhiteSpace(beginTime))
             {
-                BeginTime = null;
+                BeginTime = DateTime.Now.AddDays(-7).Date;
             }
             else
             {
@@ -41,11 +41,11 @@ namespace BugChang.DES.Core.Commons
 
             if (string.IsNullOrWhiteSpace(endTime))
             {
-                EndTime = null;
+                EndTime = DateTime.Now.AddDays(1).Date;
             }
             else
             {
-                EndTime = Convert.ToDateTime(endTime);
+                EndTime = Convert.ToDateTime(endTime).AddDays(1);
             }
 
         }

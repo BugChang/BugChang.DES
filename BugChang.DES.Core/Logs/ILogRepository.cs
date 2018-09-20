@@ -7,8 +7,8 @@ namespace BugChang.DES.Core.Logs
     {
         Task AddAsync(Log log);
 
-        Task<PageResultModel<Log>> GetSystemLogs(PageSearchCommonModel pageSearchModel);
+        Task<PageResultModel<Log>> GetSystemLogs(LogPageSerchModel pageSearchModel);
 
-        Task<PageResultModel<Log>> GetAuditLogs(PageSearchCommonModel pageSearchModel);
+        Task<PageResultModel<Log>> GetAuditLogs(LogPageSerchModel pageSearchModel);
     }
 }

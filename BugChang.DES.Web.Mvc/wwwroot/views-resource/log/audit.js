@@ -16,7 +16,16 @@
                 var rowIndex = $(this).attr('data-rowindex');
                 showData(rowIndex);
             });
+        $('.search-time').datetimepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+            autoclose: true,
+            minView: 2
+        });
 
+        $("#btnSearch").click(function () {
+            table.ajax.reload();
+        });
     });
 
     //初始化table
@@ -27,7 +36,14 @@
             serverSide: true,
             autoWith: true,
             ajax: {
-                url: '/Log/GetAuditLogs'
+                url: '/Log/GetAuditLogs',
+                data: function (d) {
+                    d.Level = $('#Level').val();
+                    d.Title = $('#Title').val();
+                    d.Content = $('#Content').val();
+                    d.BeginTime = $('#BeginTime').val();
+                    d.EndTime = $('#EndTime').val();
+                }
             },
             stateSave: true,
             columns: [
@@ -42,7 +58,7 @@
                 },
                 {
                     data: 'title',
-                    title: '姓名'
+                    title: '标题'
                 },
                 {
                     data: 'content',

@@ -21,15 +21,27 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<PageResultModel<Log>> GetSystemLogs(PageSearchCommonModel pageSearchModel)
+        public async Task<PageResultModel<Log>> GetSystemLogs(LogPageSerchModel pageSearchModel)
         {
             var query = _dbContext.Logs.Where(a => a.Type == EnumLogType.System);
-            if (!string.IsNullOrWhiteSpace(pageSearchModel.Keywords))
+            if (!string.IsNullOrWhiteSpace(pageSearchModel.Title))
             {
                 query = query.Where(a =>
-                    a.Title.Contains(pageSearchModel.Keywords) || a.Content.Contains(pageSearchModel.Keywords) ||
-                    a.Data.Contains(pageSearchModel.Keywords));
+                    a.Title.Contains(pageSearchModel.Title));
             }
+            if (!string.IsNullOrWhiteSpace(pageSearchModel.Content))
+            {
+                query = query.Where(a =>
+                    a.Title.Contains(pageSearchModel.Content));
+            }
+            if (pageSearchModel.Level != -1)
+            {
+                query = query.Where(a =>
+                    (int)a.Level == pageSearchModel.Level);
+            }
+
+            query = query.Where(a =>
+                a.CreateTime >= pageSearchModel.BeginTime && a.CreateTime <= pageSearchModel.EndTime);
             return new PageResultModel<Log>
             {
                 Total = await query.CountAsync(),
@@ -37,15 +49,27 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             };
         }
 
-        public async Task<PageResultModel<Log>> GetAuditLogs(PageSearchCommonModel pageSearchModel)
+        public async Task<PageResultModel<Log>> GetAuditLogs(LogPageSerchModel pageSearchModel)
         {
             var query = _dbContext.Logs.Include(a => a.Operator).Where(a => a.Type == EnumLogType.Audit);
-            if (!string.IsNullOrWhiteSpace(pageSearchModel.Keywords))
+            if (!string.IsNullOrWhiteSpace(pageSearchModel.Title))
             {
                 query = query.Where(a =>
-                    a.Title.Contains(pageSearchModel.Keywords) || a.Content.Contains(pageSearchModel.Keywords) ||
-                    a.Data.Contains(pageSearchModel.Keywords));
+                    a.Title.Contains(pageSearchModel.Title));
             }
+            if (!string.IsNullOrWhiteSpace(pageSearchModel.Content))
+            {
+                query = query.Where(a =>
+                    a.Title.Contains(pageSearchModel.Content));
+            }
+            if (pageSearchModel.Level != -1)
+            {
+                query = query.Where(a =>
+                    (int)a.Level == pageSearchModel.Level);
+            }
+
+            query = query.Where(a =>
+                a.CreateTime >= pageSearchModel.BeginTime && a.CreateTime <= pageSearchModel.EndTime);
             return new PageResultModel<Log>
             {
                 Total = await query.CountAsync(),

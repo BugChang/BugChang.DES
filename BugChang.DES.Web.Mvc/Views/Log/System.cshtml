@@ -1,11 +1,43 @@
-﻿<div class="box box-primary">
+﻿@section css
+    {
+    <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+}
+<div class="box box-primary">
     <div class="box-header with-border">
         <h3 class="box-title">查询条件</h3>
     </div>
     <div class="box-body">
-        <div class="table-responsive">
-           <h2>Comming Soon!</h2>
-        </div>
+        <form class="form-inline" id="searchForm" asp-action="ExportSystenLog" method="post">
+            <div class="form-group">
+                <label class="control-label">级别</label>
+                <select class="form-control" id="Level" name="Level">
+                    <option value="-1">全部</option>
+                    <option value="0">调试</option>
+                    <option value="1">信息</option>
+                    <option value="2">警告</option>
+                    <option value="3">错误</option>
+                    <option value="4">致命</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">标题</label>
+                <input type="text" class="form-control" id="Title" name="Title">
+            </div>
+            <div class="form-group">
+                <label class="control-label">内容</label>
+                <input type="text" class="form-control" id="Content" name="Content">
+            </div>
+            <div class="form-group">
+                <label>开始时间</label>
+                <input type="text" class="form-control search-time" id="BeginTime" name="BeginTime" value="@DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="form-group">
+                <label>结束时间</label>
+                <input type="text" class="form-control search-time" id="EndTime" name="EndTime" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            </div>
+            <button type="button" id="btnSearch" class="btn btn-primary">查询</button>
+            <button type="submit" class="btn btn-default">导出</button>
+        </form>
     </div>
 </div>
 <div class="box box-primary">
@@ -21,5 +53,7 @@
 
 @section scripts
     {
+    <script src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/lib/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
     <script src="~/views-resource/log/system.js" asp-append-version="true"></script>
 }
