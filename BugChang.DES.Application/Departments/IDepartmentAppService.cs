@@ -13,5 +13,7 @@ namespace BugChang.DES.Application.Departments
 
         Task<DepartmentEditDto> GetDepartmentByCode(string code);
 
+        Task<int> CheckForImport(int parentId, string code, string name);
+
     }
 }

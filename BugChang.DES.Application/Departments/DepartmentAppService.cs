@@ -100,5 +100,20 @@ namespace BugChang.DES.Application.Departments
             var pageResult = await _departmentRepository.GetPagingAysnc(pageSearchDto);
             return Mapper.Map<PageResultModel<DepartmentListDto>>(pageResult);
         }
+
+
+        /// <summary>
+        /// 校验导入
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <param name="code"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public async Task<int> CheckForImport(int parentId, string code, string name)
+        {
+            var department = await _departmentRepository.GetQueryable()
+                .FirstOrDefaultAsync(a => a.ParentId == parentId && a.Code == code && a.Name == name);
+            return department?.Id ?? 0;
+        }
     }
 }
