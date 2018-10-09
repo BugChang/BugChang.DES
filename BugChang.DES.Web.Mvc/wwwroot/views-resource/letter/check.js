@@ -16,9 +16,19 @@
         $("#CheckForm").submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-            $.post('/Letter/Check',
-                data,
-                function (result) {
+
+            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+            $.ajax({
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: data,
+                headers:
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
+                url: "/Letter/Check",
+                success: function (result) {
                     if (result.success) {
                         $("#divInfo").html("");
                         var html = '<ul>';
@@ -31,7 +41,9 @@
                     } else {
                         window.toastr.error(result.message);
                     }
-                });
+                }
+            });
+
         });
     });
 

@@ -27,15 +27,26 @@
                 window.toastr.error("请选择要退回的记录");
             } else {
                 var letterId = searchTable.rows({ selected: true }).data()[0].id;
-                $.post("/Letter/BackLetter/" + letterId,
-                    function(result) {
+                var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    data: null,
+                    headers:
+                    {
+                        "BugChang-CSRF-HEADER": token //注意header要修改
+                    },
+                    url: "/Letter/BackLetter/" + letterId,
+                    success: function (result) {
                         if (result.success) {
                             window.toastr.success("退回成功");
                             backTable.ajax.reload();
                         } else {
                             window.toastr.error(result.message);
                         }
-                    });
+                    }
+                });
             }
         });
 
@@ -76,7 +87,7 @@
     function openScanGun() {
         console.log(macAddress);
         if (macAddress !== undefined) {
-            $.post("/HardWare/GetScanGun", { deviceCode: macAddress }, function (data) {
+            $.get("/HardWare/GetScanGun", { deviceCode: macAddress }, function (data) {
                 if (data === null || data === undefined) {
                     window.toastr.error("硬件参数获取失败，请确认本机硬件参数设置是否正确！");
                 } else {

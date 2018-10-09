@@ -1,4 +1,5 @@
-﻿using BugChang.DES.Application.DashBoards;
+﻿using System;
+using BugChang.DES.Application.DashBoards;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using BugChang.DES.Core.Tools;
@@ -23,7 +24,6 @@ namespace BugChang.DES.Web.Mvc.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-          
             return View();
         }
 

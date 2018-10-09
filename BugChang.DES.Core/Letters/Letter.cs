@@ -84,6 +84,14 @@ namespace BugChang.DES.Core.Letters
 
         public string GetLetterNo(string barCodeNo)
         {
+            if (barCodeNo.Contains("(01)000001500011"))
+            {
+                //二维条码信件（AI）
+                var letterNo = barCodeNo.Substring(barCodeNo.IndexOf("(637)", StringComparison.Ordinal));
+                letterNo = letterNo.Replace("(637)", "");
+                letterNo = letterNo.Substring(0, letterNo.IndexOf('('));
+                return letterNo;
+            }
             if (barCodeNo.Length == 33)
             {
                 return barCodeNo.Substring(15, 7);
@@ -92,12 +100,19 @@ namespace BugChang.DES.Core.Letters
             {
                 return barCodeNo.Substring(8, 8);
             }
-
             return "";
         }
 
         public EnumSecretLevel GetSecretLevel(string barCode)
         {
+            if (barCode.Contains("(01)000001500011"))
+            {
+                //二维条码信件（AI）
+                var sec = barCode.Substring(barCode.IndexOf("(623)", StringComparison.Ordinal));
+                sec = sec.Replace("(623)", "");
+                sec = sec.Substring(0, sec.IndexOf('('));
+                return (EnumSecretLevel)Convert.ToInt32(sec);
+            }
             if (barCode.Length == 33)
             {
                 var sec = Convert.ToInt32(barCode.Substring(11, 1));
@@ -115,6 +130,14 @@ namespace BugChang.DES.Core.Letters
 
         public EnumUrgentLevel GetUrgencyLevel(string barCode)
         {
+            if (barCode.Contains("(01)000001500011"))
+            {
+                //二维条码信件（AI）
+                var urg = barCode.Substring(barCode.IndexOf("(624)", StringComparison.Ordinal));
+                urg = urg.Replace("(624)", "");
+                urg = urg.Substring(0, urg.IndexOf('('));
+                return (EnumUrgentLevel)Convert.ToInt32(urg);
+            }
             if (barCode.Length == 33)
             {
                 var urg = Convert.ToInt32(barCode.Substring(12, 1));
@@ -132,6 +155,14 @@ namespace BugChang.DES.Core.Letters
 
         public string GetSendCode(string barCodeNo)
         {
+            if (barCodeNo.Contains("(01)000001500011"))
+            {
+                //二维条码信件（AI）
+                var sendCode = barCodeNo.Substring(barCodeNo.IndexOf("(251)", StringComparison.Ordinal));
+                sendCode = sendCode.Replace("(251)", "");
+                sendCode = sendCode.Substring(0, sendCode.IndexOf('('));
+                return sendCode;
+            }
             if (barCodeNo.Length == 33)
             {
                 return barCodeNo.Substring(0, 11);
@@ -146,6 +177,15 @@ namespace BugChang.DES.Core.Letters
 
         public string GetReceiveCode(string barCodeNo)
         {
+            if (barCodeNo.Contains("(01)000001500011"))
+            {
+                //二维条码信件（AI）
+                var receiveCode = barCodeNo.Substring(barCodeNo.IndexOf("(628)", StringComparison.Ordinal));
+                receiveCode = receiveCode.Replace("(628)", "");
+                receiveCode = receiveCode.Substring(0, receiveCode.IndexOf('('));
+                return receiveCode;
+            }
+
             if (barCodeNo.Length == 33)
             {
                 return barCodeNo.Substring(22, 11);
@@ -166,6 +206,14 @@ namespace BugChang.DES.Core.Letters
         /// <returns></returns>
         public EnumLetterType GetSendLetterType(string sendDepartmentCode, string receiveDepartmentCode)
         {
+            if (sendDepartmentCode.Length == 15)
+            {
+                //二维条码信件（AI）
+                if (sendDepartmentCode.Substring(3, 3) == receiveDepartmentCode.Substring(3, 3))
+                {
+                    return EnumLetterType.内交换;
+                }
+            }
             if (sendDepartmentCode.Substring(0, 3) == receiveDepartmentCode.Substring(0, 3))
             {
                 return EnumLetterType.内交换;

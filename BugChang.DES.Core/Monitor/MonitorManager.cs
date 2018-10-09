@@ -65,7 +65,7 @@ namespace BugChang.DES.Core.Monitor
         {
 
             var checkBarcodeModel = new CheckBarcodeModel();
-            if (barcodeNo.Length == 33 || barcodeNo.Length == 26)
+            if (barcodeNo.Length == 33 || barcodeNo.Length == 26 || barcodeNo.Contains("(01)000001500011"))
             {
                 var barcode = await _barcodeRepository.GetByNoAsync(barcodeNo);
                 var letter = await _letterRepository.GetLetter(barcodeNo) ?? new Letter

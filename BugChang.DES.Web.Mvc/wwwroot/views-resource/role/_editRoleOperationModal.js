@@ -107,11 +107,23 @@
 
     //删除角色和操作关联
     function deleteRoleOperation(operationCode) {
-        $.post('/Role/DeleteRoleOperation', { roleId: roleId, operationCode: operationCode }, function (result) {
-            if (result.success) {
-                window.toastr.success('操作成功');
-            } else {
-                window.toastr.error(result.message);
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: { roleId: roleId, operationCode: operationCode },
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Role/DeleteRoleOperation",
+            success: function (result) {
+                if (result.success) {
+                    window.toastr.success('操作成功');
+                } else {
+                    window.toastr.error(result.message);
+                }
             }
         });
     }

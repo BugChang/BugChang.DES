@@ -12,15 +12,25 @@
         $("#HardWareSaveForm").submit(function (e) {
             e.preventDefault();
             var data = JSON.stringify($(this).serialize());
-            $.post('/HardWare/Save',
-                { postData: data },
-                function (result) {
+            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+            $.ajax({
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: { postData: data },
+                headers:
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
+                url: "/HardWare/Save",
+                success: function (result) {
                     if (result.success) {
                         window.toastr.success('操作成功');
                     } else {
                         window.toastr.error(result.message);
                     }
-                });
+                }
+            });
         });
     });
     //绑定打印机列表
@@ -30,7 +40,7 @@
             lodop.Create_Printer_List($(".printer")[i]);
         }
 
-        $.post("/HardWare/GeSettings?macAddress=" + macAddress, function (data) {
+        $.get("/HardWare/GeSettings?macAddress=" + macAddress, function (data) {
             var d;
             for (d in data) {
                 if (data.hasOwnProperty(d)) {

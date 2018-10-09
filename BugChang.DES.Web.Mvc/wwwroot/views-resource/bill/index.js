@@ -34,9 +34,18 @@
     });
 
     function checkReceive() {
-        $.post("/Bill/CheckReceive",
-            { deviceCode: deviceCode },
-            function (result) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: { deviceCode: deviceCode },
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Bill/CheckReceive",
+            success: function (result) {
                 if (result.success) {
                     if (result.data.length === 1) {
                         var objectId = result.data[0].id;
@@ -57,13 +66,23 @@
                 } else {
                     window.toastr.error(result.message);
                 }
-            });
+            }
+        });
     }
 
     function checkSend() {
-        $.post("/Bill/CheckSend",
-            { deviceCode: deviceCode },
-            function (result) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: { deviceCode: deviceCode },
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Bill/CheckSend",
+            success: function (result) {
                 if (result.success) {
                     if (result.data.length === 1) {
                         var objectId = result.data[0].id;
@@ -84,39 +103,74 @@
                 } else {
                     window.toastr.error(result.message);
                 }
-            });
+            }
+        });
     }
 
     function checkReceiveSend() {
-        $.post("/Bill/CheckSend",
-            { deviceCode: deviceCode },
-            function (result) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: { deviceCode: deviceCode },
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Bill/CheckSendAndReceive",
+            success: function (result) {
                 if (result.success) {
                     printReceiveSend();
                 } else {
                     window.toastr.error(result.message);
                 }
-            });
+            }
+        });
     }
 
     function printReceive(objectId) {
         $('body').loading();
-        $.post("/Bill/CreateReceiveBill", { objectId: objectId, deviceCode: deviceCode }, function (result) {
-            if (result.success) {
-                location.href = "/Bill/Detail/" + result.data;
-            } else {
-                window.toastr.error(result.message);
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: { objectId: objectId, deviceCode: deviceCode },
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Bill/CreateReceiveBill",
+            success: function (result) {
+                if (result.success) {
+                    location.href = "/Bill/Detail/" + result.data;
+                } else {
+                    window.toastr.error(result.message);
+                }
             }
         });
     }
 
     function printSend(departmentId) {
         $('body').loading();
-        $.post("/Bill/CreateSendBill", { departmentId: departmentId, deviceCode: deviceCode }, function (result) {
-            if (result.success) {
-                location.href = "/Bill/Detail/" + result.data;
-            } else {
-                window.toastr.error(result.message);
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: { departmentId: departmentId, deviceCode: deviceCode },
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Bill/CreateSendBill",
+            success: function (result) {
+                if (result.success) {
+                    location.href = "/Bill/Detail/" + result.data;
+                } else {
+                    window.toastr.error(result.message);
+                }
             }
         });
     }
@@ -124,11 +178,23 @@
 
     function printReceiveSend() {
         $('body').loading();
-        $.post("/Bill/CreateReceiveSendBill", { deviceCode: deviceCode }, function (result) {
-            if (result.success) {
-                location.href = "/Bill/Detail/" + result.data;
-            } else {
-                window.toastr.error(result.message);
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: { deviceCode: deviceCode },
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Bill/CreateReceiveSendBill",
+            success: function (result) {
+                if (result.success) {
+                    location.href = "/Bill/Detail/" + result.data;
+                } else {
+                    window.toastr.error(result.message);
+                }
             }
         });
     }
