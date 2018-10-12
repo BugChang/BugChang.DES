@@ -9,6 +9,7 @@ using BugChang.DES.Application.Monitors;
 using BugChang.DES.Core.Monitor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace BugChang.DES.Web.Mvc.Controllers.API
 {
@@ -123,7 +124,9 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
             try
             {
                 var result = new CheckCardTypeModel();
+                _logger.LogWarning($"placeId:{placeId};bn:{bn};cardValue:{cardValue}");
                 var box = await _boxAppService.GetBoxByPlaceBn(bn, placeId);
+                _logger.LogWarning($"box:{JsonConvert.SerializeObject(box)}");
                 if (box != null)
                 {
                     result = await _monitorAppService.CheckCardType(placeId, box.Id, cardValue);
@@ -138,11 +141,11 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
 
         }
 
-        public async Task<IActionResult> SaveLetter(int pacleId, string barCode, int boxId, int fileCount, bool isJiaJi)
+        public async Task<IActionResult> SaveLetter(int placeId, string barCode, int no, int fileCount, bool isJiaJi)
         {
             try
             {
-                var result = await _monitorAppService.SaveLetter(pacleId, barCode, boxId, 1, isJiaJi);
+                var result = await _monitorAppService.SaveLetter(placeId, barCode, no, 1, isJiaJi);
                 return Json(result);
             }
             catch (Exception e)
@@ -153,11 +156,12 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
 
         }
 
-        public async Task<IActionResult> Box_UserGetLetter(int boxId, string cardValue, int placeId)
+        public async Task<IActionResult> Box_UserGetLetter(int no, string cardValue, int placeId)
         {
             try
             {
-                var result = await _monitorAppService.UserGetLetter(boxId, cardValue, placeId);
+                _logger.LogWarning($"no：{no},cardValue:{cardValue},placeId:{placeId}");
+                var result = await _monitorAppService.UserGetLetter(no, cardValue, placeId);
                 return Json(result);
 
             }

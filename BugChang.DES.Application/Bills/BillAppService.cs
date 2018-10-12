@@ -15,6 +15,8 @@ using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SerialNumbers;
 using BugChang.DES.EntityFrameWorkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace BugChang.DES.Application.Bills
 {
@@ -30,8 +32,9 @@ namespace BugChang.DES.Application.Bills
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IPlaceWardenRepository _placeWardenRepository;
         private readonly UnitOfWork _unitOfWork;
+        private readonly ILogger<BillAppService> _logger;
 
-        public BillAppService(IBarcodeLogRepository barcodeLogRepository, SerialNumberManager serialNumberManager, ILetterRepository letterRepository, IExchangeListDetailRepository exchangeListDetailRepository, IExchangeListRepository exchangeListRepository, UnitOfWork unitOfWork, IExchangeObjectRepository exchangeObjectRepository, IUserRepository userRepository, IDepartmentRepository departmentRepository, IPlaceWardenRepository placeWardenRepository)
+        public BillAppService(IBarcodeLogRepository barcodeLogRepository, SerialNumberManager serialNumberManager, ILetterRepository letterRepository, IExchangeListDetailRepository exchangeListDetailRepository, IExchangeListRepository exchangeListRepository, UnitOfWork unitOfWork, IExchangeObjectRepository exchangeObjectRepository, IUserRepository userRepository, IDepartmentRepository departmentRepository, IPlaceWardenRepository placeWardenRepository, ILogger<BillAppService> logger)
         {
             _barcodeLogRepository = barcodeLogRepository;
             _serialNumberManager = serialNumberManager;
@@ -43,6 +46,7 @@ namespace BugChang.DES.Application.Bills
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
             _placeWardenRepository = placeWardenRepository;
+            _logger = logger;
         }
 
         /// <summary>
@@ -59,14 +63,19 @@ namespace BugChang.DES.Application.Bills
             var barcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
                 !a.IsSynBill && a.CurrentPlaceId == placeId && a.CurrentObjectId == objectId &&
                 a.BarcodeStatus == EnumBarcodeStatus.已签收).ToListAsync();
+            _logger.LogWarning($"barcodeLogs:{JsonConvert.SerializeObject(barcodeLogs)}");
             if (barcodeLogs.Count > 0)
             {
                 var exchangeObject = await _exchangeObjectRepository.GetByIdAsync(objectId);
+                _logger.LogWarning($"exchangeObject:{JsonConvert.SerializeObject(exchangeObject)}");
                 var user = await _userRepository.GetByIdAsync(userId);
-                var letters = _letterRepository.GetQueryable()
+                _logger.LogWarning($"user:{JsonConvert.SerializeObject(user)}");
+                var letters = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
                     .Where(a => barcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
+                _logger.LogWarning($"letters:{JsonConvert.SerializeObject(letters)}");
                 //清单全局使用一个流水，防止串号
                 var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
+                _logger.LogWarning($"serialNo:{JsonConvert.SerializeObject(serialNo)}");
                 var exchangeList = new ExchangeList
                 {
                     CreateBy = userId,
@@ -80,8 +89,9 @@ namespace BugChang.DES.Application.Bills
                     Type = EnumListType.收件清单
                 };
                 exchangeList.ListNo = exchangeList.GetListNo(serialNo);
+                _logger.LogWarning($"exchangeList:{JsonConvert.SerializeObject(exchangeList)}");
                 await _exchangeListRepository.AddAsync(exchangeList);
-
+                await _unitOfWork.CommitAsync();
                 foreach (var letter in letters)
                 {
                     var barcodeLog = barcodeLogs.FirstOrDefault(a => a.BarcodeNumber == letter.BarcodeNo);
@@ -89,7 +99,7 @@ namespace BugChang.DES.Application.Bills
                     {
                         var exchangeListDetail = new ExchangeListDetail
                         {
-                            BarcodeNo = letter.BarcodeNo,
+                            BarcodeNo = letter.LetterNo,
                             CustomData = letter.CustomData,
                             DetailType = barcodeLog.BarcodeSubStatus == EnumBarcodeSubStatus.退回 ? EnumListDetailType.收退件 : EnumListDetailType.收件,
                             ExchangeListId = exchangeList.Id,
@@ -104,6 +114,7 @@ namespace BugChang.DES.Application.Bills
                         result.Data = exchangeList.Id;
                     }
                 }
+                _logger.LogWarning($"结束");
 
                 await _unitOfWork.CommitAsync();
             }
@@ -132,7 +143,7 @@ namespace BugChang.DES.Application.Bills
             {
                 var department = await _departmentRepository.GetByIdAsync(departmentId);
                 var user = await _userRepository.GetByIdAsync(userId);
-                var letters = _letterRepository.GetQueryable()
+                var letters = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
                     .Where(a => barcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
                 //清单全局使用一个流水，防止串号
                 var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
@@ -157,7 +168,7 @@ namespace BugChang.DES.Application.Bills
                     {
                         var exchangeListDetail = new ExchangeListDetail
                         {
-                            BarcodeNo = letter.BarcodeNo,
+                            BarcodeNo = letter.LetterNo,
                             CustomData = letter.CustomData,
                             DetailType = barcodeLog.BarcodeSubStatus == EnumBarcodeSubStatus.退回 ? EnumListDetailType.发退件 : EnumListDetailType.发件,
                             ExchangeListId = exchangeList.Id,
@@ -203,9 +214,9 @@ namespace BugChang.DES.Application.Bills
             {
                 //清单全局使用一个流水，防止串号
                 var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
-                var receiveLettesr = _letterRepository.GetQueryable()
+                var receiveLettesr = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
                     .Where(a => receiveBarcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
-                var sendLettesr = _letterRepository.GetQueryable()
+                var sendLettesr = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
                     .Where(a => sendBarcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
                 var department = await _departmentRepository.GetByIdAsync(departmentId);
                 var user = await _userRepository.GetByIdAsync(userId);
@@ -232,7 +243,7 @@ namespace BugChang.DES.Application.Bills
                     {
                         var exchangeListDetail = new ExchangeListDetail
                         {
-                            BarcodeNo = letter.BarcodeNo,
+                            BarcodeNo = letter.LetterNo,
                             CustomData = letter.CustomData,
                             DetailType = barcodeLog.BarcodeSubStatus == EnumBarcodeSubStatus.退回 ? EnumListDetailType.收退件 : EnumListDetailType.收件,
                             ExchangeListId = exchangeList.Id,
@@ -253,7 +264,7 @@ namespace BugChang.DES.Application.Bills
                     {
                         var exchangeListDetail = new ExchangeListDetail
                         {
-                            BarcodeNo = letter.BarcodeNo,
+                            BarcodeNo = letter.LetterNo,
                             CustomData = letter.CustomData,
                             DetailType = barcodeLog.BarcodeSubStatus == EnumBarcodeSubStatus.退回 ? EnumListDetailType.发退件 : EnumListDetailType.发件,
                             ExchangeListId = exchangeList.Id,
@@ -281,7 +292,7 @@ namespace BugChang.DES.Application.Bills
 
         public async Task<BillDto> GetBill(int id)
         {
-            var bill = await _exchangeListRepository.GetByIdAsync(id);
+            var bill = await _exchangeListRepository.GetQueryable().Include(a=>a.CreateUser).Include(a=>a.UpdateUser).FirstOrDefaultAsync(a=>a.Id==id);
             return Mapper.Map<BillDto>(bill);
         }
 

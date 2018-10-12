@@ -16,7 +16,9 @@ using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.Sortings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace BugChang.DES.Core.Monitor
 {
@@ -26,7 +28,6 @@ namespace BugChang.DES.Core.Monitor
         private readonly IBarcodeRepository _barcodeRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IBoxObjectRepository _boxObjectRepository;
-        private readonly LogManager _logManager;
         private readonly BarcodeManager _barcodeManager;
         private readonly IBoxRepository _boxRepository;
         private readonly ICardRepository _cardRepository;
@@ -38,15 +39,15 @@ namespace BugChang.DES.Core.Monitor
         private readonly IExchangeObjectRepository _objectRepository;
         private readonly ISortingRepository _sortingRepository;
         private readonly IOptions<CommonSettings> _commonSettings;
+        private readonly ILogger<MonitorManager> _logger;
         public MonitorManager(IPlaceRepository placeRepository, IBarcodeRepository barcodeRepository, IBoxObjectRepository boxObjectRepository,
-            LogManager logManager, BarcodeManager barcodeManager, IBoxRepository boxRepository, ICardRepository cardRepository, IUserRepository userRepository, IPlaceWardenRepository placeWardenRepository,
+             BarcodeManager barcodeManager, IBoxRepository boxRepository, ICardRepository cardRepository, IUserRepository userRepository, IPlaceWardenRepository placeWardenRepository,
             IExchangeObjectSignerRepository objectSignerRepository, ILetterRepository letterRepository, IBarcodeLogRepository barcodeLogRepository, IExchangeObjectRepository objectRepository,
-            IDepartmentRepository departmentRepository, ISortingRepository sortingRepository, IOptions<CommonSettings> commonSettings)
+            IDepartmentRepository departmentRepository, ISortingRepository sortingRepository, IOptions<CommonSettings> commonSettings, ILogger<MonitorManager> logger)
         {
             _placeRepository = placeRepository;
             _barcodeRepository = barcodeRepository;
             _boxObjectRepository = boxObjectRepository;
-            _logManager = logManager;
             _barcodeManager = barcodeManager;
             _boxRepository = boxRepository;
             _cardRepository = cardRepository;
@@ -59,11 +60,12 @@ namespace BugChang.DES.Core.Monitor
             _departmentRepository = departmentRepository;
             _sortingRepository = sortingRepository;
             _commonSettings = commonSettings;
+            _logger = logger;
         }
 
         public async Task<CheckBarcodeModel> CheckBarcodeType(string barcodeNo, int placeId)
         {
-
+            _logger.LogWarning("进入CheckBarcodeType，参数：barcodeNo：" + barcodeNo + "placeId:" + placeId);
             var checkBarcodeModel = new CheckBarcodeModel();
             if (barcodeNo.Length == 33 || barcodeNo.Length == 26 || barcodeNo.Contains("(01)000001500011"))
             {
@@ -81,6 +83,7 @@ namespace BugChang.DES.Core.Monitor
                     switch (barcode.Status)
                     {
                         case EnumBarcodeStatus.已签收:
+                            _logger.LogWarning($"已签收");
                             if (barcode.CurrentPlaceId == placeId && barcode.SubStatus == EnumBarcodeSubStatus.正常)
                             {
                                 //同一场所下，已签收的文件禁止再次投箱（勘误、退回件除外）
@@ -95,14 +98,17 @@ namespace BugChang.DES.Core.Monitor
                         case EnumBarcodeStatus.已勘误:
                             return await CheckBarcodeTypeCommon(letter, placeId);
                         case EnumBarcodeStatus.已投递:
+                            _logger.LogWarning($"已投递");
                             checkBarcodeModel.Type = EnumCheckBarcodeType.条码已经投箱;
                             break;
                         case EnumBarcodeStatus.申请退回:
+                            _logger.LogWarning($"申请退回");
                             var receiveDepartmentId = letter.ReceiveDepartmentId;
                             letter.ReceiveDepartmentId = letter.SendDepartmentId;
                             letter.SendDepartmentId = receiveDepartmentId;
                             return await CheckBarcodeTypeCommon(letter, placeId);
                         case EnumBarcodeStatus.已退回:
+                            _logger.LogWarning($"已退回");
                             checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
                             break;
 
@@ -112,6 +118,7 @@ namespace BugChang.DES.Core.Monitor
                 }
                 else
                 {
+                    _logger.LogWarning($"barcode==null");
                     return await CheckBarcodeTypeCommon(letter, placeId);
                 }
             }
@@ -127,14 +134,16 @@ namespace BugChang.DES.Core.Monitor
             {
                 case EnumLetterType.收信:
                     {
+                        _logger.LogWarning($"收信");
                         var exchangeObject = await _objectRepository.GetQueryable().Where(a =>
                                a.ObjectType == EnumObjectType.机构 && a.Value == letter.ReceiveDepartmentId)
                            .FirstOrDefaultAsync();
-
+                        _logger.LogWarning($"exchangeObject：{JsonConvert.SerializeObject(exchangeObject)}");
                         var tempObject = exchangeObject;
                         var boxs = await _boxObjectRepository.GetQueryable()
                             .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == tempObject.Id && a.Box.Enabled)
                             .Select(a => a.Box).ToListAsync();
+                        _logger.LogWarning($"boxs：{JsonConvert.SerializeObject(boxs)}");
                         if (boxs.Count > 0)
                         {
                             checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
@@ -144,24 +153,22 @@ namespace BugChang.DES.Core.Monitor
                         }
                         else
                         {
-                            while (exchangeObject.ParentId != null)
+
+                            if (exchangeObject.IsVirtual)
                             {
-                                var o = exchangeObject;
-                                exchangeObject = await _objectRepository.GetQueryable().Where(a => a.Id == o.ParentId.Value)
-                                    .FirstOrDefaultAsync();
-                                var exchangeObject1 = exchangeObject;
                                 boxs = await _boxObjectRepository.GetQueryable()
-                                    .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == exchangeObject1.Id && a.Box.Enabled)
+                                    .Where(a => a.Box.PlaceId == placeId && a.Box.Enabled)
                                     .Select(a => a.Box).ToListAsync();
-                                if (boxs.Count > 0)
-                                {
-                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
-                                    checkBarcodeModel.Record = boxs.Select(a =>
-                                        new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id }).ToList();
-                                    break;
-                                }
+                                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
+                                checkBarcodeModel.Record =
+                                    boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
+                                        .ToList();
                             }
-                            checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
+                            else
+                            {
+                                checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
+                            }
+
                         }
                     }
                     break;
@@ -357,15 +364,19 @@ namespace BugChang.DES.Core.Monitor
 
         public async Task<CheckCardTypeModel> CheckCardType(int placeId, int boxId, string cardValue)
         {
-
+            _logger.LogWarning($"placeId:{placeId};boxId:{boxId};cardValue:{cardValue}");
             var card = await _cardRepository.GetQueryable().Where(a => a.Value == cardValue).FirstOrDefaultAsync();
+            _logger.LogWarning($"card:{JsonConvert.SerializeObject(card)}");
             if (card == null)
             {
                 return new CheckCardTypeModel();
             }
             var user = await _userRepository.GetQueryable().Include(a => a.Department).FirstOrDefaultAsync(a => a.Id == card.UserId);
+            _logger.LogWarning($"user:{JsonConvert.SerializeObject(user)}");
             var objects = await _boxObjectRepository.GetQueryable().Where(a => a.BoxId == boxId).ToListAsync();
+            _logger.LogWarning($"objects:{JsonConvert.SerializeObject(objects)}");
             var objectSigner = await _objectSignerRepository.GetQueryable().Where(a => objects.Any(b => b.ExchangeObjectId == a.ExchangeObjectId) && a.UserId == user.Id).FirstOrDefaultAsync();
+            _logger.LogWarning($"objectSigner:{JsonConvert.SerializeObject(objectSigner)}");
             var checkCardModel = new CheckCardTypeModel
             {
                 Boxs = new List<int>
@@ -378,6 +389,7 @@ namespace BugChang.DES.Core.Monitor
             if (objectSigner != null)
             {
                 checkCardModel.Type = 22;
+                _logger.LogWarning($"checkCardModel.Type = 22;");
             }
             else
             {
@@ -386,18 +398,24 @@ namespace BugChang.DES.Core.Monitor
                 {
                     //当前刷卡人为本场所管理员
                     checkCardModel.Type = 21;
+                    _logger.LogWarning($"checkCardModel.Type = 21;");
                 }
             }
-
+            _logger.LogWarning($"checkCardModel:{JsonConvert.SerializeObject(checkCardModel)}");
             return checkCardModel;
         }
 
         public async Task<int> SaveLetter(int placeId, string barCodeNo, int boxId, int fileCount, bool isJiaJi)
         {
+            _logger.LogWarning($"placeId:{placeId};barCodeNo:{barCodeNo};boxId:{boxId}");
+
             var place = await _placeRepository.GetByIdAsync(placeId);
+            _logger.LogWarning($"place:{JsonConvert.SerializeObject(place)}");
             var letter = await _letterRepository.GetQueryable().Where(a => a.BarcodeNo == barCodeNo).FirstOrDefaultAsync();
+
             if (letter == null)
             {
+                _logger.LogWarning($"letter == null");
                 //保存信件基本信息
                 letter = new Letter
                 {
@@ -412,15 +430,21 @@ namespace BugChang.DES.Core.Monitor
                 letter.UrgencyLevel = letter.GetUrgencyLevel(barCodeNo);
                 letter.CreateTime = DateTime.Now;
                 await _letterRepository.AddAsync(letter);
+                _logger.LogWarning($"await _letterRepository.AddAsync(letter);");
             }
 
             var barCode = await _barcodeRepository.GetQueryable().Where(a => a.BarcodeNo == barCodeNo)
                 .FirstOrDefaultAsync();
 
+            _logger.LogWarning($"barCode:{JsonConvert.SerializeObject(barCode)}");
+
             var boxObject = await _boxObjectRepository.GetQueryable().Where(a => a.BoxId == boxId).FirstOrDefaultAsync();
+
+            _logger.LogWarning($"boxObject:{JsonConvert.SerializeObject(boxObject)}");
 
             if (barCode == null)
             {
+                _logger.LogWarning($"barCode == null");
                 //添加条码记录
                 barCode = new Barcode
                 {
@@ -430,10 +454,12 @@ namespace BugChang.DES.Core.Monitor
                     Status = EnumBarcodeStatus.已投递,
                     SubStatus = EnumBarcodeSubStatus.正常,
                     CreateTime = DateTime.Now,
-                    CurrentObjectId = boxObject.ExchangeObjectId
+                    CurrentObjectId = boxObject.ExchangeObjectId,
+                    CurrentPlaceId = placeId 
                 };
                 barCode.BarcodeType = barCode.AnalysisBarcodeType(barCodeNo);
                 await _barcodeRepository.AddAsync(barCode);
+                _logger.LogWarning($"await _barcodeRepository.AddAsync(barCode);");
             }
             barCode.UpdateTime = DateTime.Now;
             switch (barCode.Status)
@@ -445,7 +471,7 @@ namespace BugChang.DES.Core.Monitor
                     break;
                 case EnumBarcodeStatus.已投递:
                 case EnumBarcodeStatus.已退回:
-                    return 0;
+                    break;
                 case EnumBarcodeStatus.申请退回:
                     barCode.Status = EnumBarcodeStatus.已投递;
                     barCode.SubStatus = EnumBarcodeSubStatus.退回;
@@ -454,7 +480,7 @@ namespace BugChang.DES.Core.Monitor
             //添加条码日志记录
             var preBarcodeLog = await _barcodeLogRepository.GetQueryable().Where(a => a.BarcodeNumber == barCodeNo)
                 .OrderByDescending(a => a.Id).FirstOrDefaultAsync();
-
+            _logger.LogWarning($"preBarcodeLog:{JsonConvert.SerializeObject(preBarcodeLog)}");
             var barcodeLog = new BarcodeLog
             {
                 BarcodeNumber = barCodeNo,
@@ -463,6 +489,7 @@ namespace BugChang.DES.Core.Monitor
                 OperationTime = DateTime.Now,
                 OperatorId = null
             };
+            _logger.LogWarning($"barcodeLog:{JsonConvert.SerializeObject(barcodeLog)}");
             if (barCode.SubStatus == EnumBarcodeSubStatus.退回)
             {
                 barcodeLog.Remark = "已投递申请退回的文件";
@@ -473,7 +500,7 @@ namespace BugChang.DES.Core.Monitor
             var box = await _boxRepository.GetByIdAsync(boxId);
             box.FileCount += 1;
             box.HasUrgent = isJiaJi;
-
+            _logger.LogWarning($"box:{JsonConvert.SerializeObject(box)}");
             return 1;
         }
 
@@ -490,18 +517,22 @@ namespace BugChang.DES.Core.Monitor
             //不包含返回0
             //包含，依次签收箱内文件
             var user = await _cardRepository.GetQueryable().Where(a => a.Value == cardValue).Select(a => a.User).FirstOrDefaultAsync();
+            _logger.LogWarning($"user:{JsonConvert.SerializeObject(user)}");
             if (user == null)
             {
                 return 0;
             }
 
             var boxObjects = await _boxObjectRepository.GetQueryable().Where(a => a.BoxId == boxId).Select(a => a.ExchangeObject).ToListAsync();
+            _logger.LogWarning($"boxObjects:{JsonConvert.SerializeObject(boxObjects)}");
             var objectSigners = await _objectSignerRepository.GetQueryable()
                 .Where(a => boxObjects.Any(b => b.Id == a.ExchangeObjectId)).Select(a => a.User).ToListAsync();
+            _logger.LogWarning($"objectSigners:{JsonConvert.SerializeObject(objectSigners)}");
             if (objectSigners.Any(a => a.Id == user.Id))
             {
                 var barcodes = await _barcodeRepository.GetQueryable().Where(a =>
                      a.Status == EnumBarcodeStatus.已投递 && boxObjects.Any(b => b.Id == a.CurrentObjectId)).ToListAsync();
+                _logger.LogWarning($"barcodes:{JsonConvert.SerializeObject(barcodes)}");
                 foreach (var barcode in barcodes)
                 {
                     barcode.Status = EnumBarcodeStatus.已签收;
@@ -515,7 +546,9 @@ namespace BugChang.DES.Core.Monitor
                             LastOperationTime = barcode.UpdateTime.Value,
                             DepartmentId = user.DepartmentId,
                             OperationTime = DateTime.Now,
-                            OperatorId = user.Id
+                            OperatorId = user.Id,
+                            CurrentPlaceId = placeId,
+                            CurrentObjectId = boxObjects[0].Id
                         };
                         await _barcodeLogRepository.AddAsync(barcodeLog);
                     }
@@ -526,6 +559,7 @@ namespace BugChang.DES.Core.Monitor
                         firtExchangeObject.Value != (int)EnumChannel.机要通信 &&
                         firtExchangeObject.Value != (int)EnumChannel.直送) continue;
                     //添加至待分拣列表
+                    _logger.LogWarning($"添加至待分拣列表");
                     var sorting = new Sorting
                     {
                         Channel = (EnumChannel)firtExchangeObject.Value,
@@ -533,8 +567,13 @@ namespace BugChang.DES.Core.Monitor
                     };
                     await _sortingRepository.AddAsync(sorting);
                 }
+
+                var box = await _boxRepository.GetByIdAsync(boxId);
+                box.HasUrgent = false;
+                box.FileCount = 0;
                 return 1;
             }
+            _logger.LogWarning($"return 0");
             return 0;
         }
 

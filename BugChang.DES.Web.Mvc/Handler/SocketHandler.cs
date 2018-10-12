@@ -8,7 +8,6 @@ using BugChang.DES.Core.Tools;
 using BugChang.DES.Web.Mvc.Models.Index;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 

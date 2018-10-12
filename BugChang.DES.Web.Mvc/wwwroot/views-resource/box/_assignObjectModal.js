@@ -7,9 +7,18 @@
         $("#AssignObjectForm").submit(function (e) {
             e.preventDefault();
             var objectIds = $(".box-object-select").val();
-            $.post('/Box/AssignObject',
-                { boxId: boxId, objectIds: objectIds },
-                function (result) {
+            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+            $.ajax({
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: { boxId: boxId, objectIds: objectIds },
+                headers:
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
+                url: "/Box/AssignObject",
+                success: function (result) {
                     if (result.success) {
                         //关闭模态
                         $("#AssignObjectModal").modal("hide");
@@ -17,7 +26,8 @@
                     } else {
                         window.toastr.error(result.message);
                     }
-                });
+                }
+            });
         });
     });
 

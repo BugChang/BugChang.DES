@@ -5,6 +5,7 @@ using BugChang.DES.Application.HardWares;
 using BugChang.DES.Application.HardWares.Dtos;
 using BugChang.DES.Core.HardWares;
 using BugChang.DES.Web.Mvc.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -114,47 +115,55 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var result = await _hardWareAppService.SaveHardWareSettings(hardWares, macAddress);
             return Json(result);
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> GetLaserPrintA4(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.LaserPrintA4);
             return Json(result);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> GetLaserPrintB5(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.LaserPrintB5);
             return Json(result);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> GetBarcodePrint6025(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.BarcodePrint6025);
             return Json(result);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> GetBarcodePrint9030(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.BarcodePrint9030);
             return Json(result);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> GetBarcodePrint80130(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.BarcodePrint80130);
             return Json(result);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> GetIdReadCard(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.IdReadCard);
             return Json(result);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> GetIcReadCard(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.IcReadCard);
             return Json(result);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> GetCpuReadCard(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.CpuReadCard);
             return Json(result);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> GetScanGun(string deviceCode)
         {
             var result = await _hardWareAppService.GetSettings(deviceCode, EnumHardWareType.ScanGun);

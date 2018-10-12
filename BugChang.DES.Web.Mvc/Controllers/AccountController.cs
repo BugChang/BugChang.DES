@@ -9,31 +9,33 @@ using BugChang.DES.Application.Clients;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Commons;
-using BugChang.DES.Core.Tools;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Account;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
     public class AccountController : BaseController
     {
-
         private readonly IAccountAppService _accountAppService;
         private readonly IOptions<AccountSettings> _accountSettings;
         private readonly IClientAppService _clientAppService;
         private readonly ICardAppService _cardAppService;
         private readonly IUserAppService _userAppService;
-        public AccountController(IAccountAppService accountAppService, IOptions<AccountSettings> accountSettings, IClientAppService clientAppService, ICardAppService cardAppService, IUserAppService userAppService)
+        private readonly ILogger<AccountController> _logger;
+        public AccountController(IAccountAppService accountAppService, IOptions<AccountSettings> accountSettings, IClientAppService clientAppService, ICardAppService cardAppService, IUserAppService userAppService, ILogger<AccountController> logger)
         {
             _accountAppService = accountAppService;
             _accountSettings = accountSettings;
             _clientAppService = clientAppService;
             _cardAppService = cardAppService;
             _userAppService = userAppService;
+            _logger = logger;
         }
 
         [AllowAnonymous]
@@ -94,37 +96,46 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             var result = new ResultEntity();
             var card = await _cardAppService.GetCardByNo(cardNo);
-            if (!card.Enabled)
+            if (card == null)
             {
-                result.Message = "该卡片尚未启用，无法登录";
+                result.Message = "无效证卡";
             }
             else
             {
-                var user = await _userAppService.GetForEditByIdAsync(card.UserId);
-                var usbKeyNo = Request.Cookies["KOAL_CERT_CN"]?.Trim();
-                usbKeyNo = usbKeyNo ?? "";
-                var loginResult = await _accountAppService.LoginAsync(user.UserName, user.Password, usbKeyNo);
-                switch (loginResult.Result)
+                if (!card.Enabled)
                 {
-                    case EnumLoginResult.登录成功:
-                    case EnumLoginResult.强制修改密码:
-                        var client = await _clientAppService.GetClient(deviceCode);
-                        if (client != null)
-                        {
-                            result.Data = client.HomePage;
-                        }
-                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, loginResult.ClaimsPrincipal, new AuthenticationProperties
-                        {
-                            ExpiresUtc = DateTimeOffset.Now.AddMinutes(_accountSettings.Value.ExpiryTime)
-                        });
-                        result.Data = string.IsNullOrEmpty(result.Data) ? "/Home/Index" : result.Data;
-                        break;
-                    default:
-                        result.Message = result.Message;
-                        break;
+                    result.Message = "该卡片尚未启用，无法登录";
+                }
+                else
+                {
+                    var user = await _userAppService.GetForEditByIdAsync(card.UserId);
+                    _logger.LogWarning($"user:{JsonConvert.SerializeObject(user)}");
+                    var usbKeyNo = Request.Cookies["KOAL_CERT_CN"]?.Trim();
+                    usbKeyNo = usbKeyNo ?? "";
+                    var loginResult = await _accountAppService.LoginAsync(user.UserName, user.Password, usbKeyNo);
+                    _logger.LogWarning($"loginResult:{JsonConvert.SerializeObject(loginResult)}");
+                    switch (loginResult.Result)
+                    {
+                        case EnumLoginResult.登录成功:
+                        case EnumLoginResult.强制修改密码:
+                            var client = await _clientAppService.GetClient(deviceCode);
+                            if (client != null)
+                            {
+                                result.Data = client.HomePage;
+                            }
+                            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, loginResult.ClaimsPrincipal, new AuthenticationProperties
+                            {
+                                ExpiresUtc = DateTimeOffset.Now.AddMinutes(_accountSettings.Value.ExpiryTime)
+                            });
+                            result.Success = true;
+                            result.Data = string.IsNullOrEmpty(result.Data) ? "/Home/Index" : result.Data;
+                            break;
+                        default:
+                            result.Message = result.Message;
+                            break;
+                    }
                 }
             }
-
             return Json(result);
         }
 

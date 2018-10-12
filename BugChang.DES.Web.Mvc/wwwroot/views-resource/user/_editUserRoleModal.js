@@ -12,16 +12,26 @@
 
         $('#btnAddUserRole').click(function () {
             var roleId = $('#roleId').val();
-            $.post('/User/AddUserRole',
-                { userId: userId, roleId: roleId },
-                function (result) {
+            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+            $.ajax({
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: { userId: userId, roleId: roleId },
+                headers:
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
+                url: "/User/AddUserRole",
+                success: function (result) {
                     if (result.success) {
                         window.toastr.success('操作成功');
                         userRoleTable.ajax.reload();
                     } else {
                         window.toastr.error(result.message);
                     }
-                });
+                }
+            });
         });
 
         $('table').delegate('.delete-user-role',

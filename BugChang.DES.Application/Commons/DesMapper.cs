@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using BugChang.DES.Application.BackUps.Dtos;
+using BugChang.DES.Application.Bills.Dtos;
 using BugChang.DES.Application.Boxs.Dtos;
 using BugChang.DES.Application.Cards.Dtos;
 using BugChang.DES.Application.Clients.Dtos;
@@ -23,6 +24,7 @@ using BugChang.DES.Core.BackUps;
 using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
+using BugChang.DES.Core.Exchanges.Bill;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
@@ -279,6 +281,12 @@ namespace BugChang.DES.Application.Commons
                 cfg.CreateMap<BackUpEditDto, DataBaseBackUp>();
 
                 #endregion
+                
+                cfg.CreateMap<ExchangeList, BillDto>()
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
+                    .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
+                    .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
             });
         }
 

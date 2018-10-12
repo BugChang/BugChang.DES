@@ -19,6 +19,7 @@ using BugChang.DES.Application.Operations;
 using BugChang.DES.Application.Places;
 using BugChang.DES.Application.Roles;
 using BugChang.DES.Application.Rules;
+using BugChang.DES.Application.SerialNumber;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Authentication;
 using BugChang.DES.Core.Authentication.Card;
@@ -95,6 +96,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IClientAppService, ClientAppService>();
             services.AddScoped<IBillAppService, BillAppService>();
             services.AddScoped<IBackUpAppService, BackUpAppService>();
+            services.AddScoped<ISerialNumberAppService, SerialNumberAppService>();
             
 
             #endregion

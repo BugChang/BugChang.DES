@@ -1,10 +1,12 @@
 ﻿var CardIndex = function () {
     var table;
-
+    var socket;
+    var deviceCode;
     $(function () {
-
         //toastr提示2s自动关闭
         window.toastr.options.timeOut = 2000;
+
+        initSocket();
 
         //初始化操作代码
         Common.initOperations('Card');
@@ -200,28 +202,51 @@
             dangerMode: true
         }).then((willDelete) => {
             if (willDelete) {
-                $.post('/Card/Delete/' + cardId,
-                    function (result) {
+                var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    data: null,
+                    headers:
+                    {
+                        "BugChang-CSRF-HEADER": token //注意header要修改
+                    },
+                    url: "/Card/Delete/" + cardId,
+                    success: function (result) {
                         if (result.success) {
                             window.swal('操作成功', cardName + '已被删除!', 'success');
                             refresh();
                         } else {
                             window.swal('操作失败', result.message, 'error');
                         }
-                    });
+                    }
+                });
             }
         });
     }
 
     //启用更改
     function changeEnabled(id) {
-        $.post("/Card/ChangeEnabled/" + id, function (result) {
-            if (result.success) {
-                //刷新页面
-                refresh();
-                window.toastr.success('操作成功');
-            } else {
-                window.toastr.error(result.message);
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: null,
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Card/ChangeEnabled/" + id,
+            success: function (result) {
+                if (result.success) {
+                    //刷新页面
+                    refresh();
+                    window.toastr.success('操作成功');
+                } else {
+                    window.toastr.error(result.message);
+                }
             }
         });
     }
@@ -247,6 +272,54 @@
         if (!Common.hasOperation('Card.Create')) {
             $('#btnAddCard').hide();
         }
+    }
+
+    function initSocket() {
+        if (typeof (WebSocket) === "undefined") {
+            window.toastr.error("您的浏览器不支持WebSocket");
+        }
+
+        socket = new WebSocket("ws://localhost:8181");
+
+        socket.onopen = function () {
+            var getMacAddress = { command: 'GetMacAddress' };
+            socket.send(JSON.stringify(getMacAddress));
+        };
+        socket.onmessage = function (e) {
+            var obj = JSON.parse(e.data);
+            if (obj.Method === "GetMacAddress") {
+                deviceCode = obj.Data;
+                $("#DeviceCode").val(deviceCode);
+                openCpuCom();
+            }
+            if (obj.Method === "GetCpuCardNo") {
+                if (obj.data==="") {
+                    return false;
+                }
+                var d1 = obj.Data.substr(0, 2);
+                var d2 = obj.Data.substr(2, 2);
+                var d3 = obj.Data.substr(4, 2);
+                var d4 = obj.Data.substr(6, 2);
+                var cardValue = d4 + d3 + d2 + d1;
+                $("#addValue").val(cardValue);
+            }
+
+        };
+        socket.onerror = function (e) {
+            window.toastr.error("与SuperService连接出现错误");
+        };
+        socket.onclose = function () {
+            window.toastr.error("SuperService连接已关闭");
+        };
+    }
+
+    function openCpuCom() {
+        $.get("/HardWare/GetCpuReadCard",
+            { deviceCode: deviceCode },
+            function (data) {
+                var row = { command: 'OpenCpuCom', port: data.value.replace("COM", ""), rate: data.baudRate };
+                socket.send(JSON.stringify(row));
+            });
     }
 
     //向外暴露方法

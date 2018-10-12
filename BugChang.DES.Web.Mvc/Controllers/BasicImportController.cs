@@ -110,16 +110,19 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
                                 userDepartmentId = department4Id;
                             }
-
-                            var user = new UserEditDto
+                            if (worksheet.Cells[row, 8].Value != null)
                             {
-                                DepartmentId = userDepartmentId,
-                                CreateTime = DateTime.Now,
-                                DisplayName = worksheet.Cells[row, 8].Value.ToString(),
-                                UserName = worksheet.Cells[row, 7].Value.ToString(),
-                                Enabled = 1
-                            };
-                            await _userAppService.AddOrUpdateAsync(user);
+                                var user = new UserEditDto
+                                {
+                                    DepartmentId = userDepartmentId,
+                                    CreateTime = DateTime.Now,
+                                    DisplayName = worksheet.Cells[row, 8].Value.ToString(),
+                                    UserName = worksheet.Cells[row, 7].Value.ToString(),
+                                    Enabled = 1
+                                };
+                                await _userAppService.AddOrUpdateAsync(user);
+                            }
+
                         }
 
 

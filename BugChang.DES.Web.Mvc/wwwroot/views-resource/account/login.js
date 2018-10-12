@@ -35,18 +35,36 @@
                 openCpuCom();
             }
             if (obj.Method === "GetCpuCardNo") {
-                $.post("/Accoount/LoginWithCard",
-                    {
-                        cardNo: obj.Data,
+                if (obj.Data==="") {
+                    return false;
+                }
+                var d1 = obj.Data.substr(0, 2);
+                var d2 = obj.Data.substr(2, 2);
+                var d3 = obj.Data.substr(4, 2);
+                var d4 = obj.Data.substr(6, 2);
+                var cardValue = d4 + d3 + d2 + d1;
+                var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    data: {
+                        cardNo: cardValue,
                         deviceCode: deviceCode
                     },
-                    function (result) {
+                    headers:
+                    {
+                        "BugChang-CSRF-HEADER": token //注意header要修改
+                    },
+                    url: "/Account/LoginWithCard",
+                    success: function (result) {
                         if (result.success) {
                             location.href = result.data;
                         } else {
                             window.toastr.error(result.message);
                         }
-                    });
+                    }
+                });
             }
 
         };

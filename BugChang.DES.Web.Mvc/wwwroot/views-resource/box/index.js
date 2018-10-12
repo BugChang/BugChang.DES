@@ -212,15 +212,26 @@
             dangerMode: true
         }).then((willDelete) => {
             if (willDelete) {
-                $.post('/Box/Delete/' + boxId,
-                    function (result) {
+                var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    data: null,
+                    headers:
+                        {
+                            "BugChang-CSRF-HEADER": token //注意header要修改
+                        },
+                    url: "/Box/Delete/" + boxId,
+                    success: function (result) {
                         if (result.success) {
                             window.swal('操作成功', boxName + '已被删除!', 'success');
                             refresh();
                         } else {
                             window.swal('操作失败', result.message, 'error');
                         }
-                    });
+                    }
+                });
             }
         });
     }
