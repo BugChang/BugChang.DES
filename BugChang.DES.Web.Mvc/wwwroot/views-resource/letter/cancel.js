@@ -18,7 +18,7 @@
             if (!barcodeNo) {
                 window.toastr.error("条码号不能为空！");
             } else {
-                searchTable.ajax.reload();
+                searchTable.draw(false);
                 $("#SearchBarcodeModal").modal('show');
             }
         });
@@ -45,7 +45,7 @@
                     success: function (result) {
                         if (result.success) {
                             window.toastr.success("勘误成功");
-                            cancelTable.ajax.reload();
+                            cancelTable.draw(false);
                         } else {
                             window.toastr.error(result.message);
                         }

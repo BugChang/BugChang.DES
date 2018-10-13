@@ -90,7 +90,7 @@
     //zTree节点单击回调函数
     function zTreeBeforeClick(treeId, treeNode) {
         currentNode = treeNode;
-        table.ajax.reload();
+        table.draw(false);
         $('.parent-select').val(treeNode.id).trigger('change');
     }
 
@@ -260,7 +260,7 @@
     //刷新数据
     function refresh() {
         //刷新表格
-        table.ajax.reload();
+        table.draw(false);
         currentNode.isParent = true;
         zTreeObj.updateNode(currentNode);
         //刷新机构树

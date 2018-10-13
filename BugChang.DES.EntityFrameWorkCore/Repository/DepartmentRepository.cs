@@ -36,20 +36,17 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<PageResultModel<Department>> GetPagingAysnc(PageSearchCommonModel pageSearchModel)
         {
-            var query = from department in _dbContext.Departments
-                        where department.ParentId == pageSearchModel.ParentId
-                        select department;
+            var query = _dbContext.Departments.Include(a => a.Parent).Include(a => a.CreateUser).Include(a => a.UpdateUser).Where(a => a.ParentId == pageSearchModel.ParentId);
             if (!string.IsNullOrWhiteSpace(pageSearchModel.Keywords))
             {
                 query = query.Where(q =>
                     q.Name.Contains(pageSearchModel.Keywords) || q.FullName.Contains(pageSearchModel.Keywords) || q.Code.Contains(pageSearchModel.Keywords));
             }
 
-            query = query.Include(a => a.Parent).Include(a => a.CreateUser).Include(a => a.UpdateUser);
             var pageResultEntity = new PageResultModel<Department>
             {
                 Total = await query.CountAsync(),
-                Rows = await query.OrderByDescending(a => a.Id).Take(pageSearchModel.Take).Skip(pageSearchModel.Skip).ToListAsync()
+                Rows = await query.OrderBy(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync()
             };
 
             return pageResultEntity;

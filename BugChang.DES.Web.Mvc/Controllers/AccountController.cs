@@ -109,11 +109,9 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 else
                 {
                     var user = await _userAppService.GetForEditByIdAsync(card.UserId);
-                    _logger.LogWarning($"user:{JsonConvert.SerializeObject(user)}");
                     var usbKeyNo = Request.Cookies["KOAL_CERT_CN"]?.Trim();
                     usbKeyNo = usbKeyNo ?? "";
                     var loginResult = await _accountAppService.LoginAsync(user.UserName, user.Password, usbKeyNo);
-                    _logger.LogWarning($"loginResult:{JsonConvert.SerializeObject(loginResult)}");
                     switch (loginResult.Result)
                     {
                         case EnumLoginResult.登录成功:

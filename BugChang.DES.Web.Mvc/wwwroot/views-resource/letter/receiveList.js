@@ -163,7 +163,7 @@
 
 
     function search() {
-        table.ajax.reload();
+        table.draw(false);
     }
 
     function initSendDepartments() {

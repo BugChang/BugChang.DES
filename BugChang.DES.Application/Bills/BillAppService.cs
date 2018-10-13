@@ -63,19 +63,14 @@ namespace BugChang.DES.Application.Bills
             var barcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
                 !a.IsSynBill && a.CurrentPlaceId == placeId && a.CurrentObjectId == objectId &&
                 a.BarcodeStatus == EnumBarcodeStatus.已签收).ToListAsync();
-            _logger.LogWarning($"barcodeLogs:{JsonConvert.SerializeObject(barcodeLogs)}");
             if (barcodeLogs.Count > 0)
             {
                 var exchangeObject = await _exchangeObjectRepository.GetByIdAsync(objectId);
-                _logger.LogWarning($"exchangeObject:{JsonConvert.SerializeObject(exchangeObject)}");
                 var user = await _userRepository.GetByIdAsync(userId);
-                _logger.LogWarning($"user:{JsonConvert.SerializeObject(user)}");
                 var letters = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
                     .Where(a => barcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
-                _logger.LogWarning($"letters:{JsonConvert.SerializeObject(letters)}");
                 //清单全局使用一个流水，防止串号
                 var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
-                _logger.LogWarning($"serialNo:{JsonConvert.SerializeObject(serialNo)}");
                 var exchangeList = new ExchangeList
                 {
                     CreateBy = userId,
@@ -89,7 +84,6 @@ namespace BugChang.DES.Application.Bills
                     Type = EnumListType.收件清单
                 };
                 exchangeList.ListNo = exchangeList.GetListNo(serialNo);
-                _logger.LogWarning($"exchangeList:{JsonConvert.SerializeObject(exchangeList)}");
                 await _exchangeListRepository.AddAsync(exchangeList);
                 await _unitOfWork.CommitAsync();
                 foreach (var letter in letters)
@@ -110,12 +104,11 @@ namespace BugChang.DES.Application.Bills
                             Time = barcodeLog.LastOperationTime
                         };
                         await _exchangeListDetailRepository.AddAsync(exchangeListDetail);
-                        result.Success = true;
-                        result.Data = exchangeList.Id;
+                        barcodeLog.IsSynBill = true;
                     }
                 }
-                _logger.LogWarning($"结束");
-
+                result.Success = true;
+                result.Data = exchangeList.Id;
                 await _unitOfWork.CommitAsync();
             }
             else
@@ -179,11 +172,14 @@ namespace BugChang.DES.Application.Bills
                             Time = barcodeLog.OperationTime
                         };
                         await _exchangeListDetailRepository.AddAsync(exchangeListDetail);
+                        barcodeLog.IsSynBill = true;
+                       
                     }
                 }
                 await _unitOfWork.CommitAsync();
                 result.Data = exchangeList.Id;
                 result.Success = true;
+
             }
             else
             {
@@ -254,6 +250,7 @@ namespace BugChang.DES.Application.Bills
                             Time = barcodeLog.LastOperationTime
                         };
                         await _exchangeListDetailRepository.AddAsync(exchangeListDetail);
+                        barcodeLog.IsSynBill = true;
                     }
                 }
                 //添加发件详情
@@ -275,6 +272,7 @@ namespace BugChang.DES.Application.Bills
                             Time = barcodeLog.OperationTime
                         };
                         await _exchangeListDetailRepository.AddAsync(exchangeListDetail);
+                        barcodeLog.IsSynBill = true;
                     }
                 }
 

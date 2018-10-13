@@ -84,6 +84,11 @@ namespace BugChang.DES.Application.Departments
             return Mapper.Map<IList<DepartmentListDto>>(departments);
         }
 
+        public Task<IList<DepartmentListDto>> GetAllInsideAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task<DepartmentEditDto> GetDepartmentByCode(string code)
         {
             var department = await _departmentRepository.GetQueryable().FirstOrDefaultAsync(a => a.Code == code);

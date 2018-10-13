@@ -26,7 +26,7 @@
                 success: function (result) {
                     if (result.success) {
                         window.toastr.success('操作成功');
-                        userRoleTable.ajax.reload();
+                        userRoleTable.draw(false);
                     } else {
                         window.toastr.error(result.message);
                     }
@@ -123,7 +123,7 @@
                     success: function (result) {
                         if (result.success) {
                             window.swal('操作成功', roleName + '已被删除!', 'success');
-                            userRoleTable.ajax.reload();
+                            userRoleTable.draw(false);
                         } else {
                             window.swal('操作失败', result.message, 'error');
                         }

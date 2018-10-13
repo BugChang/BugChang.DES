@@ -28,7 +28,7 @@ namespace BugChang.DES.Core.Exchanges.Places
 
         public Operation PlaceDelete => new Operation
         {
-            Name = Operation.CreateName,
+            Name = Operation.DeleteName,
             Code = "Place.Delete"
         };
     }

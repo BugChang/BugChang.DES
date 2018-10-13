@@ -227,7 +227,7 @@
     //刷新页面
     function refresh() {
         //刷新表格
-        table.ajax.reload();
+        table.draw(false);
     }
 
     //重新加载页面

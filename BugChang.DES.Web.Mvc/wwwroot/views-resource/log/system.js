@@ -26,7 +26,7 @@
         });
 
         $("#btnSearch").click(function() {
-            table.ajax.reload();
+            table.draw(false);
         });
     });
 

@@ -35,7 +35,7 @@
                 openCpuCom();
             }
             if (obj.Method === "GetCpuCardNo") {
-                if (obj.Data==="") {
+                if (obj.Data === "") {
                     return false;
                 }
                 var d1 = obj.Data.substr(0, 2);
@@ -84,4 +84,5 @@
                 socket.send(JSON.stringify(row));
             });
     }
+
 })();

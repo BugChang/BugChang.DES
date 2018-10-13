@@ -509,7 +509,9 @@ namespace BugChang.DES.Core.Monitor
                 BarcodeStatus = EnumBarcodeStatus.已投递,
                 DepartmentId = preBarcodeLog?.DepartmentId ?? place.DepartmentId,
                 OperationTime = DateTime.Now,
-                OperatorId = null
+                OperatorId = null,
+                CurrentObjectId = boxObject.ExchangeObjectId,
+                CurrentPlaceId = placeId
             };
             if (barCode.SubStatus == EnumBarcodeSubStatus.退回)
             {
@@ -551,22 +553,22 @@ namespace BugChang.DES.Core.Monitor
                 foreach (var barcode in barcodes)
                 {
                     barcode.Status = EnumBarcodeStatus.已签收;
-                    if (barcode.UpdateTime != null)
+                    barcode.CurrentPlaceId = placeId;
+                    barcode.CurrentObjectId = boxObjects[0].Id;
+                    var barcodeLog = new BarcodeLog
                     {
-                        var barcodeLog = new BarcodeLog
-                        {
-                            BarcodeNumber = barcode.BarcodeNo,
-                            BarcodeStatus = EnumBarcodeStatus.已签收,
-                            BarcodeSubStatus = barcode.SubStatus,
-                            LastOperationTime = barcode.UpdateTime.Value,
-                            DepartmentId = user.DepartmentId,
-                            OperationTime = DateTime.Now,
-                            OperatorId = user.Id,
-                            CurrentPlaceId = placeId,
-                            CurrentObjectId = boxObjects[0].Id
-                        };
-                        await _barcodeLogRepository.AddAsync(barcodeLog);
-                    }
+                        BarcodeNumber = barcode.BarcodeNo,
+                        BarcodeStatus = EnumBarcodeStatus.已签收,
+                        BarcodeSubStatus = barcode.SubStatus,
+                        LastOperationTime = barcode.UpdateTime ?? DateTime.Now,
+                        DepartmentId = user.DepartmentId,
+                        OperationTime = DateTime.Now,
+                        OperatorId = user.Id,
+                        CurrentPlaceId = placeId,
+                        CurrentObjectId = boxObjects[0].Id
+                    };
+                    await _barcodeLogRepository.AddAsync(barcodeLog);
+
 
                     var firtExchangeObject = boxObjects.FirstOrDefault();
                     if (firtExchangeObject == null || firtExchangeObject.ObjectType != EnumObjectType.渠道) continue;

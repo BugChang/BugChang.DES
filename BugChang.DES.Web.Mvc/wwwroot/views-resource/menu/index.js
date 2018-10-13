@@ -83,7 +83,7 @@
             }
         }
 
-        table.ajax.reload();
+        table.draw(false);
         $('.select2').val(treeNode.id).trigger('change');
     }
 
@@ -214,7 +214,7 @@
     //刷新页面
     function refresh() {
         //刷新表格
-        table.ajax.reload();
+        table.draw(false);
         //刷新菜单树
         zTreeObj.reAsyncChildNodes(currentNode, 'refresh');
     }

@@ -11,6 +11,8 @@ namespace BugChang.DES.Application.Departments
 
         Task<IList<DepartmentListDto>> GetAllAsync();
 
+        Task<IList<DepartmentListDto>> GetAllInsideAsync();
+
         Task<DepartmentEditDto> GetDepartmentByCode(string code);
 
         Task<int> CheckForImport(int parentId, string code, string name);

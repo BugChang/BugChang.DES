@@ -6,6 +6,7 @@ using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Logs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace BugChang.DES.Core.Departments
@@ -15,12 +16,14 @@ namespace BugChang.DES.Core.Departments
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IUserRepository _userRepository;
         private readonly LogManager _logManager;
+        private readonly IOptions<CommonSettings> _commonSettings;
 
-        public DepartmentManager(IDepartmentRepository departmentRepository, IUserRepository userRepository, LogManager logManager)
+        public DepartmentManager(IDepartmentRepository departmentRepository, IUserRepository userRepository, LogManager logManager, IOptions<CommonSettings> commonSettings)
         {
             _departmentRepository = departmentRepository;
             _userRepository = userRepository;
             _logManager = logManager;
+            _commonSettings = commonSettings;
         }
 
         public async Task<ResultEntity> AddOrUpdateAsync(Department department)
