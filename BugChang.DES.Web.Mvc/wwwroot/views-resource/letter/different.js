@@ -46,12 +46,24 @@
     function openScanGun() {
         console.log(macAddress);
         if (macAddress !== undefined) {
-            $.post("/HardWare/GetScanGun", { deviceCode: macAddress }, function (data) {
-                if (data === null || data === undefined) {
-                    window.toastr.error("硬件参数获取失败，请确认本机硬件参数设置是否正确！");
-                } else {
-                    var row = { command: 'OpenSerialPort', serialPortName: data.value, baudRate: data.baudRate };
-                    socket.send(JSON.stringify(row));
+            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+            $.ajax({
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: { deviceCode: macAddress },
+                headers:
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
+                url: "/HardWare/GetScanGun",
+                success: function (data) {
+                    if (data === null || data === undefined) {
+                        window.toastr.error("硬件参数获取失败，请确认本机硬件参数设置是否正确！");
+                    } else {
+                        var row = { command: 'OpenSerialPort', serialPortName: data.value, baudRate: data.baudRate };
+                        socket.send(JSON.stringify(row));
+                    }
                 }
             });
         } else {
@@ -60,9 +72,18 @@
     }
 
     function printDifferent() {
-        $.post("/HardWare/GetLaserPrintA4",
-            { deviceCode: macAddress },
-            function (data) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: { deviceCode: macAddress },
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/HardWare/GetLaserPrintA4",
+            success: function (data) {
                 if (data === null || data === undefined) {
                     window.toastr.error("硬件参数获取失败，请确认本机硬件参数设置是否正确！");
                 } else {
@@ -90,7 +111,8 @@
                     lodop.SET_PRINTER_INDEX(data.value);
                     lodop.PRINT();
                 }
-            });
+            }
+        });
     }
 
     function getLetterNo(barcodeNo) {

@@ -16,7 +16,6 @@
         $("#CheckForm").submit(function (e) {
             e.preventDefault();
             var data = $(this).serialize();
-
             var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
             $.ajax({
                 type: 'POST',

@@ -142,36 +142,69 @@
     }
 
     function printBillTcjh(listId) {
-        $.post("/Letter/SortingPrintTcjh/" + listId,
-            function (html) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: null,
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Letter/SortingPrintTcjh/" + listId,
+            success: function (html) {
                 var lodop = getLodop();
                 lodop.PRINT_INIT("");
                 var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
                 lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
                 lodop.PRINT();
-            });
+            }
+        });
     }
 
     function printBillJytx(listId) {
-        $.post("/Letter/SortingPrintJytx/" + listId,
-            function (html) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: null,
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Letter/SortingPrintJytx/" + listId,
+            success: function (html) {
                 var lodop = getLodop();
                 lodop.PRINT_INIT("");
                 var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
                 lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
                 lodop.PRINT();
-            });
+            }
+        });
     }
 
     function printBillZs(listId) {
-        $.post("/Letter/SortingPrintZs/" + listId,
-            function (html) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: null,
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Letter/SortingPrintZs/" + listId,
+            success: function (html) {
                 var lodop = getLodop();
                 lodop.PRINT_INIT("");
                 var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
                 lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
                 lodop.PRINT();
-            });
+            }
+        });
     }
 
     function writeCard(listId) {

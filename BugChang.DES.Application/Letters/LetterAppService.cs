@@ -157,53 +157,56 @@ namespace BugChang.DES.Application.Letters
         {
             var result = new ResultEntity();
             var letter = Mapper.Map<Letter>(sendLetter);
-            var receiveDepartment = await _departmentManager.GetAsync(sendLetter.ReceiveDepartmentId);
-            var sendDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.SendDepartmentId), 11);
-            var receiveDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.ReceiveDepartmentId), 11);
-            letter.LetterType = letter.GetSendLetterType(sendDepartmentCode, receiveDepartmentCode);
-            int serialNumber;
-            var barcodeNo = "";
-            switch (letter.LetterType)
+            if (string.IsNullOrWhiteSpace(letter.BarcodeNo))
             {
-                case EnumLetterType.发信:
-                    switch (receiveDepartment.ReceiveChannel)
-                    {
-                        case EnumChannel.同城交换:
-                            serialNumber = await _serialNumberManager.GetSerialNumber(letter.SendDepartmentId, EnumSerialNumberType.同城交换);
-                            barcodeNo = _barcodeManager.MakeBarcodeLength26(sendDepartmentCode, receiveDepartmentCode,
-                                letter.SecretLevel, letter.UrgencyLevel,
-                                serialNumber);
-                            break;
-                        case EnumChannel.机要通信:
-                            serialNumber = await _serialNumberManager.GetSerialNumber(letter.SendDepartmentId, EnumSerialNumberType.机要通信);
-                            barcodeNo = _barcodeManager.MakeBarcodeLength33(sendDepartmentCode, receiveDepartmentCode,
-                                letter.SecretLevel, letter.UrgencyLevel,
-                                serialNumber);
-                            break;
-                    }
-                    break;
-                case EnumLetterType.内交换:
-                    serialNumber = await _serialNumberManager.GetSerialNumber(letter.SendDepartmentId, EnumSerialNumberType.内部交换);
-                    barcodeNo = _barcodeManager.MakeBarcodeLength33(sendDepartmentCode, receiveDepartmentCode,
-                        letter.SecretLevel, letter.UrgencyLevel,
-                        serialNumber);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException($"发信类型有误");
-            }
+                var receiveDepartment = await _departmentManager.GetAsync(sendLetter.ReceiveDepartmentId);
+                var sendDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.SendDepartmentId), 11);
+                var receiveDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.ReceiveDepartmentId), 11);
+                letter.LetterType = letter.GetSendLetterType(sendDepartmentCode, receiveDepartmentCode);
+                int serialNumber;
+                var barcodeNo = "";
+                switch (letter.LetterType)
+                {
+                    case EnumLetterType.发信:
+                        switch (receiveDepartment.ReceiveChannel)
+                        {
+                            case EnumChannel.同城交换:
+                                serialNumber = await _serialNumberManager.GetSerialNumber(letter.SendDepartmentId, EnumSerialNumberType.同城交换);
+                                barcodeNo = _barcodeManager.MakeBarcodeLength26(sendDepartmentCode, receiveDepartmentCode,
+                                    letter.SecretLevel, letter.UrgencyLevel,
+                                    serialNumber);
+                                break;
+                            case EnumChannel.机要通信:
+                                serialNumber = await _serialNumberManager.GetSerialNumber(letter.SendDepartmentId, EnumSerialNumberType.机要通信);
+                                barcodeNo = _barcodeManager.MakeBarcodeLength33(sendDepartmentCode, receiveDepartmentCode,
+                                    letter.SecretLevel, letter.UrgencyLevel,
+                                    serialNumber);
+                                break;
+                        }
+                        break;
+                    case EnumLetterType.内交换:
+                        serialNumber = await _serialNumberManager.GetSerialNumber(letter.SendDepartmentId, EnumSerialNumberType.内部交换);
+                        barcodeNo = _barcodeManager.MakeBarcodeLength33(sendDepartmentCode, receiveDepartmentCode,
+                            letter.SecretLevel, letter.UrgencyLevel,
+                            serialNumber);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException($"发信类型有误");
+                }
 
-            if (barcodeNo == "")
-            {
-                result.Message = "条码生成失败";
-                return result;
+                if (barcodeNo == "")
+                {
+                    result.Message = "条码生成失败";
+                    return result;
+                }
+                letter.BarcodeNo = barcodeNo;
+                letter.LetterNo = barcodeNo.Length == 33 ? barcodeNo.Substring(15, 7) : barcodeNo.Substring(8, 8);
             }
-            letter.BarcodeNo = barcodeNo;
-            letter.LetterNo = barcodeNo.Length == 33 ? barcodeNo.Substring(15, 7) : barcodeNo.Substring(8, 8);
             await _letterRepository.AddAsync(letter);
 
             var barcode = new Barcode
             {
-                BarcodeNo = barcodeNo,
+                BarcodeNo = letter.BarcodeNo,
                 Entity = EnumBarcodeEntity.信件,
                 Souce = EnumBarcodeSouce.本系统,
                 Status = EnumBarcodeStatus.已就绪,
@@ -211,12 +214,12 @@ namespace BugChang.DES.Application.Letters
                 CreateTime = DateTime.Now,
                 CreateBy = letter.CreateBy
             };
-            barcode.BarcodeType = barcode.AnalysisBarcodeType(barcodeNo);
+            barcode.BarcodeType = barcode.AnalysisBarcodeType(letter.BarcodeNo);
             await _barcodeRepository.AddAsync(barcode);
 
             var baroceLog = new BarcodeLog
             {
-                BarcodeNumber = barcodeNo,
+                BarcodeNumber = letter.BarcodeNo,
                 BarcodeStatus = EnumBarcodeStatus.已就绪,
                 DepartmentId = letter.SendDepartmentId,
                 OperationTime = DateTime.Now,

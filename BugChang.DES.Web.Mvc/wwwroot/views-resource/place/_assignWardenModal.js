@@ -7,9 +7,18 @@
         $("#AssignWardenForm").submit(function (e) {
             e.preventDefault();
             var wardenIds = $(".warden-select").val();
-            $.post('/Place/AssignWarden',
-                { placeId: placeId, wardenIds: wardenIds },
-                function (result) {
+            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+            $.ajax({
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: { placeId: placeId, wardenIds: wardenIds },
+                headers:
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
+                url: "/Place/AssignWarden",
+                success: function (result) {
                     if (result.success) {
                         //关闭模态
                         $("#AssignWardenModal").modal("hide");
@@ -17,7 +26,8 @@
                     } else {
                         window.toastr.error(result.message);
                     }
-                });
+                }
+            });
         });
     });
 

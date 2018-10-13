@@ -27,9 +27,18 @@
 
         $("#AssignDetailForm").submit(function (e) {
             e.preventDefault();
-            $.post('/Group/AssignDetail',
-                { groupId: groupId, strDetailId: getStrDetailId() },
-                function (result) {
+            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+            $.ajax({
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: { groupId: groupId, strDetailId: getStrDetailId() },
+                headers:
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
+                url: "/Group/AssignDetail",
+                success: function (result) {
                     if (result.success) {
                         //关闭模态
                         $("#AssignDetailModal").modal("hide");
@@ -37,7 +46,8 @@
                     } else {
                         window.toastr.error(result.message);
                     }
-                });
+                }
+            });
         });
 
     });

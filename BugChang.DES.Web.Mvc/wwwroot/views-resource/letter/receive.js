@@ -1,5 +1,7 @@
 ﻿var LetterReceive = function () {
     var table;
+    var socket;
+    var deviceCode;
     var groupTreeObj;
     var groupDetailTreeObj;
     var currentId;
@@ -32,6 +34,8 @@
         }
     };
     $(function () {
+
+        initSocket();
 
         initGroupTree();
 
@@ -263,48 +267,76 @@
     }
 
     function printBarcode(letterId) {
-        $.get("/Letter/GetReceiveBarcode/" + letterId, function (data) {
-            var lodop = getLodop();
-            lodop.PRINT_INIT("");
-            lodop.SET_PRINT_MODE("PRINT_NOCOLLATE", 1);
-            lodop.PRINT_INIT("");
-            lodop.SET_PRINT_MODE("PRINT_NOCOLLATE", 1);
-            lodop.ADD_PRINT_BARCODE("7.11mm", "5.78mm", "15.01mm", "66.99mm", "128Auto", data.barcodeNo);
-            lodop.SET_PRINT_STYLEA(0, "ShowBarText", 0);
-            lodop.SET_PRINT_STYLEA(0, "Angle", 90);
-            lodop.ADD_PRINT_LINE("12.87mm", "22.75mm", "12.87mm", "117.75mm", 0, 1);
-            lodop.ADD_PRINT_LINE("19.26mm", "22.97mm", "19.26mm", "117.96mm", 0, 1);
-            lodop.ADD_PRINT_LINE("68.33mm", "24.77mm", "68.33mm", "119.76mm", 0, 1);
-            lodop.ADD_PRINT_TEXT("6.56mm", "22.75mm", "24.45mm", "6.01mm", data.secretLevel);
-            lodop.SET_PRINT_STYLEA(0, "FontSize", 16);
-            lodop.ADD_PRINT_TEXT("6.56mm", "46.67mm", "74.89mm", "6.01mm", "信封号：" + data.letterNo);
-            lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
-            lodop.ADD_PRINT_TEXT("13.86mm", "22.86mm", "44.6mm", "6.01mm", "缓急：" + data.urgencyLevel);
-            lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
-            lodop.ADD_PRINT_TEXT("33.34mm", "23.71mm", "97.9mm", "26.16mm", data.receiveDepartmentName);
-            lodop.SET_PRINT_STYLEA(0, "FontSize", 28);
-            lodop.SET_PRINT_STYLEA(0, "Alignment", 2);
-            lodop.SET_PRINT_STYLEA(0, "LineSpacing", "-0.21mm");
-            lodop.SET_PRINT_STYLEA(0, "LetterSpacing", "-0.21mm");
-            lodop.ADD_PRINT_TEXT("59.61mm", "23.71mm", "98.32mm", "7.81mm", data.receiver + "（收）");
-            lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
-            lodop.SET_PRINT_STYLEA(0, "FontSize", 22);
-            lodop.SET_PRINT_STYLEA(0, "Alignment", 3);
-            lodop.ADD_PRINT_TEXT("70.61mm", "24.72mm", "70.02mm", "6.01mm", data.sendDepartmentName);
-            lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
-            lodop.SET_PRINT_STYLEA(0, "Bold", 1);
-            lodop.ADD_PRINT_TEXT("70.61mm", "94.72mm", "27.66mm", "6.01mm", data.printDate);
-            lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
-            lodop.ADD_PRINT_LINE("26.54mm", "23.43mm", "26.54mm", "119.23mm", 0, 1);
-            lodop.ADD_PRINT_TEXT("20.57mm", "23.14mm", "44.7mm", "5.29mm", "原始编号：" + data.oldBarcodeNo);
-            lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
-            lodop.ADD_PRINT_TEXT("13.12mm", "68.58mm", "52.92mm", "6.35mm", "市机码：" + data.customData);
-            lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
-            lodop.ADD_PRINT_TEXT("20.53mm", "68.37mm", "53.13mm", "5.5mm", "原发单位：" + data.oldSendDepartmentName);
-            lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
-            //lodop.SET_PRINTER_INDEX(data.Value);
-            lodop.PRINT_DESIGN();
-        });
+        $.get("/HardWare/GetBarcodePrint80130",
+            { deviceCode: deviceCode },
+            function (hard) {
+                $.get("/Letter/GetReceiveBarcode/" + letterId, function (data) {
+                    var lodop = getLodop();
+                    lodop.PRINT_INIT("");
+                    lodop.SET_PRINT_MODE("PRINT_NOCOLLATE", 1);
+                    lodop.ADD_PRINT_BARCODE("7.11mm", "5.78mm", "15.01mm", "66.99mm", "128Auto", data.barcodeNo);
+                    lodop.SET_PRINT_STYLEA(0, "ShowBarText", 0);
+                    lodop.SET_PRINT_STYLEA(0, "Angle", 90);
+                    lodop.ADD_PRINT_LINE("12.87mm", "22.75mm", "12.87mm", "117.75mm", 0, 1);
+                    lodop.ADD_PRINT_LINE("19.26mm", "22.97mm", "19.26mm", "117.96mm", 0, 1);
+                    lodop.ADD_PRINT_LINE("68.33mm", "24.77mm", "68.33mm", "119.76mm", 0, 1);
+                    lodop.ADD_PRINT_TEXT("6.56mm", "22.75mm", "24.45mm", "6.01mm", data.secretLevel);
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 16);
+                    lodop.ADD_PRINT_TEXT("6.56mm", "46.67mm", "74.89mm", "6.01mm", "信封号：" + data.letterNo);
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
+                    lodop.ADD_PRINT_TEXT("13.86mm", "22.86mm", "44.6mm", "6.01mm", "缓急：" + data.urgencyLevel);
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
+                    lodop.ADD_PRINT_TEXT("33.34mm", "23.71mm", "97.9mm", "26.16mm", data.receiveDepartmentName.replace("北京市国家安全局", "   "));
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 28);
+                    lodop.SET_PRINT_STYLEA(0, "Alignment", 2);
+                    lodop.SET_PRINT_STYLEA(0, "LineSpacing", "-0.21mm");
+                    lodop.SET_PRINT_STYLEA(0, "LetterSpacing", "-0.21mm");
+                    lodop.ADD_PRINT_TEXT("59.61mm", "23.71mm", "98.32mm", "7.81mm", data.receiver + "（收）");
+                    lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 22);
+                    lodop.SET_PRINT_STYLEA(0, "Alignment", 3);
+                    lodop.ADD_PRINT_TEXT("70.61mm", "24.72mm", "70.02mm", "6.01mm", data.sendDepartmentName);
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
+                    lodop.SET_PRINT_STYLEA(0, "Bold", 1);
+                    lodop.ADD_PRINT_TEXT("70.61mm", "94.72mm", "27.66mm", "6.01mm", data.printDate);
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
+                    lodop.ADD_PRINT_LINE("26.54mm", "23.43mm", "26.54mm", "119.23mm", 0, 1);
+                    lodop.ADD_PRINT_TEXT("20.57mm", "23.14mm", "44.7mm", "5.29mm", "原始编号：" + data.oldBarcodeNo);
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
+                    lodop.ADD_PRINT_TEXT("13.12mm", "68.58mm", "52.92mm", "6.35mm", "市机码：" + data.shiJiCode);
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
+                    lodop.ADD_PRINT_TEXT("20.53mm", "68.37mm", "53.13mm", "5.5mm", "原发单位：" + data.oldSendDepartmentName);
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
+                    lodop.SET_PRINTER_INDEX(hard.value);
+                    lodop.PRINT();
+                });
+            });
+
+    }
+
+    function initSocket() {
+        if (typeof (WebSocket) === "undefined") {
+            window.toastr.error("您的浏览器不支持WebSocket");
+        }
+
+        socket = new WebSocket("ws://localhost:8181");
+
+        socket.onopen = function () {
+            var getMacAddress = { command: 'GetMacAddress' };
+            socket.send(JSON.stringify(getMacAddress));
+        };
+        socket.onmessage = function (e) {
+            var obj = JSON.parse(e.data);
+            if (obj.Method === "GetMacAddress") {
+                deviceCode = obj.Data;
+            }
+        };
+        socket.onerror = function (e) {
+            window.toastr.error("与SuperService连接出现错误");
+        };
+        socket.onclose = function () {
+            window.toastr.error("SuperService连接已关闭");
+        };
     }
 
     //刷新页面

@@ -139,14 +139,26 @@
 
     //打开扫描枪端口
     function openScanGun() {
-        console.log(macAddress);
-        if (macAddress !== undefined) {
-            $.post("/HardWare/GetScanGun", { deviceCode: macAddress }, function (data) {
-                if (data === null || data === undefined) {
-                    window.toastr.error("硬件参数获取失败，请确认本机硬件参数设置是否正确！");
-                } else {
-                    var row = { command: 'OpenSerialPort', serialPortName: data.value, baudRate: data.baudRate };
-                    socket.send(JSON.stringify(row));
+        if (deviceCode !== undefined) {
+
+            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+            $.ajax({
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: { deviceCode: deviceCode },
+                headers:
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
+                url: "/HardWare/GetScanGun",
+                success: function (data) {
+                    if (data === null || data === undefined) {
+                        window.toastr.error("硬件参数获取失败，请确认本机硬件参数设置是否正确！");
+                    } else {
+                        var row = { command: 'OpenSerialPort', serialPortName: data.value, baudRate: data.baudRate };
+                        socket.send(JSON.stringify(row));
+                    }
                 }
             });
         } else {
@@ -553,9 +565,18 @@
                     letterIds += ',' + selections[i].id;
                 }
                 letterIds = letterIds.substring(1);
-                $.post("/Letter/CreateTcjhList",
-                    { letterIds: letterIds },
-                    function (result) {
+                var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    data: { letterIds: letterIds },
+                    headers:
+                    {
+                        "BugChang-CSRF-HEADER": token //注意header要修改
+                    },
+                    url: "/Letter/CreateTcjhList",
+                    success: function (result) {
                         if (result.success) {
                             tcjhListId = result.data;
                             if (nextFunc === "writeCpuCard") {
@@ -566,7 +587,8 @@
                         } else {
                             window.toastr.error(result.message);
                         }
-                    });
+                    }
+                });
 
             } else {
                 window.toastr.error("未选中任何记录");
@@ -587,16 +609,26 @@
                     letterIds += ',' + selections[i].id;
                 }
                 letterIds = letterIds.substring(1);
-                $.post("/Letter/CreateZsList",
-                    { letterIds: letterIds },
-                    function (result) {
+                var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    data: { letterIds: letterIds },
+                    headers:
+                    {
+                        "BugChang-CSRF-HEADER": token //注意header要修改
+                    },
+                    url: "/Letter/CreateZsList",
+                    success: function (result) {
                         if (result.success) {
                             zsListId = result.data;
                             printZsBill();
                         } else {
                             window.toastr.error(result.message);
                         }
-                    });
+                    }
+                });
 
             } else {
                 window.toastr.error("未选中任何记录");
@@ -617,16 +649,26 @@
                     letterIds += ',' + selections[i].id;
                 }
                 letterIds = letterIds.substring(1);
-                $.post("/Letter/CreateJytxList",
-                    { letterIds: letterIds },
-                    function (result) {
+                var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    data: { letterIds: letterIds },
+                    headers:
+                    {
+                        "BugChang-CSRF-HEADER": token //注意header要修改
+                    },
+                    url: "/Letter/CreateJytxList",
+                    success: function (result) {
                         if (result.success) {
                             jytxListId = result.data;
                             printJytxBill();
                         } else {
                             window.toastr.error(result.message);
                         }
-                    });
+                    }
+                });
 
             } else {
                 window.toastr.error("未添加任何记录");
@@ -636,8 +678,18 @@
 
     //转市机
     function changeJytx(letterId) {
-        $.post("/Letter/Change2Jytx/" + letterId,
-            function (result) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: null,
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Letter/Change2Jytx/" + letterId,
+            success: function (result) {
                 if (result.success) {
                     tcjhTable.bootstrapTable('refresh', { silent: true });
                     zsTable.bootstrapTable('refresh', { silent: true });
@@ -646,7 +698,8 @@
                 } else {
                     window.toastr.error(result.message);
                 }
-            });
+            }
+        });
     }
 
     //写卡
@@ -667,38 +720,71 @@
 
     //打印同城交换清单
     function printTcjhBill() {
-        $.post("/Letter/SortingPrintTcjh/" + tcjhListId,
-            function (html) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: null,
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Letter/SortingPrintTcjh/" + tcjhListId,
+            success: function (html) {
                 var lodop = getLodop();
                 lodop.PRINT_INIT("");
                 var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
                 lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
                 lodop.PRINT();
-            });
+            }
+        });
     }
 
     //打印直送交换清单
     function printZsBill() {
-        $.post("/Letter/SortingPrintZs/" + zsListId,
-            function (html) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: null,
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Letter/SortingPrintZs/" + zsListId,
+            success: function (html) {
                 var lodop = getLodop();
                 lodop.PRINT_INIT("");
                 var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
                 lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
                 lodop.PRINT();
-            });
+            }
+        });
     }
 
     //打印机要通信清单
     function printJytxBill() {
-        $.post("/Letter/SortingPrintJytx/" + jytxListId,
-            function (html) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: null,
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/Letter/SortingPrintJytx/" + jytxListId,
+            success: function (html) {
                 var lodop = getLodop();
                 lodop.PRINT_INIT("");
                 var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
                 lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
                 lodop.PRINT();
-            });
+            }
+        });
     }
 
 

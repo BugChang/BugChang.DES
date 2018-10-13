@@ -7,9 +7,18 @@
         $("#AssignObjectSignerForm").submit(function (e) {
             e.preventDefault();
             var userIds = $(".object-signer-select").val();
-            $.post('/ExchangeObject/AssignObjectSigner',
-                { objectId: objectId, userIds: userIds },
-                function (result) {
+            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+            $.ajax({
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: { objectId: objectId, userIds: userIds },
+                headers:
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
+                url: "/ExchangeObject/AssignObjectSigner",
+                success: function (result) {
                     if (result.success) {
                         //关闭模态
                         $("#AssignObjectSignerModal").modal("hide");
@@ -17,7 +26,8 @@
                     } else {
                         window.toastr.error(result.message);
                     }
-                });
+                }
+            });
         });
     });
 

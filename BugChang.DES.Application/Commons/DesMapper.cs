@@ -210,7 +210,7 @@ namespace BugChang.DES.Application.Commons
 
                 cfg.CreateMap<Letter, LetterReceiveBarcodeDto>()
                     .ForMember(a => a.SendDepartmentName, b => b.MapFrom(c => c.SendDepartment.FullName))
-                    .ForMember(a => a.ReceiveDepartmentName, b => b.MapFrom(c => c.ReceiveDepartment.Name))
+                    .ForMember(a => a.ReceiveDepartmentName, b => b.MapFrom(c => c.ReceiveDepartment.FullName))
                     .ForMember(a => a.ShiJiCode, b => b.MapFrom(c => c.ShiJiCode ?? ""))
                     .ForMember(a => a.SecretLevel, b => b.MapFrom(c => c.SecretLevel.ToString()))
                     .ForMember(a => a.UrgencyLevel, b => b.MapFrom(c => c.UrgencyLevel.ToString()))
@@ -219,7 +219,7 @@ namespace BugChang.DES.Application.Commons
 
                 cfg.CreateMap<Letter, LetterSendBarcodeDto>()
                     .ForMember(a => a.SendDepartmentName, b => b.MapFrom(c => c.SendDepartment.FullName))
-                    .ForMember(a => a.ReceiveDepartmentName, b => b.MapFrom(c => c.ReceiveDepartment.Name))
+                    .ForMember(a => a.ReceiveDepartmentName, b => b.MapFrom(c => c.ReceiveDepartment.FullName))
                     .ForMember(a => a.BoxNo, b => b.MapFrom(c => c.ReceiveDepartment.FullCode.Substring(0, 3)))
                     .ForMember(a => a.Address, b => b.MapFrom(c => c.ReceiveDepartment.Address))
                     .ForMember(a => a.SecretLevel, b => b.MapFrom(c => c.SecretLevel.ToString()))

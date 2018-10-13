@@ -240,15 +240,26 @@
             dangerMode: true
         }).then((willDelete) => {
             if (willDelete) {
-                $.post('/User/Delete/' + userId,
-                    function (result) {
+                var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    data: null,
+                    headers:
+                    {
+                        "BugChang-CSRF-HEADER": token //注意header要修改
+                    },
+                    url: "/User/Delete/" + userId,
+                    success: function (result) {
                         if (result.success) {
                             window.swal('操作成功', userName + '已被删除!', 'success');
                             refresh();
                         } else {
                             window.swal('操作失败', result.message, 'error');
                         }
-                    });
+                    }
+                });
             }
         });
     }
@@ -288,15 +299,26 @@
 
     //切换用户启用状态
     function changeUserEnabled(id) {
-        $.post("/User/ChangeUserEnabled/" + id,
-            function (result) {
+        var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+        $.ajax({
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: null,
+            headers:
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
+            url: "/User/ChangeUserEnabled/" + id,
+            success: function (result) {
                 if (result.success) {
                     window.toastr.success('操作成功');
                     refresh();
                 } else {
                     window.toastr.error(result.message);
                 }
-            });
+            }
+        });
     }
 
     //向外暴露方法

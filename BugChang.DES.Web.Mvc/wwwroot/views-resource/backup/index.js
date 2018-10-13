@@ -31,17 +31,26 @@
                         if ($.trim(value) === '') {
                             window.toastr.error('备份说明不能为空');
                         } else {
-                            $.post("/BackUp/BackUpNow",
+                            var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
+                            $.ajax({
+                                type: 'POST',
+                                async: false,
+                                cache: false,
+                                data: { remark: value },
+                                headers:
                                 {
-                                    remark: value
-                                }, function (result) {
+                                    "BugChang-CSRF-HEADER": token //注意header要修改
+                                },
+                                url: "/BackUp/BackUpNow",
+                                success: function (result) {
                                     if (result.success) {
                                         window.toastr.success('备份成功');
                                         refresh();
                                     } else {
                                         window.toastr.error('备份失败');
                                     }
-                                });
+                                }
+                            });
                         }
                     }
                 });
@@ -94,7 +103,7 @@
                     targets: 5,
                     render: function (data, type, row) {
                         var strHtml = '';
-                        if (row.type===1) {
+                        if (row.type === 1) {
                             strHtml = "自动备份";
                         } else {
                             strHtml = "手动备份";
