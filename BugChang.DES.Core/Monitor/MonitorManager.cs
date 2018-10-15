@@ -588,9 +588,10 @@ namespace BugChang.DES.Core.Monitor
                 var box = await _boxRepository.GetByIdAsync(boxId);
                 box.HasUrgent = false;
                 box.FileCount = 0;
+                _logger.LogWarning($"--------------用户取件结束：1--------------");
                 return 1;
             }
-            _logger.LogWarning($"未找到签收人");
+            _logger.LogWarning($"--------------用户取件结束：0--------------");
             return 0;
         }
 
