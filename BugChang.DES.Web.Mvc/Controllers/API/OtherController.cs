@@ -183,6 +183,7 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
                     SecretLevel = sec,
                     UrgencyLevel = urg
                 };
+                
                 var result = await _letterAppService.AddSendLetter(letter);
                 if (result.Success)
                 {

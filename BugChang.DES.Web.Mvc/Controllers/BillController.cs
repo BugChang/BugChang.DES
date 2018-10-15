@@ -12,6 +12,7 @@ using BugChang.DES.Core.Clients;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Bill;
 using BugChang.DES.Core.Exchanges.Channel;
+using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Bill;
 using BugChang.DES.Web.Mvc.Models.Common;
@@ -53,15 +54,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
                     Bill = bill,
                     BillDetails = billDetails
                 };
-                if (bill.DepartmentId != CurrentUser.DepartmentId)
-                {
-                    return View("InsideDetail", model);
-                }
 
                 if (bill.ObjectId != null)
                 {
                     var exchangeObject = await _exchangeObjectAppService.GetForEditByIdAsync(bill.ObjectId.Value);
-                    if (exchangeObject.ObjectType == (int)EnumChannel.内部)
+                    if (exchangeObject.ObjectType == (int)EnumObjectType.渠道)
                     {
                         return View("InsideDetail", model);
                     }
@@ -154,11 +151,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
                     }
 
                     result.Success = true;
-                    result.Data = departments.Select(a => new SelectViewModel
+                    result.Data = departments.Distinct().Select(a => new SelectViewModel
                     {
                         Id = a.Id,
                         Text = a.Name
-                    }).Distinct();
+                    });
                 }
             }
             return Json(result);

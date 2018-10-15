@@ -24,7 +24,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         {
             var query = from roleMenu in _dbContext.RoleMenus
                         where roles.Contains(roleMenu.Role.Name)
-                        select roleMenu.Menu;
+                        select  roleMenu.Menu;
             return await query.ToListAsync();
         }
 

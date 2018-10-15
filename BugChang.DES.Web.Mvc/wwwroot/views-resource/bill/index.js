@@ -130,7 +130,6 @@
     }
 
     function printReceive(objectId) {
-        $('body').loading();
         var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
         $.ajax({
             type: 'POST',
@@ -153,7 +152,6 @@
     }
 
     function printSend(departmentId) {
-        $('body').loading();
         var token = $("input[name='BugChangFieldName']").val();//隐藏域的名称要改
         $.ajax({
             type: 'POST',

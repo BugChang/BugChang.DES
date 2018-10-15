@@ -200,7 +200,7 @@ namespace BugChang.DES.Application.Letters
                     return result;
                 }
                 letter.BarcodeNo = barcodeNo;
-                letter.LetterNo = barcodeNo.Length == 33 ? barcodeNo.Substring(15, 7) : barcodeNo.Substring(8, 8);
+                letter.LetterNo = letter.GetLetterNo(barcodeNo);
             }
             await _letterRepository.AddAsync(letter);
 
@@ -619,7 +619,7 @@ namespace BugChang.DES.Application.Letters
                   a.DepartmentId == _commonSettings.Value.UseDepartmentId) && a.BarcodeStatus == EnumBarcodeStatus.已投递 &&
                  a.CurrentPlaceId == _commonSettings.Value.RootPlaceId).ToListAsync();
 
-            var letters = await _letterRepository.GetQueryable()
+            var letters = await _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
                 .Where(a => barcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
 
             var pageResult = new PageResultModel<Letter>

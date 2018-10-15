@@ -50,6 +50,26 @@
                 <td></td>
             </tr>
         }
+        @*@{
+            if (15 - Model.LetterSortings.Count % 15 != 15)
+            {
+                for (int k = 0; k < 15 - Model.LetterSortings.Count % 15; k++)
+                {
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+            }
+        }*@
     </tbody>
     <tfoot>
         <tr>

@@ -17,6 +17,7 @@ namespace BugChang.DES.Core.Authorization.Menus
         public async Task<IList<Menu>> GetUserMenusAsync(IList<string> userRoles)
         {
             var menus = await _menuRepository.GetMenusByRolesAsync(userRoles);
+            menus = menus.Distinct().ToList();
             return menus;
         }
 

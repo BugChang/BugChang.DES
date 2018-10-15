@@ -131,7 +131,7 @@ namespace BugChang.DES.Application.Bills
             var result = new ResultEntity();
             var barcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
                 !a.IsSynBill && a.CurrentPlaceId == placeId && a.DepartmentId == departmentId &&
-                a.BarcodeStatus == EnumBarcodeStatus.已签收).ToListAsync();
+                a.BarcodeStatus == EnumBarcodeStatus.已投递).ToListAsync();
             if (barcodeLogs.Count > 0)
             {
                 var department = await _departmentRepository.GetByIdAsync(departmentId);
@@ -153,7 +153,7 @@ namespace BugChang.DES.Application.Bills
                 };
                 exchangeList.ListNo = exchangeList.GetListNo(serialNo);
                 await _exchangeListRepository.AddAsync(exchangeList);
-
+                await _unitOfWork.CommitAsync();
                 foreach (var letter in letters)
                 {
                     var barcodeLog = barcodeLogs.FirstOrDefault(a => a.BarcodeNumber == letter.BarcodeNo);
@@ -230,7 +230,7 @@ namespace BugChang.DES.Application.Bills
                 };
                 exchangeList.ListNo = exchangeList.GetListNo(serialNo);
                 await _exchangeListRepository.AddAsync(exchangeList);
-
+                await _unitOfWork.CommitAsync();
                 //添加收件详情
                 foreach (var letter in receiveLettesr)
                 {

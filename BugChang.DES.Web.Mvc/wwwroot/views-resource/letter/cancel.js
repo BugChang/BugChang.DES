@@ -78,6 +78,8 @@
                 } else {
                     window.toastr.error("连接扫描枪出现错误");
                 }
+            } else {
+                $("#barcodeNo").val(obj.Data);
             }
         };
         socket.onerror = function () {
