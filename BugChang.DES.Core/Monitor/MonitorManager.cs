@@ -319,7 +319,7 @@ namespace BugChang.DES.Core.Monitor
 
                             if (!isFind)
                             {
-                                _logger.LogWarning($"已找到上级流转对象箱格，判断是否是该场所下的单位发件");
+                                _logger.LogWarning($"未找到上级流转对象箱格，判断是否是该场所下的单位发件");
                                 var currentSend = false;
                                 //判断是否是该场所下的单位发件
                                 var place = await _placeRepository.GetByIdAsync(placeId);
