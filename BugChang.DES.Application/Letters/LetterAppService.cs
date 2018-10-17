@@ -163,6 +163,10 @@ namespace BugChang.DES.Application.Letters
                 var sendDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.SendDepartmentId), 11);
                 var receiveDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.ReceiveDepartmentId), 11);
                 letter.LetterType = letter.GetSendLetterType(sendDepartmentCode, receiveDepartmentCode);
+                if (receiveDepartment.ReceiveChannel == EnumChannel.机要通信)
+                {
+                    letter.LetterType = EnumLetterType.发信;
+                }
                 int serialNumber;
                 var barcodeNo = "";
                 switch (letter.LetterType)
@@ -201,6 +205,18 @@ namespace BugChang.DES.Application.Letters
                 }
                 letter.BarcodeNo = barcodeNo;
                 letter.LetterNo = letter.GetLetterNo(barcodeNo);
+            }
+            else
+            {
+                var receiveDepartment = await _departmentManager.GetAsync(sendLetter.ReceiveDepartmentId);
+                var sendDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.SendDepartmentId), 11);
+                var receiveDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.ReceiveDepartmentId), 11);
+                letter.LetterType = letter.GetSendLetterType(sendDepartmentCode, receiveDepartmentCode);
+                letter.LetterNo = letter.GetLetterNo(letter.BarcodeNo);
+                if (receiveDepartment.ReceiveChannel == EnumChannel.机要通信)
+                {
+                    letter.LetterType = EnumLetterType.发信;
+                }
             }
             await _letterRepository.AddAsync(letter);
 
@@ -619,13 +635,13 @@ namespace BugChang.DES.Application.Letters
                   a.DepartmentId == _commonSettings.Value.UseDepartmentId) && a.BarcodeStatus == EnumBarcodeStatus.已投递 &&
                  a.CurrentPlaceId == _commonSettings.Value.RootPlaceId).ToListAsync();
 
-            var letters = await _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
-                .Where(a => barcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+            var letters = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
+                .Where(a => barcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo));
 
             var pageResult = new PageResultModel<Letter>
             {
-                Rows = letters,
-                Total = letters.Count
+                Rows = await letters.OrderByDescending(a => a.Id).Skip(pageSearch.Skip).Take(pageSearch.Take).ToListAsync(),
+                Total = await letters.CountAsync()
             };
             return Mapper.Map<PageResultModel<LetterReceiveListDto>>(pageResult);
         }

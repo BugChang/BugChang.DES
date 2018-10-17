@@ -48,7 +48,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         [HttpPost]
         [TypeFilter(typeof(OperationFilter),
-            Arguments = new object[] { "Rule.Create" })]
+            Arguments = new object[] { "User.Create" })]
         public async Task<IActionResult> Create(UserEditDto user)
         {
             if (user.Id > 0)
@@ -60,7 +60,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         [HttpPost]
         [TypeFilter(typeof(OperationFilter),
-            Arguments = new object[] { "Rule.Edit" })]
+            Arguments = new object[] { "User.Edit" })]
         public async Task<IActionResult> Edit(UserEditDto user)
         {
             if (user.Id <= 0)

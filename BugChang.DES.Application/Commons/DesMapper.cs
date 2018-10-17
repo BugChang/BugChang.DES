@@ -244,8 +244,8 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.UrgencyTime, b => b.MapFrom(c => c.UrgencyTime == null ? "-" : c.UrgencyTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
 
                 cfg.CreateMap<Letter, LetterSortingDto>()
-                    .ForMember(a => a.SendDepartmentName, b => b.MapFrom(c => c.SendDepartment.Name))
-                    .ForMember(a => a.ReceiveDepartmentName, b => b.MapFrom(c => c.ReceiveDepartment.Name))
+                    .ForMember(a => a.SendDepartmentName, b => b.MapFrom(c => c.SendDepartment.FullName))
+                    .ForMember(a => a.ReceiveDepartmentName, b => b.MapFrom(c => c.ReceiveDepartment.FullName))
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
                     .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
                     .ForMember(a => a.UrgencyTime, b => b.MapFrom(c => c.UrgencyTime == null ? "-" : c.UrgencyTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
@@ -281,7 +281,7 @@ namespace BugChang.DES.Application.Commons
                 cfg.CreateMap<BackUpEditDto, DataBaseBackUp>();
 
                 #endregion
-                
+
                 cfg.CreateMap<ExchangeList, BillDto>()
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))

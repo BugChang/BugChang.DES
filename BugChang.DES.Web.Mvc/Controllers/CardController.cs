@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Cards;
 using BugChang.DES.Application.Cards.Dtos;
-using BugChang.DES.Application.Rules.Dtos;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Web.Mvc.Filters;

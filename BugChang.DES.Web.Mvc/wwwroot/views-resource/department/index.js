@@ -261,10 +261,10 @@
     function refresh() {
         //刷新表格
         table.draw(false);
-        currentNode.isParent = true;
-        zTreeObj.updateNode(currentNode);
+        //currentNode.isParent = true;
+        //zTreeObj.updateNode(currentNode);
         //刷新机构树
-        zTreeObj.reAsyncChildNodes(currentNode, 'refresh');
+        //zTreeObj.reAsyncChildNodes(currentNode, 'refresh');
         //刷新上级单位列表
         initSelect();
     }
