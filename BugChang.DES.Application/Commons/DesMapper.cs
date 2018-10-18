@@ -254,6 +254,8 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
                     .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")));
 
+
+
                 #endregion
 
                 #region HardWare
@@ -287,6 +289,23 @@ namespace BugChang.DES.Application.Commons
                     .ForMember(a => a.CreateUserName, b => b.MapFrom(c => c.CreateUser.DisplayName))
                     .ForMember(a => a.CreateTime, b => b.MapFrom(c => c.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")))
                     .ForMember(a => a.UpdateTime, b => b.MapFrom(c => c.UpdateTime == null ? "" : c.UpdateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+
+                cfg.CreateMap<BarcodeLog, ExchangeLogListDto>()
+                    .ForMember(a => a.CurrentObjectName,
+                        b => b.MapFrom(c => c.CurrentObject == null ? "-" : c.CurrentObject.Name))
+                    .ForMember(a => a.CurrentPlaceName,
+                        b => b.MapFrom(c => c.CurrentPlace == null ? "-" : c.CurrentPlace.Name))
+                    .ForMember(a => a.DepartmentName,
+                        b => b.MapFrom(c => c.Department == null ? "-" : c.Department.Name))
+                    .ForMember(a => a.OperatorName,
+                        b => b.MapFrom(c => c.Operator == null ? "-" : c.Operator.DisplayName))
+                    .ForMember(a => a.BarcodeStatus, b => b.MapFrom(c => c.BarcodeStatus.ToString()))
+                    .ForMember(a => a.BarcodeSubStatus, b => b.MapFrom(c => c.BarcodeSubStatus.ToString()))
+                    .ForMember(a => a.LastOperationTime,
+                        b => b.MapFrom(c => c.LastOperationTime.ToString("yyyy-MM-dd HH:mm:ss")))
+                    .ForMember(a => a.OperationTime,
+                        b => b.MapFrom(c => c.OperationTime.ToString("yyyy-MM-dd HH:mm:ss")))
+                    .ForMember(a => a.IsSynBill, b => b.MapFrom(c => c.IsSynBill ? "是" : "否"));
             });
         }
 

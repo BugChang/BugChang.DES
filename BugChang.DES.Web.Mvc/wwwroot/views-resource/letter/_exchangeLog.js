@@ -13,7 +13,7 @@
             autoWith: true,
             searching: false,
             ajax: {
-                url: '/Letter/GetSortingListDetailsForTable',
+                url: '/Letter/GetExchangeLogs',
                 data: function (para) {
                     //添加额外的参数传给服务器
                     para.barcodeNo = barcodeNo;
