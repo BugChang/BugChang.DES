@@ -1,0 +1,10 @@
+﻿@using BugChang.DES.Web.Mvc.Models.Common
+@Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("流转记录"))
+<div class="modal-body">
+    <input type="hidden" id="DefaultValue" data-barcode-no="@ViewBag.BarcodeNo" />
+    <div class="table-responsive">
+        <table id="logTable" class="table table-bordered table-hover text-nowrap"></table>
+    </div>
+</div>
+@Html.Partial("~/Views/Shared/Modals/_ModalFooterWithClose.cshtml")
+<script src="~/views-resource/letter/_exchangeLog.js" asp-append-version="true"></script>

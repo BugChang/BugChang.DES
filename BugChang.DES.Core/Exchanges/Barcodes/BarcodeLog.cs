@@ -1,5 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using BugChang.DES.Core.Authorization.Users;
 using BugChang.DES.Core.Commons;
+using BugChang.DES.Core.Departments;
+using BugChang.DES.Core.Exchanges.ExchangeObjects;
+using BugChang.DES.Core.Exchanges.Places;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BugChang.DES.Core.Exchanges.Barcodes
 {
@@ -62,5 +68,19 @@ namespace BugChang.DES.Core.Exchanges.Barcodes
         public bool IsSynBill { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        [ForeignKey("CurrentObjectId")]
+        public virtual ExchangeObject CurrentObject { get; set; }
+
+        [ForeignKey("CurrentPlaceId")]
+        public virtual Place CurrentPlace { get; set; }
+
+        [ForeignKey("OperatorId")]
+        public virtual User Operator { get; set; }
+
+
+        [ForeignKey("DepartmentId")]
+        public virtual Department Department { get; set; }
+
     }
 }

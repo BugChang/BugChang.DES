@@ -10,6 +10,9 @@ namespace BugChang.DES.Application.Letters
 {
     public interface ILetterAppService
     {
+
+        Task<string> GetBarcodeNoByLetterId(int letterId);
+
         Task<ReceiveLetterEditDto> GetReceiveLetter(int letterId);
 
         Task<LetterSendEditDto> GetSendLetter(int letterId);
@@ -67,5 +70,7 @@ namespace BugChang.DES.Application.Letters
         Task<DepartmentStatisticsDto> GetDepartmentStatistics(int departmentId, DateTime beginDate, DateTime endDate);
 
         Task<PlaceStatisticsDto> GetPlaceStatistics(int placeId, DateTime beginDate, DateTime endDate);
+
+        Task<IList<ExchangeLogListDto>> GetExchangeLogs(string barcodeNo);
     }
 }

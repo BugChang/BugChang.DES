@@ -61,6 +61,12 @@ namespace BugChang.DES.Application.Letters
             _placeWardenRepository = placeWardenRepository;
         }
 
+        public async Task<string> GetBarcodeNoByLetterId(int letterId)
+        {
+            var letter = await _letterRepository.GetByIdAsync(letterId);
+            return letter.BarcodeNo;
+        }
+
         public Task<ReceiveLetterEditDto> GetReceiveLetter(int letterId)
         {
             throw new NotImplementedException();
@@ -864,5 +870,11 @@ namespace BugChang.DES.Application.Letters
             return placeStatistics;
         }
 
+        public async Task<IList<ExchangeLogListDto>> GetExchangeLogs(string barcodeNo)
+        {
+            var barcodeLogs = await _barcodeLogRepository.GetQueryable().Include(a => a.CurrentPlace).Include(a => a.CurrentObject).Include(a => a.Operator).Include(a => a.Department).Where(a => a.BarcodeNumber == barcodeNo).OrderBy(a => a.Id)
+                .ToListAsync();
+            return Mapper.Map<IList<ExchangeLogListDto>>(barcodeLogs);
+        }
     }
 }

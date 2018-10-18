@@ -677,5 +677,30 @@ namespace BugChang.DES.Web.Mvc.Controllers
         }
 
         #endregion
+
+        #region 流转记录
+
+        public async Task<IActionResult> ExchangeLog(int id)
+        {
+            var barcodeNo = await _letterAppService.GetBarcodeNoByLetterId(id);
+            ViewBag.BarcodeNo = barcodeNo;
+            return PartialView("_ExchangeLog");
+        }
+
+
+        public async Task<IActionResult> GetExchangeLogs(int draw, int start, int length, string barcodeNo)
+        {
+            var letters = await _letterAppService.GetExchangeLogs(barcodeNo);
+            var json = new
+            {
+                draw,
+                recordsTotal = letters.Count,
+                recordsFiltered = letters.Count,
+                data = letters
+            };
+            return Json(json);
+        }
+
+        #endregion
     }
 }

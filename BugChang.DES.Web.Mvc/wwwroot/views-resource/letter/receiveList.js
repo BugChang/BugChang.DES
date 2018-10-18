@@ -14,6 +14,13 @@
         $("#btnSearch").click(function () {
             search();
         });
+
+        $('#table').delegate('.exchange-detail',
+            'click',
+            function () {
+                var letterId = $(this).attr('data-letter-id');
+                exchangeLogs(letterId);
+            });
     });
 
 
@@ -174,5 +181,15 @@
                     allowClear: false
                 });
             });
+    }
+
+    //流转详情
+    function exchangeLogs(letterId) {
+        $('#ExchangeLogModal .modal-content').load('/Letter/ExchangeLog/' + letterId);
+        $('#ExchangeLogModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
     }
 })();
