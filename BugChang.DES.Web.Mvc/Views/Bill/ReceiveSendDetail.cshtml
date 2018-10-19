@@ -85,7 +85,7 @@
                             var detail = receiveDetails[i];
                             <tr>
                                 <td>@(i + 1)</td>
-                                <td>@detail.SendDepartmentName</td>
+                                <td>@detail.SendDepartmentName.Replace("北京市国家安全局", "")</td>
                                 <td>@detail.BarcodeNo</td>
                                 <td>@detail.Time.ToString("yy/MM/dd HH:mm")</td>
                                 <td>@detail.SecSecretLevelText</td>
@@ -136,7 +136,7 @@
                             var detail = sendDetails[i];
                             <tr>
                                 <td>@(i + 1)</td>
-                                <td>@detail.ReceiveDepartmentName</td>
+                                <td>@detail.ReceiveDepartmentName.Replace("北京市国家安全局", "")</td>
                                 <td>@detail.BarcodeNo</td>
                                 <td>@detail.Time.ToString("yy/MM/dd HH:mm")</td>
                                 <td>@detail.SecSecretLevelText</td>

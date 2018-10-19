@@ -1,8 +1,23 @@
 ﻿(function () {
     var socket;
     var deviceCode;
+    var maxTime = 20;
+    var time = maxTime;
     $(function () {
         initSocket();
+
+        $('body').on('keydown mousemove', function (e) {
+            time = maxTime; // reset
+        });
+
+        var intervalId = setInterval(function () {
+            time--;
+            if (time <= 0) {
+                logOut();
+                clearInterval(intervalId);
+            }
+        },
+            1000);
 
         $("#btnPrintAndExit").click(function () {
             print("/Account/Logout");
@@ -68,5 +83,9 @@
                 lodop.PRINT();
                 setTimeout('location.href="' + href + '"', 1000);
             });
+    }
+
+    function logOut() {
+        window.location.href = "/Account/Logout";
     }
 })();

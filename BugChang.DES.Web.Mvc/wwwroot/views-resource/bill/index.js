@@ -1,9 +1,24 @@
 ﻿(function () {
     var socket;
     var deviceCode;
+    var maxTime = 20;
+    var time = maxTime;
     $(function () {
 
         initSocket();
+
+        $('body').on('keydown mousemove', function (e) {
+            time = maxTime; // reset
+        });
+
+        var intervalId = setInterval(function() {
+                time--;
+                if (time <= 0) {
+                    logOut();
+                    clearInterval(intervalId);
+                }
+            },
+            1000);
 
         $(".print-receive").click(function () {
             checkReceive();
@@ -223,5 +238,9 @@
         socket.onclose = function () {
             window.toastr.error("SuperService连接已关闭");
         };
+    }
+
+    function logOut() {
+        window.location.href = "/Account/Logout";
     }
 })();

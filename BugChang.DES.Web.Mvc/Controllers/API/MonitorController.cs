@@ -162,13 +162,13 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
             {
                 _logger.LogWarning($"no：{no},cardValue:{cardValue},placeId:{placeId}");
                 var result = await _monitorAppService.UserGetLetter(no, cardValue, placeId);
-                return Json(result);
+                return Json(result > 0);
 
             }
             catch (Exception e)
             {
                 _logger.LogError("用户取件错误：" + e);
-                return Json(0);
+                return Json(false);
             }
 
 
