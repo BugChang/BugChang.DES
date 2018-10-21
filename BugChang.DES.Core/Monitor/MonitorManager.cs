@@ -180,7 +180,7 @@ namespace BugChang.DES.Core.Monitor
                             if (boxs.Count > 0)
                             {
                                 _logger.LogWarning($"虚拟流转对象存在下级流转对象并在该交换场所存在箱格");
-                                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
+                                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
                                 checkBarcodeModel.Record =
                                     boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
                                         .ToList();
@@ -216,7 +216,7 @@ namespace BugChang.DES.Core.Monitor
                                 if (boxs.Count > 0)
                                 {
                                     _logger.LogWarning($"虚拟流转对象存在下级流转对象并在该交换场所存在箱格");
-                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
+                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
                                     checkBarcodeModel.Record =
                                         boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
                                             .ToList();
@@ -227,7 +227,7 @@ namespace BugChang.DES.Core.Monitor
                                     boxs = await _boxObjectRepository.GetQueryable()
                                         .Where(a => a.Box.PlaceId == placeId && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
                                         .Select(a => a.Box).ToListAsync();
-                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
+                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
                                     checkBarcodeModel.Record =
                                         boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
                                             .ToList();
@@ -357,7 +357,7 @@ namespace BugChang.DES.Core.Monitor
                             if (boxs.Count > 0)
                             {
                                 _logger.LogWarning($"虚拟流转对象存在下级流转对象并在该交换场所存在箱格");
-                                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
+                                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
                                 checkBarcodeModel.Record =
                                     boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
                                         .ToList();
@@ -385,7 +385,7 @@ namespace BugChang.DES.Core.Monitor
                                 if (boxs.Count > 0)
                                 {
                                     _logger.LogWarning($"虚拟流转对象存在下级流转对象并在该交换场所存在箱格");
-                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
+                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
                                     checkBarcodeModel.Record =
                                         boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
                                             .ToList();
@@ -396,7 +396,7 @@ namespace BugChang.DES.Core.Monitor
                                     boxs = await _boxObjectRepository.GetQueryable()
                                         .Where(a => a.Box.PlaceId == placeId && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
                                         .Select(a => a.Box).ToListAsync();
-                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
+                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
                                     checkBarcodeModel.Record =
                                         boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
                                             .ToList();

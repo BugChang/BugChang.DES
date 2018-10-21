@@ -35,6 +35,7 @@
         });
 
         $("#btnReloadJytxTable").click(function () {
+            jytxListId = undefined;
             jytxTable.bootstrapTable('refresh', { silent: true });
             jytxScanTable.bootstrapTable('removeAll');
         });
@@ -189,6 +190,13 @@
                 {
                     field: 'checkBox',
                     checkbox: true
+                },
+                {
+                    field: 'number',
+                    title: '序号',
+                    formatter: function (value, row, index) {
+                        return index + 1;
+                    }
                 }, {
                     field: 'letterNo',
                     title: '信封编号'
@@ -287,6 +295,13 @@
             },
             columns: [
                 {
+                    field: 'number',
+                    title: '序号',
+                    formatter: function (value, row, index) {
+                        return index + 1;
+                    }
+                },
+                {
                     field: 'letterNo',
                     title: '信封编号'
                 }, {
@@ -381,6 +396,13 @@
             },
             columns: [
                 {
+                    field: 'number',
+                    title: '序号',
+                    formatter: function (value, row, index) {
+                        return index + 1;
+                    }
+                },
+                {
                     field: 'letterNo',
                     title: '信封编号'
                 }, {
@@ -473,6 +495,13 @@
                 }
             },
             columns: [
+                {
+                    field: 'number',
+                    title: '序号',
+                    formatter: function (value, row, index) {
+                        return index + 1;
+                    }
+                },
                 {
                     field: 'checkBox',
                     checkbox: true
@@ -793,8 +822,7 @@
     function doSort(letterId) {
         var row = jytxTable.bootstrapTable('getRowByUniqueId', letterId);
         if (row !== null && row !== undefined) {
-            jytxScanTable.bootstrapTable('append', row);
-            jytxScanTable.bootstrapTable('scrollTo', 'bottom');
+            jytxScanTable.bootstrapTable('prepend', row);
             jytxTable.bootstrapTable('removeByUniqueId', letterId);
         } else {
             window.toastr.error("排序失败，表格中不存在记录");
