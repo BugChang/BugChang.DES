@@ -143,6 +143,10 @@ namespace BugChang.DES.Core.Monitor
             _logger.LogWarning($"进入通用逻辑");
             var checkBarcodeModel = new CheckBarcodeModel();
             _logger.LogWarning($"检查信件类型：{letter.LetterType.ToString()}");
+            if (letter.SendDepartmentId == 0)
+            {
+                return checkBarcodeModel;
+            }
             switch (letter.LetterType)
             {
                 case EnumLetterType.收信:
@@ -156,12 +160,16 @@ namespace BugChang.DES.Core.Monitor
                             checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
                             return checkBarcodeModel;
                         }
+
                         _logger.LogWarning($"收件流转对象：{exchangeObject.Name}");
-                        var tempObject = exchangeObject;
+
+                        var objectId = exchangeObject.Id;
                         var boxs = await _boxObjectRepository.GetQueryable()
-                            .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == tempObject.Id && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
+                            .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == objectId && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
                             .Select(a => a.Box).ToListAsync();
+
                         _logger.LogWarning($"箱格数量：{boxs.Count}");
+
                         if (boxs.Count > 0)
                         {
                             checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
@@ -171,73 +179,14 @@ namespace BugChang.DES.Core.Monitor
                             return checkBarcodeModel;
                         }
 
-                        if (exchangeObject.IsVirtual && letter.SendDepartmentId != 0)
+                        if (exchangeObject.IsVirtual)
                         {
-                            //查找本场所，本流转对象的下级流转对象是否存在箱格
-                            boxs = await _boxObjectRepository.GetQueryable()
-                                .Where(a => a.Box.PlaceId == placeId && a.ExchangeObject.ParentId == exchangeObject.Id && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
-                                .Select(a => a.Box).ToListAsync();
-                            if (boxs.Count > 0)
-                            {
-                                _logger.LogWarning($"虚拟流转对象存在下级流转对象并在该交换场所存在箱格");
-                                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
-                                checkBarcodeModel.Record =
-                                    boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
-                                        .ToList();
-                                return checkBarcodeModel;
-                            }
+                            return await CheckVirtualObject(placeId, objectId);
                         }
 
-                        _logger.LogWarning($"循环判断上级流转对象在这有没有箱子");
-                        //循环判断上级流转对象在这有没有箱子
-                        while (exchangeObject.ParentId != null)
-                        {
-                            var o = exchangeObject;
-                            exchangeObject = await _objectRepository.GetQueryable().Where(a => a.Id == o.ParentId.Value)
-                                .FirstOrDefaultAsync();
-                            var exchangeObject1 = exchangeObject;
-                            boxs = await _boxObjectRepository.GetQueryable()
-                                .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == exchangeObject1.Id && a.Box.Enabled)
-                                .Select(a => a.Box).ToListAsync();
-                            if (boxs.Count > 0)
-                            {
-                                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
-                                checkBarcodeModel.Record = boxs.Select(a =>
-                                    new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id }).ToList();
-                                return checkBarcodeModel;
-                            }
-                            if (exchangeObject.IsVirtual && letter.SendDepartmentId != 0)
-                            {
-                                _logger.LogWarning($"虚拟流转对象");
-                                //查找本场所，本流转对象的下级流转对象是否存在箱格
-                                boxs = await _boxObjectRepository.GetQueryable()
-                                    .Where(a => a.Box.PlaceId == placeId && a.ExchangeObject.ParentId == tempObject.Id && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
-                                    .Select(a => a.Box).ToListAsync();
-                                if (boxs.Count > 0)
-                                {
-                                    _logger.LogWarning($"虚拟流转对象存在下级流转对象并在该交换场所存在箱格");
-                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
-                                    checkBarcodeModel.Record =
-                                        boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
-                                            .ToList();
-                                }
-                                else
-                                {
-                                    _logger.LogWarning($"除渠道箱外全部返回");
-                                    boxs = await _boxObjectRepository.GetQueryable()
-                                        .Where(a => a.Box.PlaceId == placeId && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
-                                        .Select(a => a.Box).ToListAsync();
-                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
-                                    checkBarcodeModel.Record =
-                                        boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
-                                            .ToList();
-                                }
-                                return checkBarcodeModel;
-                            }
-                        }
+                        return await CheckParent(exchangeObject, placeId);
 
                     }
-                    break;
                 case EnumLetterType.发信:
                     {
                         var receiveDepartment = await _departmentRepository.GetByIdAsync(letter.ReceiveDepartmentId);
@@ -349,7 +298,7 @@ namespace BugChang.DES.Core.Monitor
                             return checkBarcodeModel;
                         }
 
-                        if (exchangeObject.IsVirtual && letter.SendDepartmentId != 0)
+                        if (exchangeObject.IsVirtual)
                         {
                             boxs = await _boxObjectRepository.GetQueryable()
                                 .Where(a => a.Box.PlaceId == placeId && a.ExchangeObject.ParentId == tempObject.Id && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
@@ -357,7 +306,7 @@ namespace BugChang.DES.Core.Monitor
                             if (boxs.Count > 0)
                             {
                                 _logger.LogWarning($"虚拟流转对象存在下级流转对象并在该交换场所存在箱格");
-                                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
+                                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
                                 checkBarcodeModel.Record =
                                     boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
                                         .ToList();
@@ -385,7 +334,7 @@ namespace BugChang.DES.Core.Monitor
                                 if (boxs.Count > 0)
                                 {
                                     _logger.LogWarning($"虚拟流转对象存在下级流转对象并在该交换场所存在箱格");
-                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
+                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
                                     checkBarcodeModel.Record =
                                         boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
                                             .ToList();
@@ -396,7 +345,7 @@ namespace BugChang.DES.Core.Monitor
                                     boxs = await _boxObjectRepository.GetQueryable()
                                         .Where(a => a.Box.PlaceId == placeId && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
                                         .Select(a => a.Box).ToListAsync();
-                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一直投;
+                                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
                                     checkBarcodeModel.Record =
                                         boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
                                             .ToList();
@@ -477,6 +426,78 @@ namespace BugChang.DES.Core.Monitor
             _logger.LogWarning($"--------------结束检查条码：{JsonConvert.SerializeObject(checkBarcodeModel)}--------------");
             return checkBarcodeModel;
         }
+
+        /// <summary>
+        /// 虚拟流转对象逻辑
+        /// </summary>
+        /// <param name="placeId"></param>
+        /// <param name="objectId"></param>
+        /// <returns></returns>
+        private async Task<CheckBarcodeModel> CheckVirtualObject(int placeId, int objectId)
+        {
+            _logger.LogWarning($"虚拟流转对象");
+            var checkBarcodeModel = new CheckBarcodeModel();
+            var boxs = await _boxObjectRepository.GetQueryable()
+                 .Where(a => a.Box.PlaceId == placeId && a.ExchangeObject.ParentId == objectId && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
+                 .Select(a => a.Box).ToListAsync();
+            if (boxs.Count > 0)
+            {
+                _logger.LogWarning($"虚拟流转对象存在下级流转对象并在该交换场所存在箱格");
+                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
+                checkBarcodeModel.Record =
+                    boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
+                        .ToList();
+            }
+            else
+            {
+                _logger.LogWarning($"除渠道箱外全部返回");
+                boxs = await _boxObjectRepository.GetQueryable()
+                    .Where(a => a.Box.PlaceId == placeId && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
+                    .Select(a => a.Box).ToListAsync();
+                checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
+                checkBarcodeModel.Record =
+                    boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
+                        .ToList();
+            }
+            return checkBarcodeModel;
+        }
+
+
+        /// <summary>
+        ///  //查找上级流转对象逻辑
+        /// </summary>
+        /// <param name="exchangeObject"></param>
+        /// <param name="placeId"></param>
+        /// <returns></returns>
+        private async Task<CheckBarcodeModel> CheckParent(ExchangeObject exchangeObject, int placeId)
+        {
+            _logger.LogWarning($"循环判断上级流转对象在这有没有箱子");
+            var checkBarcodeModel = new CheckBarcodeModel();
+            while (exchangeObject.ParentId != null)
+            {
+                var o = exchangeObject;
+                exchangeObject = await _objectRepository.GetQueryable().Where(a => a.Id == o.ParentId.Value)
+                    .FirstOrDefaultAsync();
+                var exchangeObject1 = exchangeObject;
+                var boxs = await _boxObjectRepository.GetQueryable()
+                     .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == exchangeObject1.Id && a.Box.Enabled)
+                     .Select(a => a.Box).ToListAsync();
+                if (boxs.Count > 0)
+                {
+                    checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
+                    checkBarcodeModel.Record = boxs.Select(a =>
+                        new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id }).ToList();
+                    return checkBarcodeModel;
+                }
+                if (exchangeObject.IsVirtual)
+                {
+                    return await CheckVirtualObject(placeId, exchangeObject.Id);
+                }
+            }
+
+            return checkBarcodeModel;
+        }
+
 
         public async Task<IList<Box>> GetAllBoxs(int placeId)
         {

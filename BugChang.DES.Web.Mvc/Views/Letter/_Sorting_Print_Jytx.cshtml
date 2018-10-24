@@ -1,7 +1,12 @@
 ﻿@model BugChang.DES.Web.Mvc.Models.Letter.PrintSortingModel
+<style>
+    table tbody tr td {
+        font-size: 12px;
+    }
+</style>
 <table style="border-collapse: collapse; border: 1px black solid; width: 100%;border-spacing: 0">
     <caption style="font-size: 24px">
-        <b>交换站交寄清单</b>
+        <b>机要文件交寄清单</b>
     </caption>
     <thead>
         <tr>
@@ -50,13 +55,14 @@
                 <td></td>
             </tr>
         }
-        @*@{
-            if (15 - Model.LetterSortings.Count % 15 != 15)
+        @{
+            var left = 15 - Model.LetterSortings.Count % 15;
+            if (left != 0)
             {
-                for (int k = 0; k < 15 - Model.LetterSortings.Count % 15; k++)
+                for (int k = 0; k < left; k++)
                 {
                     <tr>
-                        <td></td>
+                        <td>@(15 - left + k + 1)</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -69,7 +75,7 @@
                     </tr>
                 }
             }
-        }*@
+        }
     </tbody>
     <tfoot>
         <tr>
@@ -115,7 +121,7 @@
                     登记人：
                 </div>
                 <div style="float: right">
-                    送件人：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    送件人：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
             </td>
         </tr>

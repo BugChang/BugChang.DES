@@ -183,7 +183,12 @@ namespace BugChang.DES.Web.Mvc.Controllers.API
                     SecretLevel = sec,
                     UrgencyLevel = urg
                 };
-                
+
+                if (sendDepartment.ReceiveChannel != EnumChannel.内部)
+                {
+                    letter.LetterType = EnumLetterType.收信;
+                }
+
                 var result = await _letterAppService.AddSendLetter(letter);
                 if (result.Success)
                 {

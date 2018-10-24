@@ -14,6 +14,10 @@
             $("#Password").val(hex_md5($("#Password").val()));
             $('body').loading();
         });
+
+        setInterval(function () {
+            $.get("/Account/Login");
+        }, 5000);
     });
 
     function initSocket() {

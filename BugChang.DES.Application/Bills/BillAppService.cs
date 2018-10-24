@@ -16,7 +16,6 @@ using BugChang.DES.Core.SerialNumbers;
 using BugChang.DES.EntityFrameWorkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace BugChang.DES.Application.Bills
 {
