@@ -16,6 +16,7 @@
                 url: '/Letter/Out2InsideLetters'
             },
             stateSave: true,
+            dom: '<"top"i>rt<"bottom"flp><"clear">',
             columns: [
                 {
                     data: 'letterNo',
