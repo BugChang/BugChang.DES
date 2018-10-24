@@ -176,11 +176,13 @@
             },
             url: "/Letter/SortingPrintJytx/" + listId,
             success: function (html) {
-                var lodop = getLodop();
-                lodop.PRINT_INIT("");
-                var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
-                lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
-                lodop.PRINT();
+                for (var i = 0; i < 2; i++) {
+                    var lodop = getLodop();
+                    lodop.PRINT_INIT("");
+                    var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
+                    lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
+                    lodop.PRINT();
+                }
             }
         });
     }

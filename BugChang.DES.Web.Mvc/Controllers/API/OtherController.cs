@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BugChang.DES.Application.Barcodes;
 using BugChang.DES.Application.Departments;
@@ -16,7 +14,6 @@ using BugChang.DES.Core.UrgentLevels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace BugChang.DES.Web.Mvc.Controllers.API
 {

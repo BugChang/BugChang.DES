@@ -496,7 +496,7 @@ namespace BugChang.DES.Application.Letters
         public async Task<IList<LetterSortingDto>> GetSortListDetails(int listId)
         {
             var list = await _sortingListRepository.GetQueryable().FirstOrDefaultAsync(a => a.Id == listId);
-            var listDetails = await _sortingListDetailRepository.GetQueryable().Where(a => a.SortingListId == list.Id).Select(a => a.Letter).Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
+            var listDetails = await _sortingListDetailRepository.GetQueryable().Where(a => a.SortingListId == list.Id).OrderBy(a => a.Id).Select(a => a.Letter).Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
                 .ToListAsync();
             return Mapper.Map<IList<LetterSortingDto>>(listDetails);
         }
