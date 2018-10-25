@@ -270,7 +270,7 @@ namespace BugChang.DES.Application.Bills
                 //添加发件详情
                 foreach (var letter in sendLetters)
                 {
-                    var barcodeLog = receiveBarcodeLogs.FirstOrDefault(a => a.BarcodeNumber == letter.BarcodeNo);
+                    var barcodeLog = sendBarcodeLogs.FirstOrDefault(a => a.BarcodeNumber == letter.BarcodeNo);
                     if (barcodeLog != null)
                     {
                         var exchangeListDetail = new ExchangeListDetail
