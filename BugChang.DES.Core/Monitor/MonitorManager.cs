@@ -140,28 +140,29 @@ namespace BugChang.DES.Core.Monitor
         {
             _logger.LogWarning($"进入通用逻辑");
             var checkBarcodeModel = new CheckBarcodeModel();
-            
+
             if (letter.SendDepartmentId == 0)
             {
                 _logger.LogWarning($"发件单位错误");
                 return checkBarcodeModel;
             }
 
-            var exchangeObject = await _objectRepository.GetQueryable().Where(a =>
-                    a.ObjectType == EnumObjectType.机构 && a.Value == letter.ReceiveDepartmentId)
-                .FirstOrDefaultAsync();
 
-            if (exchangeObject == null)
-            {
-                _logger.LogWarning($"不存在的收件流转对象");
-                checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
-                return checkBarcodeModel;
-            }
             _logger.LogWarning($"信件类型：{letter.LetterType.ToString()}");
             switch (letter.LetterType)
             {
                 case EnumLetterType.收信:
                     {
+                        var exchangeObject = await _objectRepository.GetQueryable().Where(a =>
+                                a.ObjectType == EnumObjectType.机构 && a.Value == letter.ReceiveDepartmentId)
+                            .FirstOrDefaultAsync();
+
+                        if (exchangeObject == null)
+                        {
+                            _logger.LogWarning($"不存在的收件流转对象");
+                            checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
+                            return checkBarcodeModel;
+                        }
                         var objectId = exchangeObject.Id;
                         var boxs = await _boxObjectRepository.GetQueryable()
                             .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == objectId && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
@@ -208,7 +209,7 @@ namespace BugChang.DES.Core.Monitor
                                       .Select(a => a.Box).ToListAsync();
                                 if (childBoxs.Count > 0)
                                 {
-                                   
+
                                     checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
                                     checkBarcodeModel.Record =
                                         childBoxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
@@ -246,7 +247,7 @@ namespace BugChang.DES.Core.Monitor
                         if (channelExchangeObjects.Count > 0)
                         {
                             var boxs = await _boxObjectRepository.GetQueryable()
-                                .Where(a => a.Box.PlaceId == placeId && channelExchangeObjects.Any(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
+                                .Where(a => a.Box.PlaceId == placeId && channelExchangeObjects.Exists(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
                                 .Select(a => a.Box).ToListAsync();
                             if (boxs.Count > 0)
                             {
@@ -277,7 +278,7 @@ namespace BugChang.DES.Core.Monitor
                                         a.ObjectType == EnumObjectType.渠道 && a.Value == (int)EnumChannel.内部)
                                     .ToListAsync();
                                 List<ExchangeObject> matchExchangeObjects;
-                                if (receiveChannel == EnumChannel.同城交换 || letter.SecretLevel != EnumSecretLevel.绝密)
+                                if (receiveChannel == EnumChannel.同城交换 && letter.SecretLevel != EnumSecretLevel.绝密)
                                 {
                                     matchExchangeObjects = insideExchangeObjects.Where(a => a.RestrictionCode.Contains("同城交换")).ToList();
                                 }
@@ -292,13 +293,13 @@ namespace BugChang.DES.Core.Monitor
                                     boxs = await _boxObjectRepository.GetQueryable()
                                         .Where(a => a.Box.PlaceId == placeId && matchExchangeObjects.Any(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
                                         .Select(a => a.Box).ToListAsync();
-                                }
-                                else
-                                {
-                                    _logger.LogWarning($"结束：内部渠道箱匹配成功");
-                                    boxs = await _boxObjectRepository.GetQueryable()
-                                        .Where(a => a.Box.PlaceId == placeId && insideExchangeObjects.Any(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
-                                        .Select(a => a.Box).ToListAsync();
+                                    if (boxs.Count == 0)
+                                    {
+                                        _logger.LogWarning($"结束：内部渠道箱匹配成功");
+                                        boxs = await _boxObjectRepository.GetQueryable()
+                                            .Where(a => a.Box.PlaceId == placeId && insideExchangeObjects.Any(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
+                                            .Select(a => a.Box).ToListAsync();
+                                    }
                                 }
                                 if (boxs.Count > 0)
                                 {
@@ -317,6 +318,16 @@ namespace BugChang.DES.Core.Monitor
                     break;
                 case EnumLetterType.内交换:
                     {
+                        var exchangeObject = await _objectRepository.GetQueryable().Where(a =>
+                                a.ObjectType == EnumObjectType.机构 && a.Value == letter.ReceiveDepartmentId)
+                            .FirstOrDefaultAsync();
+
+                        if (exchangeObject == null)
+                        {
+                            _logger.LogWarning($"不存在的收件流转对象");
+                            checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
+                            return checkBarcodeModel;
+                        }
                         var tempObject = exchangeObject;
                         var boxs = await _boxObjectRepository.GetQueryable()
                             .Where(a => a.Box.PlaceId == placeId && a.ExchangeObjectId == tempObject.Id && a.Box.Enabled)
@@ -368,18 +379,8 @@ namespace BugChang.DES.Core.Monitor
                                         .ToList();
                                 return checkBarcodeModel;
                             }
-
-                            boxs = await _boxObjectRepository.GetQueryable()
-                                .Where(a => a.Box.PlaceId == placeId && a.Box.Enabled && a.ExchangeObject.ObjectType != EnumObjectType.渠道)
-                                .Select(a => a.Box).ToListAsync();
-                            checkBarcodeModel.Type = EnumCheckBarcodeType.唯一指定;
-                            checkBarcodeModel.Record =
-                                boxs.Select(a => new CheckedBarcodeRecord { FileCount = 1, Message = "", No = a.Id })
-                                    .ToList();
-                            _logger.LogWarning($"结束：除渠道箱外全部返回");
-                            return checkBarcodeModel;
                         }
-                        
+
                         var currentSend = false;
                         //判断是否是该场所下的单位发件
                         var place = await _placeRepository.GetByIdAsync(placeId);
@@ -405,6 +406,13 @@ namespace BugChang.DES.Core.Monitor
                             var matchExchangeObjects = exchangeObjects.Where(a => receiveCode.Contains(a.RestrictionCode)).ToList();
                             if (matchExchangeObjects.Count > 0)
                             {
+                                var c = JsonConvert.SerializeObject(matchExchangeObjects);
+
+                                if (matchExchangeObjects.Count > 1)
+                                {
+                                    //匹配数量超过一个，排除限制码为空的对象
+                                    matchExchangeObjects = exchangeObjects.Where(a => receiveCode.Contains(a.RestrictionCode) && !string.IsNullOrWhiteSpace(a.RestrictionCode)).ToList();
+                                }
                                 boxs = await _boxObjectRepository.GetQueryable()
                                     .Where(a => a.Box.PlaceId == placeId && matchExchangeObjects.Any(b => b.Id == a.ExchangeObjectId) && a.Box.Enabled)
                                     .Select(a => a.Box).ToListAsync();
