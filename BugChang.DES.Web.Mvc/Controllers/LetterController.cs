@@ -11,12 +11,14 @@ using BugChang.DES.Application.Places;
 using BugChang.DES.Application.Users;
 using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Channel;
+using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Web.Mvc.Filters;
 using BugChang.DES.Web.Mvc.Models.Common;
 using BugChang.DES.Web.Mvc.Models.Letter;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 
 namespace BugChang.DES.Web.Mvc.Controllers
 {
@@ -334,21 +336,25 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> SearchCancelLetters(int draw, int start, int length)
         {
+            var placeId = await _placeAppService.GetPlaceId(CurrentUser.UserId);
             var pageSearchDto = new PageSearchCommonModel
             {
                 DepartmentId = CurrentUser.DepartmentId,
                 Keywords = Request.Query["letterNo"],
                 Take = length,
-                Skip = start
+                Skip = start,
+                PlaceId = placeId
             };
 
-            var pagereslut = string.IsNullOrWhiteSpace(pageSearchDto.Keywords) ? new PageResultModel<LetterBackListDto> { Rows = new List<LetterBackListDto>() } : await _letterAppService.GetBackLettersForSearch(pageSearchDto);
+
+
+            var pageReslut = string.IsNullOrWhiteSpace(pageSearchDto.Keywords) ? new PageResultModel<LetterBackListDto> { Rows = new List<LetterBackListDto>() } : await _letterAppService.GetBackLettersForSearch(pageSearchDto);
             var json = new
             {
                 draw,
-                recordsTotal = pagereslut.Total,
-                recordsFiltered = pagereslut.Total,
-                data = pagereslut.Rows
+                recordsTotal = pageReslut.Total,
+                recordsFiltered = pageReslut.Total,
+                data = pageReslut.Rows
             };
             return Json(json);
         }

@@ -15,5 +15,7 @@ namespace BugChang.DES.Application.Places
         Task<ResultEntity> AssignWarden(int placeId, List<int> wardenIds, int operatorId);
 
         Task<bool> IsPlaceWarden(int userId, int placeId);
+
+        Task<int> GetPlaceId(int userId);
     }
 }

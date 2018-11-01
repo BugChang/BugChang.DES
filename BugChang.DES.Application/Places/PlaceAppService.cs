@@ -8,6 +8,7 @@ using BugChang.DES.Core.Commons;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Logs;
 using BugChang.DES.EntityFrameWorkCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace BugChang.DES.Application.Places
@@ -15,16 +16,18 @@ namespace BugChang.DES.Application.Places
     public class PlaceAppService : IPlaceAppService
     {
         private readonly IPlaceRepository _placeRepository;
+        private readonly IPlaceWardenRepository _placeWardenRepository;
         private readonly PlaceManager _placeManager;
         private readonly LogManager _logManager;
         private readonly UnitOfWork _unitOfWork;
 
-        public PlaceAppService(PlaceManager placeManager, UnitOfWork unitOfWork, LogManager logManager, IPlaceRepository placeRepository)
+        public PlaceAppService(PlaceManager placeManager, UnitOfWork unitOfWork, LogManager logManager, IPlaceRepository placeRepository, IPlaceWardenRepository placeWardenRepository)
         {
             _placeManager = placeManager;
             _unitOfWork = unitOfWork;
             _logManager = logManager;
             _placeRepository = placeRepository;
+            _placeWardenRepository = placeWardenRepository;
         }
 
         public async Task<ResultEntity> AddOrUpdateAsync(PlaceEditDto place)
@@ -92,6 +95,12 @@ namespace BugChang.DES.Application.Places
         {
             var placeWardens = await _placeManager.GetPlaceWardenIds(placeId);
             return placeWardens.Contains(userId);
+        }
+
+        public async Task<int> GetPlaceId(int userId)
+        {
+            var placeId = await _placeWardenRepository.GetQueryable().Where(a => a.UserId == userId).Select(a => a.PlaceId).FirstOrDefaultAsync();
+            return placeId;
         }
     }
 }

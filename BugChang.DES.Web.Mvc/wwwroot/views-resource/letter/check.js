@@ -2,6 +2,7 @@
     var macAddress;
     var socket;
     var table;
+    var initFlag = 0;
     $(function () {
 
         initSocket();
@@ -31,12 +32,17 @@
                     if (result.success) {
                         $("#divInfo").html("");
                         var html = '<ul>';
-                        for (var i = 0; i < result.data; i++) {
+                        for (var i = 0; i < result.data.length; i++) {
                             html += '<li>' + result.data[i] + '</li>';
                         }
                         html += '</ul>';
                         $("#divInfo").html(html);
-                        initTable();
+                        if (initFlag===0) {
+                            initTable();
+                        } else {
+                            table.ajax.reload();
+                        }
+                        
                     } else {
                         window.toastr.error(result.message);
                     }
@@ -74,7 +80,8 @@
 
 
     function initTable() {
-        table = $('#backTable').DataTable({
+        initFlag = 1;
+        table = $('#detailTable').DataTable({
             ordering: false,
             processing: true,
             serverSide: true,
@@ -133,14 +140,6 @@
                 {
                     data: 'customData',
                     title: '附加数据'
-                },
-                {
-                    data: 'createUserName',
-                    title: '创建人'
-                },
-                {
-                    data: 'createTime',
-                    title: '创建时间'
                 }
             ],
             columnDefs: [

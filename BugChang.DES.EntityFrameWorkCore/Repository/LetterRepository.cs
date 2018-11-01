@@ -160,11 +160,18 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<PageResultModel<Letter>> GetBackLettersForManagerSearch(PageSearchCommonModel pageSearchModel)
         {
-            var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords));
+            var inboxBarcode = await _dbContext.Barcodes
+                .Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords) && a.Status == EnumBarcodeStatus.已投递 &&
+                            a.CurrentPlaceId == pageSearchModel.PlaceId).OrderBy(a=>a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).Select(a => a.BarcodeNo).ToListAsync();
+            var inboxBarcodeCount = await _dbContext.Barcodes
+                .Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords) && a.Status == EnumBarcodeStatus.已投递 &&
+                            a.CurrentPlaceId == pageSearchModel.PlaceId).CountAsync();
+
+            var letters = await _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => inboxBarcode.Contains(a.BarcodeNo)).ToListAsync();
             return new PageResultModel<Letter>
             {
-                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync(),
-                Total = await query.CountAsync()
+                Rows = letters,
+                Total = inboxBarcodeCount
             };
         }
 

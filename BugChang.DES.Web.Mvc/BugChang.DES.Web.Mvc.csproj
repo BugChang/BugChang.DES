@@ -291,4 +291,11 @@
     <ProjectReference Include="..\BugChang.DES.Application\BugChang.DES.Application.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Content Update="wwwroot\views-resource\letter\receive.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -9,6 +9,7 @@ using BugChang.DES.Core.Departments;
 using BugChang.DES.Core.Exchanges.Barcodes;
 using BugChang.DES.Core.Exchanges.Boxs;
 using BugChang.DES.Core.Exchanges.Channel;
+using BugChang.DES.Core.Exchanges.ExchangeObjects;
 using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SecretLevels;
@@ -38,10 +39,13 @@ namespace BugChang.DES.Application.Letters
         private readonly BoxManager _boxManager;
         private readonly IPlaceRepository _placeRepository;
         private readonly IPlaceWardenRepository _placeWardenRepository;
+        private readonly IExchangeObjectRepository _exchangeObjectRepository;
+        private readonly IExchangeObjectSignerRepository _objectSignerRepository;
         private readonly UnitOfWork _unitOfWork;
         private readonly IOptions<CommonSettings> _commonSettings;
 
-        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository, ICancelLetterRepository cancelLetterRepository, BoxManager boxManager, ISortingListDetailRepository sortingListDetailRepository, ISortingListRepository sortingListRepository, ISortingRepository sortingRepository, IPlaceRepository placeRepository, IPlaceWardenRepository placeWardenRepository)
+
+        public LetterAppService(DepartmentManager departmentManager, SerialNumberManager serialNumberManager, BarcodeManager barcodeManager, ILetterRepository letterRepository, UnitOfWork unitOfWork, IOptions<CommonSettings> commonSettings, IBarcodeLogRepository barcodeLogRepository, IBarcodeRepository barcodeRepository, IBackLetterRepository backLetterRepository, ICancelLetterRepository cancelLetterRepository, BoxManager boxManager, ISortingListDetailRepository sortingListDetailRepository, ISortingListRepository sortingListRepository, ISortingRepository sortingRepository, IPlaceRepository placeRepository, IPlaceWardenRepository placeWardenRepository, IExchangeObjectRepository exchangeObjectRepository, IExchangeObjectSignerRepository objectSignerRepository)
         {
             _departmentManager = departmentManager;
             _serialNumberManager = serialNumberManager;
@@ -59,6 +63,8 @@ namespace BugChang.DES.Application.Letters
             _sortingRepository = sortingRepository;
             _placeRepository = placeRepository;
             _placeWardenRepository = placeWardenRepository;
+            _exchangeObjectRepository = exchangeObjectRepository;
+            _objectSignerRepository = objectSignerRepository;
         }
 
         public async Task<string> GetBarcodeNoByLetterId(int letterId)
@@ -276,14 +282,8 @@ namespace BugChang.DES.Application.Letters
         public async Task<PageResultModel<LetterBackListDto>> GetBackLettersForSearch(PageSearchCommonModel pageSearchModel)
         {
             PageResultModel<Letter> letters;
-            if (_commonSettings.Value.ReceiveDepartmentId == pageSearchModel.DepartmentId)
-            {
-                letters = await _letterRepository.GetBackLettersForManagerSearch(pageSearchModel);
-            }
-            else
-            {
-                letters = await _letterRepository.GetBackLettersForSearch(pageSearchModel);
-            }
+
+            letters = await _letterRepository.GetBackLettersForManagerSearch(pageSearchModel);
 
             return Mapper.Map<PageResultModel<LetterBackListDto>>(letters);
         }
@@ -429,6 +429,7 @@ namespace BugChang.DES.Application.Letters
             {
                 result.Success = true;
                 result.Data = sortingList.Id;
+                result.Data = sortingList.Id;
             }
             return result;
         }
@@ -538,7 +539,7 @@ namespace BugChang.DES.Application.Letters
         {
             var result = new ResultEntity();
             var listInfo = new List<string>();
-            var managePlace = await _placeWardenRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == userId);
+            var managePlace = await _placeWardenRepository.GetQueryable().Include(a => a.Place).FirstOrDefaultAsync(a => a.UserId == userId);
             var place = await _placeRepository.GetQueryable().Include(a => a.Parent).FirstOrDefaultAsync(a => a.Id == placeId);
             if (managePlace == null)
             {
@@ -554,15 +555,16 @@ namespace BugChang.DES.Application.Letters
                 }
                 else
                 {
+                    var objectIds = await _objectSignerRepository.GetQueryable().Where(a => a.UserId == userId)
+                        .Select(a => a.ExchangeObjectId).ToListAsync();
                     var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
                             a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == place.ParentId &&
-                            a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date)
+                            a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date && objectIds.Contains(a.CurrentObjectId)).Select(a => a.BarcodeNumber)
                         .ToListAsync();
                     listInfo.Add($"场所【{place.Parent.Name}】取件【{receiveLogs.Count}】");
                     var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
                         a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == placeId &&
-                        a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date &&
-                        receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
+                        a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date && receiveLogs.Contains(a.BarcodeNumber)).Select(a => a.BarcodeNumber).ToListAsync();
                     listInfo.Add($"场所【{place.Name}】投件【{sendLogs.Count}】");
                     listInfo.Add(receiveLogs.Count == sendLogs.Count
                         ? "成功！所有文件已成功投递"
@@ -571,16 +573,18 @@ namespace BugChang.DES.Application.Letters
             }
             else
             {
+                var insideObjects = await _exchangeObjectRepository.GetQueryable()
+                    .Where(a => a.ObjectType == EnumObjectType.渠道).Select(a => a.Id).ToListAsync();
                 var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
-                        a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == placeId &&
-                        a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date)
+                        a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == managePlace.PlaceId &&
+                        a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date && insideObjects.Contains(a.CurrentObjectId)).Select(a => a.BarcodeNumber)
                     .ToListAsync();
-                listInfo.Add($"场所【{place.Name}】取件【{receiveLogs.Count}】");
+                listInfo.Add($"场所【{managePlace.Place.Name}】取件【{receiveLogs.Count}】");
                 var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
-                    a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == place.ParentId &&
+                    a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == placeId &&
                     a.OperationTime.Date >= beginTime.Date && a.OperationTime.Date <= endTime.Date &&
-                    receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
-                listInfo.Add($"场所【{place.Parent.Name}】投件【{sendLogs.Count}】");
+                    receiveLogs.Contains(a.BarcodeNumber)).Select(a => a.BarcodeNumber).ToListAsync();
+                listInfo.Add($"场所【{place.Name}】投件【{sendLogs.Count}】");
                 listInfo.Add(receiveLogs.Count == sendLogs.Count
                     ? "成功！所有文件已成功投递"
                     : $"警告！{receiveLogs.Count - sendLogs.Count}份文件尚未投递，请查看下方明细！");
@@ -593,42 +597,54 @@ namespace BugChang.DES.Application.Letters
 
         public async Task<PageResultModel<LetterCheckListDto>> GetCheckLetters(PageSearchDetailModel pageSearch)
         {
-            List<Letter> letters;
+            IQueryable<Letter> letters;
             var managePlace = await _placeWardenRepository.GetQueryable().FirstOrDefaultAsync(a => a.UserId == pageSearch.UserId);
             var place = await _placeRepository.GetQueryable().Include(a => a.Parent).FirstOrDefaultAsync(a => a.Id == pageSearch.PlaceId);
 
             if (managePlace.PlaceId == pageSearch.PlaceId)
             {
+                var objectIds = await _objectSignerRepository.GetQueryable().Where(a => a.UserId == pageSearch.UserId)
 
+                    .Select(a => a.ExchangeObjectId).ToListAsync();
                 var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
                         a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == place.ParentId &&
-                        a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date)
+                        a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date && objectIds.Contains(a.CurrentObjectId)).Select(a => a.BarcodeNumber)
                     .ToListAsync();
 
                 var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
                     a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == pageSearch.PlaceId &&
                     a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date &&
-                    receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
-                letters = await _letterRepository.GetQueryable()
-                    .Where(a => sendLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+                    receiveLogs.Contains(a.BarcodeNumber)).Select(a => a.BarcodeNumber).ToListAsync();
+
+                var differentBarcodeNumbers = (from receive in receiveLogs
+                                               select receive).Except
+                (from send in sendLogs
+                 select send).ToList();
+                letters = _letterRepository.GetQueryable().Where(a => differentBarcodeNumbers.Contains(a.BarcodeNo)).OrderBy(a => a.Id);
             }
             else
             {
+                var insideObjects = await _exchangeObjectRepository.GetQueryable()
+                    .Where(a => a.ObjectType == EnumObjectType.渠道).Select(a => a.Id).ToListAsync();
                 var receiveLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
-                        a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == pageSearch.PlaceId &&
-                        a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date)
+                        a.BarcodeStatus == EnumBarcodeStatus.已签收 && a.CurrentPlaceId == managePlace.PlaceId &&
+                        a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date && insideObjects.Contains(a.CurrentObjectId)).Select(a => a.BarcodeNumber)
                     .ToListAsync();
+
                 var sendLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
-                    a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == place.ParentId &&
+                    a.BarcodeStatus == EnumBarcodeStatus.已投递 && a.CurrentPlaceId == pageSearch.PlaceId &&
                     a.OperationTime.Date >= pageSearch.BeginTime.Value.Date && a.OperationTime.Date <= pageSearch.EndTime.Value.Date &&
-                    receiveLogs.Exists(b => b.BarcodeNumber == a.BarcodeNumber)).ToListAsync();
-                letters = await _letterRepository.GetQueryable()
-                    .Where(a => sendLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+                    receiveLogs.Contains(a.BarcodeNumber)).ToListAsync();
+                var differentBarcodeNumbers = (from receive in receiveLogs
+                                               select receive).Except
+                (from send in sendLogs
+                 select send.BarcodeNumber).ToList();
+                letters = _letterRepository.GetQueryable().Where(a => differentBarcodeNumbers.Contains(a.BarcodeNo)).OrderBy(a => a.Id);
             }
             var pageLetters = new PageResultModel<Letter>
             {
-                Rows = letters,
-                Total = letters.Count
+                Rows = await letters.Skip(pageSearch.Skip).Take(pageSearch.Take).ToListAsync(),
+                Total = await letters.CountAsync()
             };
             return Mapper.Map<PageResultModel<LetterCheckListDto>>(pageLetters);
         }
