@@ -7,8 +7,10 @@
         initTable();
 
         $('.search-time').datetimepicker({
-            format: 'yyyy-mm-dd hh:ii',
-            language: 'zh-CN'
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+            autoclose: true,
+            minView: 2
         });
 
         $("#btnSearch").click(function () {

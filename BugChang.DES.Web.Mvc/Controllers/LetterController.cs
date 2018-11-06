@@ -708,5 +708,46 @@ namespace BugChang.DES.Web.Mvc.Controllers
         }
 
         #endregion
+
+        #region 信件查询
+
+        public IActionResult Search()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> GetSearchList(int draw, int start, int length)
+        {
+            var pageSearchDto = new LetterPageSerchModel
+            {
+                Take = length,
+                Skip = start
+            };
+            pageSearchDto.SetTimeValue(Request.Query["beginTime"], Request.Query["endTime"]);
+            if (!string.IsNullOrWhiteSpace(Request.Query["sendDepartmentId"]))
+            {
+                pageSearchDto.SendDepartmentId = Convert.ToInt32(Request.Query["sendDepartmentId"]);
+            }
+
+            if (!string.IsNullOrWhiteSpace(Request.Query["receiveDepartmentId"]))
+            {
+                pageSearchDto.ReceiveDepartmentId = Convert.ToInt32(Request.Query["receiveDepartmentId"]);
+            }
+
+            pageSearchDto.ShiJiNo = Request.Query["shiJiNo"];
+            pageSearchDto.LetterNo = Request.Query["letterNo"];
+            var pagereslut = await _letterAppService.GetSearchLetters(pageSearchDto);
+            var json = new
+            {
+                draw,
+                recordsTotal = pagereslut.Total,
+                recordsFiltered = pagereslut.Total,
+                data = pagereslut.Rows
+            };
+            return Json(json);
+        }
+
+
+        #endregion
     }
 }

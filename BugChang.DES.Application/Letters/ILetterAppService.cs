@@ -27,6 +27,8 @@ namespace BugChang.DES.Application.Letters
 
         Task<PageResultModel<LetterReceiveListDto>> GetReceiveLetters(LetterPageSerchModel pageSearchModel);
 
+        Task<PageResultModel<LetterReceiveListDto>> GetSearchLetters(LetterPageSerchModel pageSerchModel);
+
         Task<ResultEntity> AddSendLetter(LetterSendEditDto sendLetter);
 
         Task<PageResultModel<LetterSendListDto>> GetTodaySendLetters(PageSearchCommonModel pageSearchModel);

@@ -165,6 +165,12 @@ namespace BugChang.DES.Application.Letters
             return Mapper.Map<PageResultModel<LetterReceiveListDto>>(letters);
         }
 
+        public async Task<PageResultModel<LetterReceiveListDto>> GetSearchLetters(LetterPageSerchModel pageSerchModel)
+        {
+            var letters = await _letterRepository.GetSearchLetters(pageSerchModel);
+            return Mapper.Map<PageResultModel<LetterReceiveListDto>>(letters);
+        }
+
         public async Task<ResultEntity> AddSendLetter(LetterSendEditDto sendLetter)
         {
             var result = new ResultEntity();

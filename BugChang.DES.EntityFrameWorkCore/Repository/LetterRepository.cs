@@ -114,6 +114,43 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             };
         }
 
+        public async Task<PageResultModel<Letter>> GetSearchLetters(LetterPageSerchModel pageSearch)
+        {
+            var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => true);
+            if (pageSearch.BeginTime != null)
+            {
+                query = query.Where(a => a.CreateTime >= pageSearch.BeginTime.Value);
+            }
+
+            if (pageSearch.EndTime != null)
+            {
+                query = query.Where(a => a.CreateTime <= pageSearch.EndTime.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(pageSearch.LetterNo))
+            {
+                query = query.Where(a => a.LetterNo.Contains(pageSearch.LetterNo));
+            }
+
+            if (pageSearch.SendDepartmentId != 0)
+            {
+                query = query.Where(a => a.SendDepartmentId == pageSearch.SendDepartmentId);
+            }
+            if (pageSearch.ReceiveDepartmentId != 0)
+            {
+                query = query.Where(a => a.ReceiveDepartmentId == pageSearch.ReceiveDepartmentId);
+            }
+            if (!string.IsNullOrWhiteSpace(pageSearch.ShiJiNo))
+            {
+                query = query.Where(a => a.ShiJiCode.Contains(pageSearch.ShiJiNo));
+            }
+            return new PageResultModel<Letter>
+            {
+                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearch.Skip).Take(pageSearch.Take).ToListAsync(),
+                Total = await query.CountAsync()
+            };
+        }
+
         public async Task<Letter> GetLetter(string barcodeNo)
         {
             var letter = await _dbContext.Letters.AsNoTracking().Where(a => a.BarcodeNo == barcodeNo).SingleOrDefaultAsync();
@@ -143,7 +180,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             }
             return new PageResultModel<Letter>
             {
-                Rows = await query.OrderByDescending(a=>a.Id).Skip(pageSearch.Skip).Take(pageSearch.Take).OrderByDescending(a => a.Id).ToListAsync(),
+                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearch.Skip).Take(pageSearch.Take).OrderByDescending(a => a.Id).ToListAsync(),
                 Total = await query.CountAsync()
             };
         }
@@ -153,7 +190,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => a.ReceiveDepartmentId == pageSearchModel.DepartmentId && a.BarcodeNo.Contains(pageSearchModel.Keywords));
             return new PageResultModel<Letter>
             {
-                Rows = await query.OrderByDescending(a=>a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync(),
+                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).OrderByDescending(a => a.Id).ToListAsync(),
                 Total = await query.CountAsync()
             };
         }
@@ -162,7 +199,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
         {
             var inboxBarcode = await _dbContext.Barcodes
                 .Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords) && a.Status == EnumBarcodeStatus.已投递 &&
-                            a.CurrentPlaceId == pageSearchModel.PlaceId).OrderBy(a=>a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).Select(a => a.BarcodeNo).ToListAsync();
+                            a.CurrentPlaceId == pageSearchModel.PlaceId).OrderBy(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).Select(a => a.BarcodeNo).ToListAsync();
             var inboxBarcodeCount = await _dbContext.Barcodes
                 .Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords) && a.Status == EnumBarcodeStatus.已投递 &&
                             a.CurrentPlaceId == pageSearchModel.PlaceId).CountAsync();

@@ -2,7 +2,7 @@
     var table;
     $(function () {
 
-        initSendDepartments();
+        initDepartments();
 
         initTable();
 
@@ -36,11 +36,12 @@
             autoWith: true,
             searching: false,
             ajax: {
-                url: '/Letter/GetReceiveLetters',
+                url: '/Letter/GetSearchList',
                 data: function (d) {
                     d.letterNo = $('#LetterNo').val();
                     d.shiJiNo = $('#ShiJiNo').val();
-                    d.sendDepartmentId = $('.department-select').val();
+                    d.sendDepartmentId = $('#SendDepartmentId').val();
+                    d.receiveDepartmentId = $('#ReceiveDepartmentId').val();
                     d.beginTime = $('#BeginTime').val();
                     d.endTime = $('#EndTime').val();
                 }
@@ -175,7 +176,7 @@
         table.draw(false);
     }
 
-    function initSendDepartments() {
+    function initDepartments() {
         $.get('/Letter/GetDepartments',
             function (data) {
                 $('.department-select').select2({

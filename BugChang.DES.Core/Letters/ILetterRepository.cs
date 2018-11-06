@@ -14,6 +14,8 @@ namespace BugChang.DES.Core.Letters
 
         Task<PageResultModel<Letter>> GetManagerReceiveLetters(LetterPageSerchModel pageSearch);
 
+        Task<PageResultModel<Letter>> GetSearchLetters(LetterPageSerchModel pageSearch);
+
         Task<Letter> GetLetter(string barcodeNo);
 
         Task<PageResultModel<Letter>> GetSendLetters(LetterPageSerchModel pageSearch);
