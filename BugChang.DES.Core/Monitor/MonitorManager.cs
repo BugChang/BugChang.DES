@@ -115,6 +115,14 @@ namespace BugChang.DES.Core.Monitor
                             var receiveDepartmentId = letter.ReceiveDepartmentId;
                             letter.ReceiveDepartmentId = letter.SendDepartmentId;
                             letter.SendDepartmentId = receiveDepartmentId;
+                            if (letter.LetterType== EnumLetterType.发信)
+                            {
+                                letter.LetterType = EnumLetterType.收信;
+                            }
+                            if (letter.LetterType== EnumLetterType.收信)
+                            {
+                                letter.LetterType = EnumLetterType.发信;
+                            }
                             return await CheckBarcodeTypeCommon(letter, placeId);
                         case EnumBarcodeStatus.已退回:
                             _logger.LogWarning($"条码无效：已退回的文件");

@@ -254,6 +254,7 @@
                 $.get("/Letter/GetSendBarcode/" + letterId, function (data) {
                     var lodop = getLodop();
                     lodop.PRINT_INIT("");
+                    lodop.SET_PRINT_PAGESIZE(2, 800, 1300, "80*130");
                     lodop.SET_PRINT_MODE("PRINT_NOCOLLATE", 1);
                     lodop.ADD_PRINT_BARCODE("5mm", "6.01mm", "17.99mm", "70.01mm", "128Auto", data.barcodeNo);
                     lodop.SET_PRINT_STYLEA(0, "ShowBarText", 0);
