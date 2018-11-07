@@ -115,11 +115,11 @@ namespace BugChang.DES.Core.Monitor
                             var receiveDepartmentId = letter.ReceiveDepartmentId;
                             letter.ReceiveDepartmentId = letter.SendDepartmentId;
                             letter.SendDepartmentId = receiveDepartmentId;
-                            if (letter.LetterType== EnumLetterType.发信)
+                            if (letter.LetterType == EnumLetterType.发信)
                             {
                                 letter.LetterType = EnumLetterType.收信;
                             }
-                            if (letter.LetterType== EnumLetterType.收信)
+                            else if (letter.LetterType == EnumLetterType.收信)
                             {
                                 letter.LetterType = EnumLetterType.发信;
                             }

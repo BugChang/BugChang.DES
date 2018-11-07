@@ -255,6 +255,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> GetBackLetters(int draw, int start, int length)
         {
+           
             var keywords = Request.Query["search[value]"];
             var pageSearchDto = new PageSearchCommonModel
             {
@@ -262,6 +263,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 Keywords = keywords,
                 Take = length,
                 Skip = start
+              
             };
             var pagereslut = await _letterAppService.GetBackLetters(pageSearchDto);
             var json = new
@@ -276,12 +278,14 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> SearchBackLetters(int draw, int start, int length)
         {
+            var placeId = await _placeAppService.GetPlaceId(CurrentUser.UserId);
             var pageSearchDto = new PageSearchCommonModel
             {
                 DepartmentId = CurrentUser.DepartmentId,
                 Keywords = Request.Query["letterNo"],
                 Take = length,
-                Skip = start
+                Skip = start,
+                PlaceId = placeId
             };
 
             var pagereslut = string.IsNullOrWhiteSpace(pageSearchDto.Keywords) ? new PageResultModel<LetterBackListDto> { Rows = new List<LetterBackListDto>() } : await _letterAppService.GetBackLettersForSearch(pageSearchDto);
@@ -348,7 +352,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
 
 
-            var pageReslut = string.IsNullOrWhiteSpace(pageSearchDto.Keywords) ? new PageResultModel<LetterBackListDto> { Rows = new List<LetterBackListDto>() } : await _letterAppService.GetBackLettersForSearch(pageSearchDto);
+            var pageReslut = string.IsNullOrWhiteSpace(pageSearchDto.Keywords) ? new PageResultModel<LetterCancelListDto> { Rows = new List<LetterCancelListDto>() } : await _letterAppService.GetCancelLettersForSearch(pageSearchDto);
             var json = new
             {
                 draw,

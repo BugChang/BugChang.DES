@@ -197,6 +197,23 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<PageResultModel<Letter>> GetBackLettersForManagerSearch(PageSearchCommonModel pageSearchModel)
         {
+            var receiveBarcode = await _dbContext.Barcodes
+                .Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords) && a.Status == EnumBarcodeStatus.已签收 &&
+                            a.CurrentPlaceId == pageSearchModel.PlaceId).OrderBy(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).Select(a => a.BarcodeNo).ToListAsync();
+            var receiveBarcodeCount = await _dbContext.Barcodes
+                .Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords) && a.Status == EnumBarcodeStatus.已签收 &&
+                            a.CurrentPlaceId == pageSearchModel.PlaceId).CountAsync();
+
+            var letters = await _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => receiveBarcode.Contains(a.BarcodeNo)).ToListAsync();
+            return new PageResultModel<Letter>
+            {
+                Rows = letters,
+                Total = receiveBarcodeCount
+            };
+        }
+
+        public async Task<PageResultModel<Letter>> GetCancelLettersForSearch(PageSearchCommonModel pageSearchModel)
+        {
             var inboxBarcode = await _dbContext.Barcodes
                 .Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords) && a.Status == EnumBarcodeStatus.已投递 &&
                             a.CurrentPlaceId == pageSearchModel.PlaceId).OrderBy(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).Select(a => a.BarcodeNo).ToListAsync();
@@ -209,16 +226,6 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             {
                 Rows = letters,
                 Total = inboxBarcodeCount
-            };
-        }
-
-        public async Task<PageResultModel<Letter>> GetCancelLettersForSearch(PageSearchCommonModel pageSearchModel)
-        {
-            var query = _dbContext.Letters.Include(a => a.SendDepartment).Include(a => a.ReceiveDepartment).Include(a => a.CreateUser).Where(a => a.BarcodeNo.Contains(pageSearchModel.Keywords));
-            return new PageResultModel<Letter>
-            {
-                Rows = await query.OrderByDescending(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync(),
-                Total = await query.CountAsync()
             };
         }
 
