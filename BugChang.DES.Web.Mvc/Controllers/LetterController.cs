@@ -255,7 +255,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> GetBackLetters(int draw, int start, int length)
         {
-           
+
             var keywords = Request.Query["search[value]"];
             var pageSearchDto = new PageSearchCommonModel
             {
@@ -263,7 +263,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 Keywords = keywords,
                 Take = length,
                 Skip = start
-              
+
             };
             var pagereslut = await _letterAppService.GetBackLetters(pageSearchDto);
             var json = new
@@ -387,7 +387,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public IActionResult Statistics()
         {
-            return View();
+            return View(new Dictionary<string, int>());
         }
 
         public async Task<IActionResult> StatisticsDepartment(int id, DateTime beginDate, DateTime endDate)
@@ -398,15 +398,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> StatisticsPlace(DateTime beginDate, DateTime endDate)
         {
-            var places = await _placeAppService.GetAllAsync();
-            var statisticsPlaces = new List<PlaceStatisticsDto>();
-            foreach (var place in places)
-            {
-                var statisticsPlace = await _letterAppService.GetPlaceStatistics(place.Id, beginDate, endDate);
-                statisticsPlaces.Add(statisticsPlace);
-            }
-
-            return PartialView("_StatisticsPlace", statisticsPlaces);
+            var dictionary = await _letterAppService.GetPlaceStatistics(beginDate, endDate);
+            return View("Statistics", dictionary);
         }
 
         public async Task<IActionResult> GetDepartmentsForStatistics()
