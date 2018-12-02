@@ -528,6 +528,11 @@ namespace BugChang.DES.Core.Monitor
         public async Task<Box> GetBox(int boxId)
         {
             var box = await _boxRepository.GetByIdAsync(boxId);
+            //箱头数量改用动态计算
+            var objectIds = await _boxObjectRepository.GetQueryable().Where(a => a.BoxId == boxId)
+                .Select(a => a.ExchangeObjectId).ToListAsync();
+            box.FileCount = await _barcodeRepository.GetQueryable()
+                .Where(a => objectIds.Contains(a.CurrentObjectId) && a.Status == EnumBarcodeStatus.已投递).CountAsync();
             return box;
         }
 
