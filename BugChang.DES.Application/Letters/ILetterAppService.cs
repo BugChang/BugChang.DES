@@ -71,7 +71,7 @@ namespace BugChang.DES.Application.Letters
 
         Task<DepartmentStatisticsDto> GetDepartmentStatistics(int departmentId, DateTime beginDate, DateTime endDate);
 
-        Task<PlaceStatisticsDto> GetPlaceStatistics(int placeId, DateTime beginDate, DateTime endDate);
+        Task<Dictionary<string, int>> GetPlaceStatistics(DateTime beginDate, DateTime endDate);
 
         Task<IList<ExchangeLogListDto>> GetExchangeLogs(string barcodeNo);
     }

@@ -82,7 +82,7 @@
                         var receiveDetails = Model.BillDetails.Where(a => a.DetailType == EnumListDetailType.收件).ToList();
                         for (int i = 0; i < receiveDetails.Count; i++)
                         {
-                            var detail = receiveDetails[i];
+                            var detail = receiveDetails.OrderBy(a=>a.SendDepartmentName).ToList()[i];
                             <tr>
                                 <td>@(i + 1)</td>
                                 <td>@detail.SendDepartmentName.Replace("北京市国家安全局", "")</td>
@@ -133,7 +133,7 @@
                         var sendDetails = Model.BillDetails.Where(a => a.DetailType == EnumListDetailType.发件).ToList();
                         for (int i = 0; i < sendDetails.Count; i++)
                         {
-                            var detail = sendDetails[i];
+                            var detail = sendDetails.OrderBy(a=>a.ReceiveDepartmentName).ToList()[i];
                             <tr>
                                 <td>@(i + 1)</td>
                                 <td>@detail.ReceiveDepartmentName.Replace("北京市国家安全局", "")</td>
