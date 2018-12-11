@@ -21,7 +21,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             var query = from department in _dbContext.Departments
                         where department.ParentId == parentId
                         select department;
-            return await query.Include(a => a.Children).ToListAsync();
+            return await query.Include(a => a.Children).OrderBy(a => a.Sort).ToListAsync();
         }
 
         public async Task<Department> GetAsync(string code, int? parentId)
@@ -46,7 +46,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
             var pageResultEntity = new PageResultModel<Department>
             {
                 Total = await query.CountAsync(),
-                Rows = await query.OrderBy(a => a.Id).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync()
+                Rows = await query.OrderBy(a => a.Sort).Skip(pageSearchModel.Skip).Take(pageSearchModel.Take).ToListAsync()
             };
 
             return pageResultEntity;

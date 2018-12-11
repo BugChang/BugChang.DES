@@ -45,6 +45,11 @@ namespace BugChang.DES.Core.Departments
 
         public bool IsDeleted { get; set; }
 
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int Sort { get; set; }
+
         [JsonIgnore]
         public virtual IList<User> Users { get; set; }
 

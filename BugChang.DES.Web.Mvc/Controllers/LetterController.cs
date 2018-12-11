@@ -653,7 +653,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         {
             var departments = await _departmentAppService.GetAllAsync();
             var groupDetails = await _groupAppService.GetGroupDetails(id);
-            departments = departments.Where(a => groupDetails.Select(b => b.DepartmentId).Contains(a.Id)).ToList();
+            departments = departments.Where(a => groupDetails.Select(b => b.DepartmentId).Contains(a.Id)).OrderBy(a => a.Sort).ToList();
             var json = departments.Select(a => new SimpleTreeViewModel
             {
                 Id = a.Id,

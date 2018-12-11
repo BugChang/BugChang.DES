@@ -59,6 +59,11 @@
                         <label>默认收件渠道</label>
                         <select class="form-control channel-select" name="ReceiveChannel" style="width: 100%"></select>
                     </div>
+                    <div class="form-group">
+                        <label>排序</label>
+                        <input type="number" class="form-control" name="Sort" />
+                    </div>
+
                 </div>
                 @Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
             </form>

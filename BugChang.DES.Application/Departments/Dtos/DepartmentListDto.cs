@@ -22,5 +22,7 @@ namespace BugChang.DES.Application.Departments.Dtos
         public IList<DepartmentListDto> Children { get; set; }
 
         public string ParentName { get; set; }
+
+        public int Sort { get; set; }
     }
 }

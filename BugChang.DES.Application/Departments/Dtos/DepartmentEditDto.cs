@@ -22,5 +22,7 @@ namespace BugChang.DES.Application.Departments.Dtos
         public int ReceiveChannel { get; set; }
 
         public int? ParentId { get; set; }
+
+        public int Sort { get; set; }
     }
 }
