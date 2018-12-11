@@ -94,13 +94,30 @@ namespace BugChang.DES.Core.Monitor
                     switch (barcode.Status)
                     {
                         case EnumBarcodeStatus.已签收:
-                            if (barcode.CurrentPlaceId == placeId && barcode.SubStatus == EnumBarcodeSubStatus.正常)
                             {
-                                checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
-                            }
-                            else
-                            {
-                                return await CheckBarcodeTypeCommon(letter, placeId);
+                                if (barcode.CurrentPlaceId == placeId && barcode.SubStatus == EnumBarcodeSubStatus.正常)
+                                {
+                                    checkBarcodeModel.Type = EnumCheckBarcodeType.无效;
+                                }
+                                else if (barcode.SubStatus == EnumBarcodeSubStatus.退回)
+                                {
+                                    var receiveDepartmentId = letter.ReceiveDepartmentId;
+                                    letter.ReceiveDepartmentId = letter.SendDepartmentId;
+                                    letter.SendDepartmentId = receiveDepartmentId;
+                                    if (letter.LetterType == EnumLetterType.发信)
+                                    {
+                                        letter.LetterType = EnumLetterType.收信;
+                                    }
+                                    else if (letter.LetterType == EnumLetterType.收信)
+                                    {
+                                        letter.LetterType = EnumLetterType.发信;
+                                    }
+                                    return await CheckBarcodeTypeCommon(letter, placeId);
+                                }
+                                else
+                                {
+                                    return await CheckBarcodeTypeCommon(letter, placeId);
+                                }
                             }
                             break;
                         case EnumBarcodeStatus.已就绪:
@@ -111,19 +128,21 @@ namespace BugChang.DES.Core.Monitor
                             checkBarcodeModel.Type = EnumCheckBarcodeType.条码已经投箱;
                             break;
                         case EnumBarcodeStatus.申请退回:
-                            _logger.LogWarning($"申请退回信件：对调收发单位信息");
-                            var receiveDepartmentId = letter.ReceiveDepartmentId;
-                            letter.ReceiveDepartmentId = letter.SendDepartmentId;
-                            letter.SendDepartmentId = receiveDepartmentId;
-                            if (letter.LetterType == EnumLetterType.发信)
                             {
-                                letter.LetterType = EnumLetterType.收信;
+                                _logger.LogWarning($"申请退回信件：对调收发单位信息");
+                                var receiveDepartmentId = letter.ReceiveDepartmentId;
+                                letter.ReceiveDepartmentId = letter.SendDepartmentId;
+                                letter.SendDepartmentId = receiveDepartmentId;
+                                if (letter.LetterType == EnumLetterType.发信)
+                                {
+                                    letter.LetterType = EnumLetterType.收信;
+                                }
+                                else if (letter.LetterType == EnumLetterType.收信)
+                                {
+                                    letter.LetterType = EnumLetterType.发信;
+                                }
+                                return await CheckBarcodeTypeCommon(letter, placeId);
                             }
-                            else if (letter.LetterType == EnumLetterType.收信)
-                            {
-                                letter.LetterType = EnumLetterType.发信;
-                            }
-                            return await CheckBarcodeTypeCommon(letter, placeId);
                         case EnumBarcodeStatus.已退回:
                             _logger.LogWarning($"条码无效：已退回的文件");
                             checkBarcodeModel.Type = EnumCheckBarcodeType.无效;

@@ -658,13 +658,12 @@ namespace BugChang.DES.Application.Letters
         public async Task<PageResultModel<LetterReceiveListDto>> Out2InsideLetters(PageSearchCommonModel pageSearch)
         {
             var barcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
-                 a.OperationTime.Date == DateTime.Now.Date &&
-                 (a.DepartmentId == _commonSettings.Value.ReceiveDepartmentId ||
-                  a.DepartmentId == _commonSettings.Value.UseDepartmentId) && a.BarcodeStatus == EnumBarcodeStatus.已投递 &&
-                 a.CurrentPlaceId == _commonSettings.Value.RootPlaceId).ToListAsync();
+                 a.OperationTime.Date == DateTime.Now.Date
+                 && a.BarcodeStatus == EnumBarcodeStatus.已投递
+                 && a.CurrentPlaceId == _commonSettings.Value.RootPlaceId).ToListAsync();
 
             var letters = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
-                .Where(a => barcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo));
+                .Where(a => a.LetterType == EnumLetterType.收信 && barcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo));
 
             var pageResult = new PageResultModel<Letter>
             {
