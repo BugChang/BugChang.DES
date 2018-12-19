@@ -433,8 +433,6 @@ namespace BugChang.DES.Core.Monitor
                             var matchExchangeObjects = exchangeObjects.Where(a => receiveCode.Contains(a.RestrictionCode)).ToList();
                             if (matchExchangeObjects.Count > 0)
                             {
-                                var c = JsonConvert.SerializeObject(matchExchangeObjects);
-
                                 if (matchExchangeObjects.Count > 1)
                                 {
                                     //匹配数量超过一个，排除限制码为空的对象
