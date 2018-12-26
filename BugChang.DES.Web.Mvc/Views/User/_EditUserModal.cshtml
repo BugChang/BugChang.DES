@@ -10,9 +10,10 @@
         <input type="hidden" asp-for="UpdateBy" value="@Model.UpdateBy" />
         <input type="hidden" asp-for="UpdateTime" value="@Model.UpdateTime" />
         <input type="hidden" asp-for="Enabled" value="@Model.Enabled" />
+        <input type="hidden" id="DefaultValue" data-department-id="@Model.DepartmentId" />
         <div class="form-group">
             <label>所属机构</label>
-            <select class="form-control select2" asp-for="DepartmentId" style="width: 100%"></select>
+            <select class="form-control edit-department-select" asp-for="DepartmentId" style="width: 100%"></select>
         </div>
         <div class="form-group">
             <label>用户名</label>

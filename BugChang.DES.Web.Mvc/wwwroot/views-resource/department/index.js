@@ -125,6 +125,10 @@
                     title: '全称'
                 },
                 {
+                    data: 'address',
+                    title: '地址'
+                },
+                {
                     data: 'code',
                     title: '代码'
                 },
@@ -155,7 +159,7 @@
             ],
             columnDefs: [
                 {
-                    targets: 9,
+                    targets: 10,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (Common.hasOperation("Department.Edit")) {

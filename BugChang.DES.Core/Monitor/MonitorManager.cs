@@ -268,6 +268,12 @@ namespace BugChang.DES.Core.Monitor
                         {
                             receiveChannel = EnumChannel.机要通信;
                         }
+                        //2018.12.26添加机要通信渠道箱不允许投非密件
+                        if (receiveChannel== EnumChannel.机要通信&& letter.SecretLevel== EnumSecretLevel.无)
+                        {
+                            _logger.LogWarning($"结束：非密件不允许走机要通信渠道");
+                            return checkBarcodeModel;
+                        }
                         var channelExchangeObjects = await _objectRepository.GetQueryable().Where(a =>
                                 a.ObjectType == EnumObjectType.渠道 && a.Value == (int)receiveChannel)
                             .ToListAsync();

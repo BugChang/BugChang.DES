@@ -54,13 +54,43 @@
                     title: '交换员'
                 },
                 {
+                    data: 'createTime',
+                    title: '创建时间'
+                },
+                {
+                    data: 'createUserName',
+                    title: '创建人'
+                },
+
+                {
                     data: null,
                     title: '操作'
                 }
             ],
             columnDefs: [
                 {
-                    targets: 4,
+                    targets: 2,
+                    render: function (data, type, row) {
+                        var strHtml = '';
+                        switch (row.type) {
+                            case 0:
+                                strHtml = "收件清单";
+                                break;
+                            case 1:
+                                strHtml = "发件清单";
+                                break;
+                            case 2:
+                                strHtml = "收发清单";
+                                break;
+                            default:
+                                strHtml = "未知类型";
+                                break;
+                        }
+                        return strHtml;
+                    }
+                },
+                {
+                    targets: 6,
                     render: function (data, type, row) {
                         var strHtml = '';
                         strHtml += '<button class="btn btn-primary btn-xs view-detail" data-bill-id=' + row.id + '>详情</button>';

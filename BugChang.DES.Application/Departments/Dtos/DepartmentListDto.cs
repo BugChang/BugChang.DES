@@ -24,5 +24,7 @@ namespace BugChang.DES.Application.Departments.Dtos
         public string ParentName { get; set; }
 
         public int Sort { get; set; }
+
+        public string Address { get; set; }
     }
 }

@@ -156,5 +156,7 @@ namespace BugChang.DES.Core.Departments
 
             return departmentCode;
         }
+
+       
     }
 }

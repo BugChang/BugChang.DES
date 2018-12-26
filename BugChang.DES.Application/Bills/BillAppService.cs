@@ -325,7 +325,7 @@ namespace BugChang.DES.Application.Bills
                 departmentIds.Add(warden.Place.DepartmentId);
             }
 
-            var queryable = _exchangeListRepository.GetQueryable().Where(a => departmentIds.Contains(a.DepartmentId));
+            var queryable = _exchangeListRepository.GetQueryable().Include(a => a.CreateUser).Where(a => departmentIds.Contains(a.DepartmentId));
             if (!string.IsNullOrWhiteSpace(pageSearch.Keywords))
             {
                 queryable = queryable.Where(a =>

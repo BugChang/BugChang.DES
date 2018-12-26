@@ -50,5 +50,10 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// 附加数据
         /// </summary>
         public string CustomData { get; set; }
+
+        /// <summary>
+        /// 原条码号
+        /// </summary>
+        public string OldBarcodeNo { get; set; }
     }
 }

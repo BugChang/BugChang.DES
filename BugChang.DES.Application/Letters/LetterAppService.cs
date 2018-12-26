@@ -227,6 +227,7 @@ namespace BugChang.DES.Application.Letters
             else
             {
                 var receiveDepartment = await _departmentManager.GetAsync(sendLetter.ReceiveDepartmentId);
+                var sendDepartment = await _departmentManager.GetAsync(sendLetter.SendDepartmentId);
                 var sendDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.SendDepartmentId), 11);
                 var receiveDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.ReceiveDepartmentId), 11);
                 letter.LetterType = letter.GetSendLetterType(sendDepartmentCode, receiveDepartmentCode);
@@ -234,6 +235,11 @@ namespace BugChang.DES.Application.Letters
                 if (receiveDepartment.ReceiveChannel == EnumChannel.机要通信)
                 {
                     letter.LetterType = EnumLetterType.发信;
+                }
+
+                if (sendDepartment.ReceiveChannel == EnumChannel.机要通信)
+                {
+                    letter.LetterType = EnumLetterType.收信;
                 }
             }
             await _letterRepository.AddAsync(letter);
