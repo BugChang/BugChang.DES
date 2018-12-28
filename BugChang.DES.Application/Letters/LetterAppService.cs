@@ -337,6 +337,13 @@ namespace BugChang.DES.Application.Letters
                         OperatorId = operatorId,
                         Remark = "文件已申请退回"
                     };
+
+
+                    //退信后干掉分拣记录
+                    var sortingLetter = await _sortingRepository.GetQueryable().AsNoTracking().Where(a => a.BarcodeNo == letter.BarcodeNo && !a.Sorted)
+                          .FirstOrDefaultAsync();
+                    await _sortingRepository.DeleteByIdAsync(sortingLetter.Id);
+
                     await _barcodeLogRepository.AddAsync(barcodeLog);
                     await _backLetterRepository.AddAsync(backLetter);
                     await _unitOfWork.CommitAsync();
@@ -376,7 +383,7 @@ namespace BugChang.DES.Application.Letters
                     LetterId = letterId,
                     OperationDepartmentId = departmentId,
                     OperatorId = operatorId,
-                    ApplicantId = applicantId,
+                    ApplicantId = 0,
                     OperationTime = DateTime.Now
                 };
                 var barcodeLog = new BarcodeLog
@@ -387,7 +394,7 @@ namespace BugChang.DES.Application.Letters
                     CurrentPlaceId = barcode.CurrentPlaceId,
                     DepartmentId = letter.ReceiveDepartmentId,
                     OperationTime = DateTime.Now,
-                    OperatorId = applicantId,
+                    OperatorId = null,
                     Remark = "文件已勘误"
                 };
 

@@ -812,7 +812,7 @@
                     lodop.PRINT_INIT("");
                     var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
                     lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
-                    lodop.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "84%");
+                    //lodop.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "84%");
                     lodop.PRINT();
                 }
                 

@@ -11,7 +11,7 @@
 
         initSearchTable();
 
-        initApplicants();
+        //initApplicants();
 
         $("#btnSearch").click(function () {
             var barcodeNo = $("#barcodeNo").val();
@@ -25,7 +25,6 @@
 
         $("#btnSave").click(function () {
             var count = searchTable.rows({ selected: true }).count();
-            var applicantId = $("#applicantId").val();
             if (count === 0) {
                 window.toastr.error("请选择要勘误的记录");
             } else {
@@ -36,7 +35,7 @@
                     type: 'POST',
                     async: false,
                     cache: false,
-                    data: { id: letterId, applicantId: applicantId },
+                    data: { id: letterId},
                     headers:
                         {
                             "BugChang-CSRF-HEADER": token //注意header要修改

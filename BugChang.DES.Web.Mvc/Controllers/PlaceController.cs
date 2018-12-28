@@ -158,7 +158,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         [HttpPost]
         [TypeFilter(typeof(OperationFilter),
-            Arguments = new object[] { "Box.AssignWarden" })]
+            Arguments = new object[] { "Place.AssignWarden" })]
         public async Task<IActionResult> AssignWarden(int placeId, List<int> wardenIds)
         {
             var result = await _placeAppService.AssignWarden(placeId, wardenIds, CurrentUser.UserId);
