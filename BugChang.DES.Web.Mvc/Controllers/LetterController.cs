@@ -755,5 +755,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
 
         #endregion
+
+
+        public IActionResult Test()
+        {
+            return View();
+        }
     }
 }
