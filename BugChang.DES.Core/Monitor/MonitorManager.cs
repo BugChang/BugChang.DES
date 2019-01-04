@@ -14,6 +14,7 @@ using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.Sortings;
+using BugChang.DES.Core.UrgentLevels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -551,11 +552,6 @@ namespace BugChang.DES.Core.Monitor
         public async Task<Box> GetBox(int boxId)
         {
             var box = await _boxRepository.GetByIdAsync(boxId);
-            //箱头数量改用动态计算
-            var objectIds = await _boxObjectRepository.GetQueryable().Where(a => a.BoxId == boxId)
-                .Select(a => a.ExchangeObjectId).ToListAsync();
-            box.FileCount = await _barcodeRepository.GetQueryable()
-                .Where(a => objectIds.Contains(a.CurrentObjectId) && a.Status == EnumBarcodeStatus.已投递).CountAsync();
             return box;
         }
 
@@ -689,7 +685,8 @@ namespace BugChang.DES.Core.Monitor
             //更新箱格信息
             var box = await _boxRepository.GetByIdAsync(boxId);
             box.FileCount += 1;
-            box.HasUrgent = isJiaJi;
+            box.HasUrgent = letter.UrgencyLevel!= EnumUrgentLevel.无 || isJiaJi;
+           
             _logger.LogWarning($"--------------结束保存条码--------------");
             return 1;
         }

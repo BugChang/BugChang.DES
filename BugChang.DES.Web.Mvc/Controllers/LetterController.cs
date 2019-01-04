@@ -518,11 +518,11 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 SortingList = await _letterAppService.GetSortingList(id),
                 LetterSortings = await _letterAppService.GetSortListDetails(id)
             };
-
+            model.SortingList.AllCount = model.LetterSortings.Count;
             var left = model.LetterSortings.Count % 15;
             if (left != 0)
             {
-                for (int i = 0; i < left; i++)
+                for (int i = 0; i < 15 - left; i++)
                 {
                     model.LetterSortings.Add(new LetterSortingDto());
                 }
@@ -756,10 +756,5 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         #endregion
 
-
-        public IActionResult Test()
-        {
-            return View();
-        }
     }
 }

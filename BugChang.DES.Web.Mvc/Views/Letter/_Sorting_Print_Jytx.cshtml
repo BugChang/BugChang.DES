@@ -15,7 +15,7 @@
         <tr>
             <td colspan="10">
                 <div style="float: left">
-                    发出日期：@DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+                    发出日期：@Model.SortingList.CreateTime
                 </div>
                 <div style="float: right">
                     第 @Model.SortingList.ListNo 号 第<span tdata="PageNO" format="0" color="blue">##</span>页
@@ -39,13 +39,9 @@
         </tr>
     </thead>
     <tbody>
-        @for (int i = 15; i < Model.LetterSortings.Count; i++)
+        @for (int i = 0; i < Model.LetterSortings.Count; i++)
         {
             var letter = Model.LetterSortings[i];
-            if (i % 15 == 0)
-            {
-                <p style="page-break-after:always">&nbsp;</p>
-            }
             <tr>
                 <td>@(i + 1)</td>
                 <td>@letter.ReceiveDepartmentName</td>
@@ -90,7 +86,7 @@
         </tr>
         <tr>
             <td colspan="5">
-                本号单共计<span tdata="PageCount" format="0" color="blue">##</span>页 <span tdata="AllCount" format="0" color="blue">@Model.LetterSortings.Count</span>件
+                本号单共计<span tdata="PageCount" format="0" color="blue">##</span>页 <span tdata="AllCount" format="0" color="blue">@Model.SortingList.AllCount</span>件
             </td>
         </tr>
         <tr>
