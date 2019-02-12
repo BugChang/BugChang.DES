@@ -342,8 +342,11 @@ namespace BugChang.DES.Application.Letters
                     //退信后干掉分拣记录
                     var sortingLetter = await _sortingRepository.GetQueryable().AsNoTracking().Where(a => a.BarcodeNo == letter.BarcodeNo && !a.Sorted)
                           .FirstOrDefaultAsync();
-                    await _sortingRepository.DeleteByIdAsync(sortingLetter.Id);
-
+                    if (sortingLetter!=null)
+                    {
+                        await _sortingRepository.DeleteByIdAsync(sortingLetter.Id);
+                    }
+                   
                     await _barcodeLogRepository.AddAsync(barcodeLog);
                     await _backLetterRepository.AddAsync(backLetter);
                     await _unitOfWork.CommitAsync();
