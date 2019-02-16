@@ -230,7 +230,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> GetSendBarcode(int id)
         {
-            var letter = await _letterAppService.GetReceiveBarcode(id);
+            var letter = await _letterAppService.GetSendBarcode(id);
             return Json(letter);
         }
 

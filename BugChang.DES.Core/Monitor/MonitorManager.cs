@@ -269,11 +269,21 @@ namespace BugChang.DES.Core.Monitor
                         {
                             receiveChannel = EnumChannel.机要通信;
                         }
-                        //2018.12.26添加机要通信渠道箱不允许投非密件
-                        if (receiveChannel== EnumChannel.机要通信&& letter.SecretLevel== EnumSecretLevel.无)
+                        
+                        if (receiveChannel== EnumChannel.机要通信 )
                         {
-                            _logger.LogWarning($"结束：非密件不允许走机要通信渠道");
-                            return checkBarcodeModel;
+                            //2018.12.26添加机要通信渠道箱不允许投非密件
+                            if (letter.SecretLevel == EnumSecretLevel.无)
+                            {
+                                _logger.LogWarning($"结束：非密件不允许走机要通信渠道");
+                                return checkBarcodeModel;
+                            }
+                            //2019.2.12添加直接到部级的单位不允许投箱
+                            if (letter.BarcodeNo.Contains("015000"))
+                            {
+                                _logger.LogWarning($"结束：直接到部级不允许投箱");
+                                return checkBarcodeModel;
+                            }
                         }
                         var channelExchangeObjects = await _objectRepository.GetQueryable().Where(a =>
                                 a.ObjectType == EnumObjectType.渠道 && a.Value == (int)receiveChannel)
