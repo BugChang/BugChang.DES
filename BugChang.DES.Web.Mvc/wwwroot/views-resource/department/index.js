@@ -133,6 +133,10 @@
                     title: '默认收件渠道'
                 },
                 {
+                    data: 'sort',
+                    title: '排序号'
+                },
+                {
                     data: 'createUserName',
                     title: '创建人'
                 },
@@ -155,7 +159,7 @@
             ],
             columnDefs: [
                 {
-                    targets: 9,
+                    targets: 10,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (Common.hasOperation("Department.Edit")) {
@@ -266,7 +270,7 @@
         //刷新机构树
         //zTreeObj.reAsyncChildNodes(currentNode, 'refresh');
         //刷新上级单位列表
-        initSelect();
+        //initSelect();
     }
 
     //重新加载页面
