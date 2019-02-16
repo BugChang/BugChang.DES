@@ -1,7 +1,7 @@
 ﻿@model BugChang.DES.Web.Mvc.Models.Letter.PrintSortingModel
 <style>
     table tbody tr td {
-        font-size: 12px;
+        font-size: 14px;
     }
 </style>
 <table style="border-collapse: collapse; border: 1px black solid; width: 100%;border-spacing: 0">
@@ -15,7 +15,7 @@
         <tr>
             <td colspan="10">
                 <div style="float: left">
-                    发出日期：@DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+                    发出日期：@Model.SortingList.CreateTime
                 </div>
                 <div style="float: right">
                     第 @Model.SortingList.ListNo 号 第<span tdata="PageNO" format="0" color="blue">##</span>页
@@ -55,27 +55,6 @@
                 <td></td>
             </tr>
         }
-        @{
-            var left = 15 - Model.LetterSortings.Count % 15;
-            if (left != 0)
-            {
-                for (int k = 0; k < left; k++)
-                {
-                    <tr>
-                        <td>@(15 - left + k + 1)</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                }
-            }
-        }
     </tbody>
     <tfoot>
         <tr>
@@ -107,7 +86,7 @@
         </tr>
         <tr>
             <td colspan="5">
-                本号单共计<span tdata="PageCount" format="0" color="blue">##</span>页 <span tdata="AllCount" format="0" color="blue">@Model.LetterSortings.Count</span>件
+                本号单共计<span tdata="PageCount" format="0" color="blue">##</span>页 <span tdata="AllCount" format="0" color="blue">@Model.SortingList.AllCount</span>件
             </td>
         </tr>
         <tr>

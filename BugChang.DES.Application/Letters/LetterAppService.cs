@@ -227,6 +227,7 @@ namespace BugChang.DES.Application.Letters
             else
             {
                 var receiveDepartment = await _departmentManager.GetAsync(sendLetter.ReceiveDepartmentId);
+                var sendDepartment = await _departmentManager.GetAsync(sendLetter.SendDepartmentId);
                 var sendDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.SendDepartmentId), 11);
                 var receiveDepartmentCode = TextHelper.RepairZeroRight(await _departmentManager.GetDepartmentCode(sendLetter.ReceiveDepartmentId), 11);
                 letter.LetterType = letter.GetSendLetterType(sendDepartmentCode, receiveDepartmentCode);
@@ -234,6 +235,11 @@ namespace BugChang.DES.Application.Letters
                 if (receiveDepartment.ReceiveChannel == EnumChannel.机要通信)
                 {
                     letter.LetterType = EnumLetterType.发信;
+                }
+
+                if (sendDepartment.ReceiveChannel == EnumChannel.机要通信)
+                {
+                    letter.LetterType = EnumLetterType.收信;
                 }
             }
             await _letterRepository.AddAsync(letter);
@@ -331,6 +337,16 @@ namespace BugChang.DES.Application.Letters
                         OperatorId = operatorId,
                         Remark = "文件已申请退回"
                     };
+
+
+                    //退信后干掉分拣记录
+                    var sortingLetter = await _sortingRepository.GetQueryable().AsNoTracking().Where(a => a.BarcodeNo == letter.BarcodeNo && !a.Sorted)
+                          .FirstOrDefaultAsync();
+                    if (sortingLetter!=null)
+                    {
+                        await _sortingRepository.DeleteByIdAsync(sortingLetter.Id);
+                    }
+                   
                     await _barcodeLogRepository.AddAsync(barcodeLog);
                     await _backLetterRepository.AddAsync(backLetter);
                     await _unitOfWork.CommitAsync();
@@ -370,7 +386,7 @@ namespace BugChang.DES.Application.Letters
                     LetterId = letterId,
                     OperationDepartmentId = departmentId,
                     OperatorId = operatorId,
-                    ApplicantId = applicantId,
+                    ApplicantId = 0,
                     OperationTime = DateTime.Now
                 };
                 var barcodeLog = new BarcodeLog
@@ -381,7 +397,7 @@ namespace BugChang.DES.Application.Letters
                     CurrentPlaceId = barcode.CurrentPlaceId,
                     DepartmentId = letter.ReceiveDepartmentId,
                     OperationTime = DateTime.Now,
-                    OperatorId = applicantId,
+                    OperatorId = null,
                     Remark = "文件已勘误"
                 };
 

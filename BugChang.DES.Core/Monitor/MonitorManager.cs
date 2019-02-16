@@ -14,6 +14,7 @@ using BugChang.DES.Core.Exchanges.Places;
 using BugChang.DES.Core.Letters;
 using BugChang.DES.Core.SecretLevels;
 using BugChang.DES.Core.Sortings;
+using BugChang.DES.Core.UrgentLevels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -268,6 +269,22 @@ namespace BugChang.DES.Core.Monitor
                         {
                             receiveChannel = EnumChannel.机要通信;
                         }
+                        
+                        if (receiveChannel== EnumChannel.机要通信 )
+                        {
+                            //2018.12.26添加机要通信渠道箱不允许投非密件
+                            if (letter.SecretLevel == EnumSecretLevel.无)
+                            {
+                                _logger.LogWarning($"结束：非密件不允许走机要通信渠道");
+                                return checkBarcodeModel;
+                            }
+                            //2019.2.12添加直接到部级的单位不允许投箱
+                            if (letter.BarcodeNo.Contains("015000"))
+                            {
+                                _logger.LogWarning($"结束：直接到部级不允许投箱");
+                                return checkBarcodeModel;
+                            }
+                        }
                         var channelExchangeObjects = await _objectRepository.GetQueryable().Where(a =>
                                 a.ObjectType == EnumObjectType.渠道 && a.Value == (int)receiveChannel)
                             .ToListAsync();
@@ -433,8 +450,6 @@ namespace BugChang.DES.Core.Monitor
                             var matchExchangeObjects = exchangeObjects.Where(a => receiveCode.Contains(a.RestrictionCode)).ToList();
                             if (matchExchangeObjects.Count > 0)
                             {
-                                var c = JsonConvert.SerializeObject(matchExchangeObjects);
-
                                 if (matchExchangeObjects.Count > 1)
                                 {
                                     //匹配数量超过一个，排除限制码为空的对象
@@ -547,11 +562,6 @@ namespace BugChang.DES.Core.Monitor
         public async Task<Box> GetBox(int boxId)
         {
             var box = await _boxRepository.GetByIdAsync(boxId);
-            //箱头数量改用动态计算
-            var objectIds = await _boxObjectRepository.GetQueryable().Where(a => a.BoxId == boxId)
-                .Select(a => a.ExchangeObjectId).ToListAsync();
-            box.FileCount = await _barcodeRepository.GetQueryable()
-                .Where(a => objectIds.Contains(a.CurrentObjectId) && a.Status == EnumBarcodeStatus.已投递).CountAsync();
             return box;
         }
 
@@ -685,7 +695,8 @@ namespace BugChang.DES.Core.Monitor
             //更新箱格信息
             var box = await _boxRepository.GetByIdAsync(boxId);
             box.FileCount += 1;
-            box.HasUrgent = isJiaJi;
+            box.HasUrgent = letter.UrgencyLevel!= EnumUrgentLevel.无 || isJiaJi;
+           
             _logger.LogWarning($"--------------结束保存条码--------------");
             return 1;
         }

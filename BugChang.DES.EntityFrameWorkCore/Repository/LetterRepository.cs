@@ -153,7 +153,7 @@ namespace BugChang.DES.EntityFrameWorkCore.Repository
 
         public async Task<Letter> GetLetter(string barcodeNo)
         {
-            var letter = await _dbContext.Letters.AsNoTracking().Where(a => a.BarcodeNo == barcodeNo).SingleOrDefaultAsync();
+            var letter = await _dbContext.Letters.AsNoTracking().Where(a => a.BarcodeNo == barcodeNo).FirstOrDefaultAsync();
             return letter;
         }
 

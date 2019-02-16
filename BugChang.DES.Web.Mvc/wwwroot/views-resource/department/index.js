@@ -125,6 +125,10 @@
                     title: '全称'
                 },
                 {
+                    data: 'address',
+                    title: '地址'
+                },
+                {
                     data: 'code',
                     title: '代码'
                 },

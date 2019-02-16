@@ -23,12 +23,13 @@
     function initSelect() {
         $.get("/User/GetListForSelect",
             function (data) {
-                $(".select2").select2({
+                $(".edit-department-select").select2({
                     data: data,
                     placeholder: "请选择机构",
                     allowClear: true
                 });
-                $(".select2").val($(".select2").val()).trigger("change");
+                var departmentId = $("#DefaultValue").attr("data-department-id");
+                $(".edit-department-select").val(departmentId).trigger("change");
             });
     }
 })();

@@ -230,7 +230,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
         public async Task<IActionResult> GetSendBarcode(int id)
         {
-            var letter = await _letterAppService.GetReceiveBarcode(id);
+            var letter = await _letterAppService.GetSendBarcode(id);
             return Json(letter);
         }
 
@@ -364,9 +364,9 @@ namespace BugChang.DES.Web.Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CancelLetter(int id, int applicantId)
+        public async Task<IActionResult> CancelLetter(int id)
         {
-            var result = await _letterAppService.CancelLetter(id, CurrentUser.DepartmentId, CurrentUser.UserId, applicantId);
+            var result = await _letterAppService.CancelLetter(id, CurrentUser.DepartmentId, CurrentUser.UserId, 0);
             return Json(result);
         }
 
@@ -518,6 +518,15 @@ namespace BugChang.DES.Web.Mvc.Controllers
                 SortingList = await _letterAppService.GetSortingList(id),
                 LetterSortings = await _letterAppService.GetSortListDetails(id)
             };
+            model.SortingList.AllCount = model.LetterSortings.Count;
+            var left = model.LetterSortings.Count % 15;
+            if (left != 0)
+            {
+                for (int i = 0; i < 15 - left; i++)
+                {
+                    model.LetterSortings.Add(new LetterSortingDto());
+                }
+            }
             return PartialView("_Sorting_Print_Jytx", model);
         }
 
@@ -746,5 +755,6 @@ namespace BugChang.DES.Web.Mvc.Controllers
 
 
         #endregion
+
     }
 }

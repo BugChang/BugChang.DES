@@ -31,5 +31,11 @@ namespace BugChang.DES.Core.Exchanges.Places
             Name = Operation.DeleteName,
             Code = "Place.Delete"
         };
+
+        public Operation AssignWarden => new Operation
+        {
+            Name = "分配管理员",
+            Code = "Place.AssignWarden"
+        };
     }
 }

@@ -180,7 +180,9 @@
                     var lodop = getLodop();
                     lodop.PRINT_INIT("");
                     var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
-                    lodop.ADD_PRINT_TABLE("2%", "5%", "90%", "96%", style + html);
+                    //不断调整500的值，直到15行一页为止
+                    lodop.ADD_PRINT_TABLE("2%", "5%", "90%", 400, style + html);
+                    lodop.SET_PRINT_STYLEA(0, "TableRowThickNess", 20);
                     lodop.PRINT();
                 }
             }
