@@ -251,7 +251,7 @@
         $.get("/HardWare/GetBarcodePrint80130",
             { deviceCode: deviceCode },
             function (hard) {
-                $.get("/Letter/GetReceiveBarcode/" + letterId, function (data) {
+                $.get("/Letter/GetSendBarcode/" + letterId, function (data) {
                     var lodop = getLodop();
                     lodop.PRINT_INIT("");
                     lodop.SET_PRINT_PAGESIZE(2, 800, 1300, "80*130");
@@ -268,7 +268,7 @@
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
                     lodop.ADD_PRINT_TEXT("13.86mm", "22.86mm", "80.6mm", "6.01mm", "缓急：" + data.urgencyLevel);
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
-                    lodop.ADD_PRINT_TEXT("33.34mm", "23.71mm", "97.9mm", "26.16mm", data.receiveDepartmentName);
+                    lodop.ADD_PRINT_TEXT("35.72mm", "23.71mm", "97.9mm", "23.79mm", data.receiveDepartmentName);
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 28);
                     lodop.SET_PRINT_STYLEA(0, "Alignment", 2);
                     lodop.SET_PRINT_STYLEA(0, "LineSpacing", "-0.21mm");
@@ -277,7 +277,7 @@
                     lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 22);
                     lodop.SET_PRINT_STYLEA(0, "Alignment", 3);
-                    lodop.ADD_PRINT_TEXT("70.61mm", "24.72mm", "70.02mm", "6.01mm", "北京市国家安全局" + data.sendDepartmentName);
+                    lodop.ADD_PRINT_TEXT("70.61mm", "24.72mm", "70.02mm", "6.01mm",data.sendDepartmentName);
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
                     lodop.SET_PRINT_STYLEA(0, "Bold", 1);
                     lodop.ADD_PRINT_TEXT("70.61mm", "94.72mm", "27.66mm", "6.01mm", data.printDate);
@@ -288,8 +288,10 @@
                     var yfdw = data.oldDepartmentName == null ? "" : data.oldDepartmentName;
                     lodop.ADD_PRINT_TEXT("20.57mm", "23.14mm", "80.7mm", "5.29mm", "原始编号：" + ysbh + "  " + sjm + "  " + yfdw);
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
+                    lodop.ADD_PRINT_TEXT("30.43mm", "87.31mm", "34.13mm", "5.29mm", data.boxNo);
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
                     lodop.SET_PRINTER_INDEX(hard.value);
-                    lodop.PRINT();
+                    lodop.PRINT_DESIGN();
                 });
             });
 

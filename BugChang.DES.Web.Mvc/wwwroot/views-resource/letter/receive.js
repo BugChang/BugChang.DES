@@ -296,7 +296,7 @@
                     lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 22);
                     lodop.SET_PRINT_STYLEA(0, "Alignment", 3);
-                    lodop.ADD_PRINT_TEXT("70.61mm", "24.72mm", "70.02mm", "6.01mm", "北京市国家安全局" + data.sendDepartmentName);
+                    lodop.ADD_PRINT_TEXT("70.61mm", "24.72mm", "70.02mm", "6.01mm",data.sendDepartmentName);
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
                     lodop.SET_PRINT_STYLEA(0, "Bold", 1);
                     lodop.ADD_PRINT_TEXT("70.61mm", "94.72mm", "27.66mm", "6.01mm", data.printDate);
