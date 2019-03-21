@@ -42,6 +42,9 @@
         /// </summary>
         public string SendDepartmentName { get; set; }
 
+        /// <summary>
+        /// 原发单位
+        /// </summary>
         public string OldSendDepartmentName { get; set; }
 
         /// <summary>

@@ -291,7 +291,7 @@
                     lodop.ADD_PRINT_TEXT("30.43mm", "87.31mm", "34.13mm", "5.29mm", data.boxNo);
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
                     lodop.SET_PRINTER_INDEX(hard.value);
-                    lodop.PRINT_DESIGN();
+                    lodop.PRINT();
                 });
             });
 

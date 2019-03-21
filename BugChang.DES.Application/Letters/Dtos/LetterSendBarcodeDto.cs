@@ -12,6 +12,11 @@ namespace BugChang.DES.Application.Letters.Dtos
         public string BarcodeNo { get; set; }
 
         /// <summary>
+        /// 原始条码号
+        /// </summary>
+        public string OldBarcodeNo { get; set; }
+
+        /// <summary>
         /// 信封号
         /// </summary>
         public string LetterNo { get; set; }
@@ -41,6 +46,10 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// </summary>
         public string SendDepartmentName { get; set; }
 
+        /// <summary>
+        /// 原发单位
+        /// </summary>
+        public string OldSendDepartmentName { get; set; }
 
         /// <summary>
         /// 打印日期
