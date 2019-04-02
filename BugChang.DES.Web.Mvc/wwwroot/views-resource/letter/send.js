@@ -256,42 +256,65 @@
                     lodop.PRINT_INIT("");
                     lodop.SET_PRINT_PAGESIZE(2, 800, 1300, "80*130");
                     lodop.SET_PRINT_MODE("PRINT_NOCOLLATE", 1);
-                    lodop.ADD_PRINT_BARCODE("7.81mm", "5.78mm", "15.01mm", "66.99mm", "128Auto", data.barcodeNo);
+                    //条形码
+                    lodop.ADD_PRINT_BARCODE("4.42mm", "5.78mm", "15.01mm", "66.99mm", "128Auto", data.barcodeNo);
                     lodop.SET_PRINT_STYLEA(0, "ShowBarText", 0);
                     lodop.SET_PRINT_STYLEA(0, "Angle", 90);
-                    lodop.ADD_PRINT_LINE("12.87mm", "22.75mm", "12.87mm", "117.75mm", 0, 1);
-                    lodop.ADD_PRINT_LINE("19.26mm", "22.97mm", "19.26mm", "117.96mm", 0, 1);
-                    lodop.ADD_PRINT_LINE("68.33mm", "24.77mm", "68.33mm", "119.76mm", 0, 1);
-                    lodop.ADD_PRINT_TEXT("6.56mm", "22.75mm", "24.45mm", "6.01mm", data.secretLevel);
+                    lodop.ADD_PRINT_LINE("9.19mm", "22.54mm", "9.19mm", "120.29mm", 0, 1);
+                    lodop.ADD_PRINT_LINE("15.92mm", "22.54mm", "15.92mm", "120.42mm", 0, 1);
+                    lodop.ADD_PRINT_LINE("68.3mm", "23.28mm", "68.3mm", "120.61mm", 0, 1);
+                    //密级
+                    lodop.ADD_PRINT_TEXT("3.18mm", "22.12mm", "24.45mm", "7.07mm", data.secretLevel);
+                    LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 16);
-                    lodop.ADD_PRINT_TEXT("6.56mm", "46.67mm", "74.89mm", "6.01mm", "信封号：" + data.letterNo);
+                    //信封号
+                    lodop.ADD_PRINT_TEXT("3.18mm", "47.1mm", "74.46mm", "7.07mm", "信封号：" + data.letterNo);
+                    lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
-                    lodop.ADD_PRINT_TEXT("13.86mm", "22.86mm", "80.6mm", "6.01mm", "缓急：" + data.urgencyLevel);
+                    //紧急程度
+                    lodop.ADD_PRINT_TEXT("10.05mm", "22.01mm", "99.65mm", "7.07mm", "缓急：" + data.urgencyLevel);
+                    lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
-                    lodop.ADD_PRINT_TEXT("35.72mm", "23.71mm", "97.9mm", "23.79mm", data.receiveDepartmentName);
-                    lodop.SET_PRINT_STYLEA(0, "FontSize", 28);
+                    //收件单位
+                    lodop.ADD_PRINT_TEXT("35.94mm", "22.23mm", "100.01mm", "23.79mm", data.receiveDepartmentName);
+                    lodop.SET_PRINT_STYLEA(0, "FontName", "华文中宋");
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 26);
                     lodop.SET_PRINT_STYLEA(0, "Alignment", 2);
                     lodop.SET_PRINT_STYLEA(0, "LineSpacing", "-0.21mm");
                     lodop.SET_PRINT_STYLEA(0, "LetterSpacing", "-0.21mm");
-                    lodop.ADD_PRINT_TEXT("59.61mm", "23.71mm", "98.32mm", "7.81mm", (data.receiver === null ? "" : data.receiver) + "（收）");
+                    //收件人
+                    lodop.ADD_PRINT_TEXT("59.61mm", "22.44mm", "99.59mm", "7.81mm", (data.receiver === null ? "" : data.receiver) + "（收）");
                     lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
-                    lodop.SET_PRINT_STYLEA(0, "FontSize", 22);
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 20);
                     lodop.SET_PRINT_STYLEA(0, "Alignment", 3);
-                    lodop.ADD_PRINT_TEXT("70.61mm", "24.72mm", "70.02mm", "6.01mm",data.sendDepartmentName);
+                    //发件单位
+                    lodop.ADD_PRINT_TEXT("69.55mm", "23.03mm", "70.02mm", "6.01mm",data.sendDepartmentName);
+                    lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
                     lodop.SET_PRINT_STYLEA(0, "Bold", 1);
-                    lodop.ADD_PRINT_TEXT("70.61mm", "94.72mm", "27.66mm", "6.01mm", data.printDate);
+                    //打印日期
+                    lodop.ADD_PRINT_TEXT("69.34mm", "97.68mm", "24.49mm", "6.01mm", data.printDate);
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
-                    lodop.ADD_PRINT_LINE("26.54mm", "23.43mm", "26.54mm", "119.23mm", 0, 1);
                     var ysbh = data.oldBarcodeNo == null ? "" : data.oldBarcodeNo;
                     var sjm = data.shiJiCode == null ? "" : data.shiJiCode;
                     var yfdw = data.oldDepartmentName == null ? "" : data.oldDepartmentName;
-                    lodop.ADD_PRINT_TEXT("20.57mm", "23.14mm", "80.7mm", "5.29mm", "原始编号：" + ysbh + "  " + sjm + "  " + yfdw);
+                    lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 12);
+                    lodop.ADD_PRINT_LINE("22.48mm", "22.58mm", "22.48mm", "120.29mm", 0, 1);
+                    //原始编号
+                    lodop.ADD_PRINT_TEXT("16.76mm", "22.08mm", "99.76mm", "6.35mm", "原始编号：" + ysbh + "  " + sjm + "  " + yfdw);
+                    lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
-                    lodop.ADD_PRINT_TEXT("30.43mm", "87.31mm", "34.13mm", "5.29mm", data.boxNo);
-                    lodop.SET_PRINT_STYLEA(0, "FontSize", 14);
+                    //箱号
+                    lodop.ADD_PRINT_TEXT("23.24mm", "85.33mm", "35.1mm", "9.1mm", data.boxNo);
+                    lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 18);
+                    //收件单位所在地址
+                    lodop.ADD_PRINT_TEXT("23.24mm", "22.28mm", "60.1mm", "9.1mm", data.address);
+                    lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
+                    lodop.SET_PRINT_STYLEA(0, "FontSize", 18);
                     lodop.SET_PRINTER_INDEX(hard.value);
-                    lodop.PRINT();
+                    lodop.PRINT_DESIGN();
                 });
             });
 
