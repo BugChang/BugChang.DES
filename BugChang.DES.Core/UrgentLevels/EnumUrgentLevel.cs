@@ -2,7 +2,7 @@
 {
     public enum EnumUrgentLevel
     {
-        无,
+        普通,
         加急,
         特急,
         限时

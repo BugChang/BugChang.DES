@@ -111,7 +111,7 @@ namespace BugChang.DES.Core.Letters
                 var sec = barCode.Substring(barCode.IndexOf("(623)", StringComparison.Ordinal));
                 sec = sec.Replace("(623)", "");
                 sec = sec.Substring(0, sec.IndexOf('('));
-                return (EnumSecretLevel)Convert.ToInt32(sec);
+                return (EnumSecretLevel)Enum.Parse(typeof(EnumSecretLevel), sec);
             }
             if (barCode.Length == 33)
             {
@@ -125,7 +125,7 @@ namespace BugChang.DES.Core.Letters
                 return (EnumSecretLevel)sec;
             }
 
-            return EnumSecretLevel.无;
+            return EnumSecretLevel.普通;
         }
 
         public EnumUrgentLevel GetUrgencyLevel(string barCode)
@@ -136,7 +136,7 @@ namespace BugChang.DES.Core.Letters
                 var urg = barCode.Substring(barCode.IndexOf("(624)", StringComparison.Ordinal));
                 urg = urg.Replace("(624)", "");
                 urg = urg.Substring(0, urg.IndexOf('('));
-                return (EnumUrgentLevel)Convert.ToInt32(urg);
+                return (EnumUrgentLevel)Enum.Parse(typeof(EnumSecretLevel), urg);
             }
             if (barCode.Length == 33)
             {
@@ -150,7 +150,7 @@ namespace BugChang.DES.Core.Letters
                 return (EnumUrgentLevel)urg;
             }
 
-            return EnumUrgentLevel.无;
+            return EnumUrgentLevel.普通;
         }
 
         public string GetSendCode(string barCodeNo)

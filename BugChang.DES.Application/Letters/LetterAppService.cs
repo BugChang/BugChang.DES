@@ -342,11 +342,11 @@ namespace BugChang.DES.Application.Letters
                     //退信后干掉分拣记录
                     var sortingLetter = await _sortingRepository.GetQueryable().AsNoTracking().Where(a => a.BarcodeNo == letter.BarcodeNo && !a.Sorted)
                           .FirstOrDefaultAsync();
-                    if (sortingLetter!=null)
+                    if (sortingLetter != null)
                     {
                         await _sortingRepository.DeleteByIdAsync(sortingLetter.Id);
                     }
-                   
+
                     await _barcodeLogRepository.AddAsync(barcodeLog);
                     await _backLetterRepository.AddAsync(backLetter);
                     await _unitOfWork.CommitAsync();
@@ -445,14 +445,13 @@ namespace BugChang.DES.Application.Letters
                     SortingList = sortingList
                 };
                 await _sortingListDetailRepository.AddAsync(listDetail);
+                //将事务提交上移，应对保存顺序不规则，最好是添加序号字段，暂时这么改
+                await _unitOfWork.CommitAsync();
             }
 
-            if (await _unitOfWork.CommitAsync() > 0)
-            {
-                result.Success = true;
-                result.Data = sortingList.Id;
-                result.Data = sortingList.Id;
-            }
+            result.Success = true;
+            result.Data = sortingList.Id;
+
             return result;
         }
 
@@ -726,7 +725,7 @@ namespace BugChang.DES.Application.Letters
                        join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
                        where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
                              barcodeLog.DepartmentId == departmentId
-                             && letter.SecretLevel == EnumSecretLevel.无
+                             && letter.SecretLevel == EnumSecretLevel.普通
                        select letter;
 
             var sec1 = from barcodeLog in _barcodeLogRepository.GetQueryable()
@@ -754,7 +753,7 @@ namespace BugChang.DES.Application.Letters
                        join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
                        where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date &&
                              barcodeLog.DepartmentId == departmentId
-                             && letter.UrgencyLevel == EnumUrgentLevel.无
+                             && letter.UrgencyLevel == EnumUrgentLevel.普通
                        select letter;
 
             var urg1 = from barcodeLog in _barcodeLogRepository.GetQueryable()
@@ -848,7 +847,7 @@ namespace BugChang.DES.Application.Letters
             var sec0 = from barcodeLog in _barcodeLogRepository.GetQueryable()
                        join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
                        where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
-                             && letter.SecretLevel == EnumSecretLevel.无
+                             && letter.SecretLevel == EnumSecretLevel.普通
                        select letter;
             dic.Add("无密", await sec0.CountAsync());
 
@@ -878,7 +877,7 @@ namespace BugChang.DES.Application.Letters
             var urg0 = from barcodeLog in _barcodeLogRepository.GetQueryable()
                        join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
                        where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
-                             && letter.UrgencyLevel == EnumUrgentLevel.无
+                             && letter.UrgencyLevel == EnumUrgentLevel.普通
                        select letter;
 
             dic.Add("非急", await urg0.CountAsync());

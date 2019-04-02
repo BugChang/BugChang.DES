@@ -163,7 +163,7 @@
             ],
             columnDefs: [
                 {
-                    targets: 10,
+                    targets: 11,
                     render: function (data, type, row) {
                         var strHtml = '';
                         if (Common.hasOperation("Department.Edit")) {

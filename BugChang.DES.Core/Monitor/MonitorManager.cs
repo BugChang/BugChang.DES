@@ -273,7 +273,7 @@ namespace BugChang.DES.Core.Monitor
                         if (receiveChannel== EnumChannel.机要通信 )
                         {
                             //2018.12.26添加机要通信渠道箱不允许投非密件
-                            if (letter.SecretLevel == EnumSecretLevel.无)
+                            if (letter.SecretLevel == EnumSecretLevel.普通)
                             {
                                 _logger.LogWarning($"结束：非密件不允许走机要通信渠道");
                                 return checkBarcodeModel;
@@ -695,7 +695,7 @@ namespace BugChang.DES.Core.Monitor
             //更新箱格信息
             var box = await _boxRepository.GetByIdAsync(boxId);
             box.FileCount += 1;
-            box.HasUrgent = letter.UrgencyLevel!= EnumUrgentLevel.无 || isJiaJi;
+            box.HasUrgent = letter.UrgencyLevel!= EnumUrgentLevel.普通 || isJiaJi;
            
             _logger.LogWarning($"--------------结束保存条码--------------");
             return 1;

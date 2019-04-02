@@ -36,7 +36,7 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// <summary>
         /// 收件单位
         /// </summary>
-        public string ReceiveDepartmentName { get; set; }
+        public string ReceiveDepartmentName { get; set; } = "";
 
         /// <summary>
         /// 收件人
@@ -46,6 +46,6 @@ namespace BugChang.DES.Application.Letters.Dtos
         /// <summary>
         /// 发件单位
         /// </summary>
-        public string SendDepartmentName { get; set; }
+        public string SendDepartmentName { get; set; } = "";
     }
 }

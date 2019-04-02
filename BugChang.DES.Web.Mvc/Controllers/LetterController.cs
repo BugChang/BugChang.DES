@@ -479,6 +479,7 @@ namespace BugChang.DES.Web.Mvc.Controllers
         public async Task<IActionResult> GetSortingListDetails(int listId)
         {
             var letters = await _letterAppService.GetSortListDetails(listId);
+
             return Json(letters);
         }
 
@@ -568,8 +569,8 @@ namespace BugChang.DES.Web.Mvc.Controllers
             var json = new
             {
                 draw,
-                recordsTotal = letters.Count,
                 recordsFiltered = letters.Count,
+                recordsTotal = letters.Count,
                 data = letters
             };
             return Json(json);
