@@ -149,9 +149,9 @@
                 cache: false,
                 data: { deviceCode: deviceCode },
                 headers:
-                    {
-                        "BugChang-CSRF-HEADER": token //注意header要修改
-                    },
+                {
+                    "BugChang-CSRF-HEADER": token //注意header要修改
+                },
                 url: "/HardWare/GetScanGun",
                 success: function (data) {
                     if (data === null || data === undefined) {
@@ -601,9 +601,9 @@
                     cache: false,
                     data: { letterIds: letterIds },
                     headers:
-                        {
-                            "BugChang-CSRF-HEADER": token //注意header要修改
-                        },
+                    {
+                        "BugChang-CSRF-HEADER": token //注意header要修改
+                    },
                     url: "/Letter/CreateTcjhList",
                     success: function (result) {
                         if (result.success) {
@@ -645,9 +645,9 @@
                     cache: false,
                     data: { letterIds: letterIds },
                     headers:
-                        {
-                            "BugChang-CSRF-HEADER": token //注意header要修改
-                        },
+                    {
+                        "BugChang-CSRF-HEADER": token //注意header要修改
+                    },
                     url: "/Letter/CreateZsList",
                     success: function (result) {
                         if (result.success) {
@@ -685,9 +685,9 @@
                     cache: false,
                     data: { letterIds: letterIds },
                     headers:
-                        {
-                            "BugChang-CSRF-HEADER": token //注意header要修改
-                        },
+                    {
+                        "BugChang-CSRF-HEADER": token //注意header要修改
+                    },
                     url: "/Letter/CreateJytxList",
                     success: function (result) {
                         if (result.success) {
@@ -714,9 +714,9 @@
             cache: false,
             data: null,
             headers:
-                {
-                    "BugChang-CSRF-HEADER": token //注意header要修改
-                },
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
             url: "/Letter/Change2Jytx/" + letterId,
             success: function (result) {
                 if (result.success) {
@@ -756,9 +756,9 @@
             cache: false,
             data: null,
             headers:
-                {
-                    "BugChang-CSRF-HEADER": token //注意header要修改
-                },
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
             url: "/Letter/SortingPrintTcjh/" + tcjhListId,
             success: function (html) {
                 var lodop = getLodop();
@@ -779,9 +779,9 @@
             cache: false,
             data: null,
             headers:
-                {
-                    "BugChang-CSRF-HEADER": token //注意header要修改
-                },
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
             url: "/Letter/SortingPrintZs/" + zsListId,
             success: function (html) {
                 var lodop = getLodop();
@@ -802,20 +802,20 @@
             cache: false,
             data: null,
             headers:
-                {
-                    "BugChang-CSRF-HEADER": token //注意header要修改
-                },
+            {
+                "BugChang-CSRF-HEADER": token //注意header要修改
+            },
             url: "/Letter/SortingPrintJytx/" + jytxListId,
             success: function (html) {
-                for (var i = 0; i < 2; i++) {
+                for (var i = 0; i < 1; i++) {
                     var lodop = getLodop();
                     lodop.PRINT_INIT("");
-                    var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
+                    var style = '<style>table{border-collapse:collapse;border:none;line-height:30px}th,td{border:solid #000 1px;} table tbody tr td {font - size: 14px;} table tfoot{font - size: 14px;}</style>';
                     //不断调整500的值，直到15行一页为止
                     lodop.ADD_PRINT_TABLE("2%", "5%", "90%", 500, style + html);
                     lodop.SET_PRINT_STYLEA(0, "TableRowThickNess", 20);
                     //lodop.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "84%");
-                    lodop.PRINT();
+                    lodop.PREVIEW();
                 }
 
             }
