@@ -69,9 +69,9 @@ namespace BugChang.DES.Application.Bills
             {
                 var exchangeObject = await _exchangeObjectRepository.GetByIdAsync(objectId);
                 var user = await _userRepository.GetByIdAsync(userId);
-                var letters = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
-                    .Where(a => barcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
-                _logger.LogWarning($"信件记录条数：{letters.Count()}");
+                var letters = await _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
+                    .Where(a => barcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+                //_logger.LogWarning($"信件记录条数：{letters.Count()}");
                 //清单全局使用一个流水，防止串号
                 var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
                 var exchangeList = new ExchangeList
@@ -133,19 +133,19 @@ namespace BugChang.DES.Application.Bills
         public async Task<ResultEntity> CreateSendBill(int placeId, int userId, int departmentId)
         {
             _logger.LogWarning($"--------------开始形成取件清单--------------");
-            _logger.LogWarning($"placeId：{placeId},userId:{userId},departmentId:{departmentId}");
+            //_logger.LogWarning($"placeId：{placeId},userId:{userId},departmentId:{departmentId}");
             var result = new ResultEntity();
             var barcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
                 !a.IsSynBill && a.CurrentPlaceId == placeId && a.DepartmentId == departmentId &&
                 a.BarcodeStatus == EnumBarcodeStatus.已投递).ToListAsync();
-            _logger.LogWarning($"流转记录条数：{barcodeLogs.Count}");
+            //_logger.LogWarning($"流转记录条数：{barcodeLogs.Count}");
             if (barcodeLogs.Count > 0)
             {
                 var department = await _departmentRepository.GetByIdAsync(departmentId);
                 var user = await _userRepository.GetByIdAsync(userId);
-                var letters = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
-                    .Where(a => barcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
-                _logger.LogWarning($"信件记录条数：{letters.Count()}");
+                var letters = await _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
+                    .Where(a => barcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+                // _logger.LogWarning($"信件记录条数：{letters.Count()}");
                 //清单全局使用一个流水，防止串号
                 var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
                 var exchangeList = new ExchangeList
@@ -208,7 +208,6 @@ namespace BugChang.DES.Application.Bills
         public async Task<ResultEntity> CreateReceiveSendBill(int placeId, int userId, int departmentId)
         {
             _logger.LogWarning($"--------------开始形成收发件清单--------------");
-            _logger.LogWarning($"placeId：{placeId},userId:{userId},departmentId:{departmentId}");
             var result = new ResultEntity();
             var receiveBarcodeLogs = await _barcodeLogRepository.GetQueryable().Where(a =>
                 !a.IsSynBill && a.CurrentPlaceId == placeId && a.DepartmentId == departmentId &&
@@ -222,12 +221,12 @@ namespace BugChang.DES.Application.Bills
             {
                 //清单全局使用一个流水，防止串号
                 var serialNo = await _serialNumberManager.GetSerialNumber(0, EnumSerialNumberType.清单);
-                var receiveLettesr = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
-                    .Where(a => receiveBarcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
-                _logger.LogWarning($"收信记录条数：{receiveLettesr.Count()}");
-                var sendLetters = _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
-                    .Where(a => sendBarcodeLogs.Any(b => b.BarcodeNumber == a.BarcodeNo));
-                _logger.LogWarning($"发信记录条数：{receiveLettesr.Count()}");
+                var receiveLetters = await _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
+                    .Where(a => receiveBarcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+                //_logger.LogWarning($"收信记录条数：{receiveLettesr.Count()}");
+                var sendLetters = await _letterRepository.GetQueryable().Include(a => a.ReceiveDepartment).Include(a => a.SendDepartment)
+                    .Where(a => sendBarcodeLogs.Exists(b => b.BarcodeNumber == a.BarcodeNo)).ToListAsync();
+                // _logger.LogWarning($"发信记录条数：{receiveLettesr.Count()}");
                 var department = await _departmentRepository.GetByIdAsync(departmentId);
                 var user = await _userRepository.GetByIdAsync(userId);
                 //添加主清单
@@ -246,7 +245,7 @@ namespace BugChang.DES.Application.Bills
                 await _exchangeListRepository.AddAsync(exchangeList);
                 await _unitOfWork.CommitAsync();
                 //添加收件详情
-                foreach (var letter in receiveLettesr)
+                foreach (var letter in receiveLetters)
                 {
                     var barcodeLog = receiveBarcodeLogs.FirstOrDefault(a => a.BarcodeNumber == letter.BarcodeNo);
                     if (barcodeLog != null)
