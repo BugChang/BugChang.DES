@@ -50,11 +50,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace BugChang.DES.Web.Mvc
 {
     public static class DependencyInjectionConfig
     {
+        public static readonly LoggerFactory MyLoggerFactory
+            = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
         public static void Initialize(IServiceCollection services, IConfigurationRoot configuration)
         {
 
@@ -63,7 +67,8 @@ namespace BugChang.DES.Web.Mvc
 
             var mainConnectionString = configuration.GetConnectionString("DefaultConnectionString");
 
-            services.AddDbContext<DesDbContext>(option => option.UseMySql(mainConnectionString).ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning)));
+
+            services.AddDbContext<DesDbContext>(option => option.UseMySql(mainConnectionString));
 
             services.AddScoped<UnitOfWork>();
 
@@ -97,7 +102,7 @@ namespace BugChang.DES.Web.Mvc
             services.AddScoped<IBillAppService, BillAppService>();
             services.AddScoped<IBackUpAppService, BackUpAppService>();
             services.AddScoped<ISerialNumberAppService, SerialNumberAppService>();
-            
+
 
             #endregion
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using BugChang.DES.Core.Authentication.Card;
 using BugChang.DES.Core.Authorization.Menus;
 using BugChang.DES.Core.Authorization.Roles;
@@ -22,6 +23,8 @@ using BugChang.DES.Core.Logs;
 using BugChang.DES.Core.SerialNumbers;
 using BugChang.DES.Core.Sortings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace BugChang.DES.EntityFrameWorkCore
 {
@@ -30,6 +33,8 @@ namespace BugChang.DES.EntityFrameWorkCore
         public DesDbContext(DbContextOptions<DesDbContext> options) : base(options)
         {
         }
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

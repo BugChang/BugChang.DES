@@ -16,7 +16,7 @@ namespace BugChang.DES.Core.SerialNumbers
 
         public async Task<int> GetSerialNumber(int departmentId, EnumSerialNumberType type)
         {
-            var serialNumber = await _numberRepository.GetQueryable().Where(a => a.DepartmentId == departmentId && a.Type == type)
+            var serialNumber = await _numberRepository.GetQueryable().Where(a => a.DepartmentId == departmentId && (int)a.Type == (int)type)
                 .FirstOrDefaultAsync();
             if (serialNumber == null)
             {

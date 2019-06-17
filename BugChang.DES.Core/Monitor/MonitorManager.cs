@@ -269,8 +269,8 @@ namespace BugChang.DES.Core.Monitor
                         {
                             receiveChannel = EnumChannel.机要通信;
                         }
-                        
-                        if (receiveChannel== EnumChannel.机要通信 )
+
+                        if (receiveChannel == EnumChannel.机要通信)
                         {
                             //2018.12.26添加机要通信渠道箱不允许投非密件
                             if (letter.SecretLevel == EnumSecretLevel.普通)
@@ -285,8 +285,17 @@ namespace BugChang.DES.Core.Monitor
                                 return checkBarcodeModel;
                             }
                         }
+
+                        //同城渠道可以走直送
+                        var allowChannels = new List<int>();
+                        allowChannels.Add((int)receiveChannel);
+                        if (receiveChannel == EnumChannel.同城交换)
+                        {
+                            allowChannels.Add((int)EnumChannel.直送);
+                        }
+
                         var channelExchangeObjects = await _objectRepository.GetQueryable().Where(a =>
-                                a.ObjectType == EnumObjectType.渠道 && a.Value == (int)receiveChannel)
+                                a.ObjectType == EnumObjectType.渠道 && allowChannels.Contains(a.Value))
                             .ToListAsync();
                         if (channelExchangeObjects.Count > 0)
                         {
@@ -695,8 +704,8 @@ namespace BugChang.DES.Core.Monitor
             //更新箱格信息
             var box = await _boxRepository.GetByIdAsync(boxId);
             box.FileCount += 1;
-            box.HasUrgent = letter.UrgencyLevel!= EnumUrgentLevel.普通 || isJiaJi;
-           
+            box.HasUrgent = letter.UrgencyLevel != EnumUrgentLevel.普通 || isJiaJi;
+
             _logger.LogWarning($"--------------结束保存条码--------------");
             return 1;
         }
