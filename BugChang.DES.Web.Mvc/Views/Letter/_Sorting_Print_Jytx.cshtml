@@ -1,9 +1,12 @@
 ﻿@model BugChang.DES.Web.Mvc.Models.Letter.PrintSortingModel
 <table style="border-collapse: collapse;  width: 100%;border-spacing: 0">
-    <caption style="font-size: 24px">
+   @* <caption style="font-size: 30px">
         <b>机要件交寄单</b>
-    </caption>
+    </caption>*@
     <thead>
+        <tr>
+            <td style="border-style: none;font-size: 30px" colspan="9"> <center><b>机要件交寄单</b></center></td>
+        </tr>
         <tr>
             <td style="border-style: none;" colspan="9">寄件单位：北京市国家安全局</td>
         </tr>
@@ -39,12 +42,12 @@
             var letter = Model.LetterSortings[i];
             <tr>
                 <td>@(i + 1)</td>
-                <td>@(letter.ReceiveDepartmentName.Length > 13 ? letter.ReceiveDepartmentName.Substring(0, 13) + "..." : letter.ReceiveDepartmentName)</td>
+                <td>@(letter.ReceiveDepartmentName.Length > 15 ? letter.ReceiveDepartmentName.Substring(0, 15) + "..." : letter.ReceiveDepartmentName)</td>
                 <td>@letter.LetterNo</td>
                 <td>@(letter.SecretLevel == 3 ? "1" : "")</td>
                 <td>@(letter.SecretLevel == 2 ? "1" : "")</td>
                 <td>@(letter.SecretLevel == 1 ? "1" : "")</td>
-                <td>@(letter.SendDepartmentName.Length > 13 ? letter.SendDepartmentName.Substring(0, 13) + "..." : letter.SendDepartmentName)</td>
+                <td>@(letter.SendDepartmentName.Length > 15 ? letter.SendDepartmentName.Substring(0, 15) + "..." : letter.SendDepartmentName)</td>
                 <td></td>
                 <td></td>
             </tr>
@@ -93,7 +96,7 @@
                 </div>
             </td>
         </tr>
-        <tr>
+        @*<tr>
             <td style=" border-style: none; font-size: x-small;text-align: right; vertical-align: top;">
                 说明：
             </td>
@@ -103,6 +106,6 @@
                 3、发件单位：指机要件属于寄件单位内部某部门发的。<br />
                 4、备注：注明机要件形状。
             </td>
-        </tr>
+        </tr>*@
     </tfoot>
 </table>

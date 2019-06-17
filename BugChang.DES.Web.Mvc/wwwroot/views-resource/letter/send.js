@@ -265,7 +265,7 @@
                     lodop.ADD_PRINT_LINE("68.3mm", "23.28mm", "68.3mm", "120.61mm", 0, 1);
                     //密级
                     lodop.ADD_PRINT_TEXT("3.18mm", "22.12mm", "24.45mm", "7.07mm", data.secretLevel);
-                    LODOP.SET_PRINT_STYLEA(0, "FontName", "黑体");
+                    lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 16);
                     //信封号
                     lodop.ADD_PRINT_TEXT("3.18mm", "47.1mm", "74.46mm", "7.07mm", "信封号：" + data.letterNo);
@@ -314,7 +314,7 @@
                     lodop.SET_PRINT_STYLEA(0, "FontName", "黑体");
                     lodop.SET_PRINT_STYLEA(0, "FontSize", 18);
                     lodop.SET_PRINTER_INDEX(hard.value);
-                    lodop.PRINT_DESIGN();
+                    lodop.PRINT();
                 });
             });
 

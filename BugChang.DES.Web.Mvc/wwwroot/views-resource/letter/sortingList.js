@@ -179,9 +179,9 @@
                 for (var i = 0; i < 2; i++) {
                     var lodop = getLodop();
                     lodop.PRINT_INIT("");
-                    var style = '<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;line-height:30px}</style>';
+                    var style = '<style>table{border-collapse:collapse;border:none;line-height:30px}th,td{border:solid #000 1px;} table tbody tr td {font - size: 16px;height: 40px;} table tfoot{font - size: 16px;height: 40px;}</style>';
                     //不断调整500的值，直到15行一页为止
-                    lodop.ADD_PRINT_TABLE("2%", "5%", "90%", 400, style + html);
+                    lodop.ADD_PRINT_TABLE("2%", "5%", "90%", 500, style + html);
                     lodop.SET_PRINT_STYLEA(0, "TableRowThickNess", 20);
                     lodop.PRINT();
                 }
