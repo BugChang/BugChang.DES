@@ -31,14 +31,15 @@
                 var allCount = 0;
                 foreach (var dic in Model)
                 {
+                    if (dic.Key == "总数")
+                    {
+                        allCount = dic.Value;
+                        continue;
+                    }
                     <tr>
                         <td>@dic.Key</td>
                         <td>@dic.Value</td>
                     </tr>
-                    if (dic.Key.Contains("密"))
-                    {
-                        allCount += dic.Value;
-                    }
 
                 }
             }

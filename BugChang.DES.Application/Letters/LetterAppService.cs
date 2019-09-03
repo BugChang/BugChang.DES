@@ -812,7 +812,7 @@ namespace BugChang.DES.Application.Letters
                                    && letter.LetterType == EnumLetterType.收信
                              select letter;
 
-            dic.Add("外收", await receiveOut.CountAsync());
+            dic.Add("外收", receiveOut.Count());
 
 
 
@@ -825,7 +825,7 @@ namespace BugChang.DES.Application.Letters
                                 && letter.LetterType == EnumLetterType.发信
                           select letter;
 
-            dic.Add("外发", await sendOut.CountAsync());
+            dic.Add("外发", sendOut.Count());
 
 
 
@@ -839,72 +839,76 @@ namespace BugChang.DES.Application.Letters
                                        barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
                                  select letter;
 
-                dic.Add(place.Name, await placeCount.CountAsync());
+                dic.Add(place.Name, placeCount.Count());
             }
 
+            var allCount = from barcodeLog in _barcodeLogRepository.GetQueryable()
+                           join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+                           where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
+                           select letter;
+            dic.Add("总数", allCount.Count());
 
+            //var sec0 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+            //           join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+            //           where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
+            //                 && letter.SecretLevel == EnumSecretLevel.普通
+            //           select letter;
+            //dic.Add("无密", await sec0.CountAsync());
 
-            var sec0 = from barcodeLog in _barcodeLogRepository.GetQueryable()
-                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
-                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
-                             && letter.SecretLevel == EnumSecretLevel.普通
-                       select letter;
-            dic.Add("无密", await sec0.CountAsync());
+            //var sec1 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+            //           join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+            //           where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
+            //                 && letter.SecretLevel == EnumSecretLevel.秘密
+            //           select letter;
+            //dic.Add("秘密", await sec1.CountAsync());
 
-            var sec1 = from barcodeLog in _barcodeLogRepository.GetQueryable()
-                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
-                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
-                             && letter.SecretLevel == EnumSecretLevel.秘密
-                       select letter;
-            dic.Add("秘密", await sec1.CountAsync());
+            //var sec2 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+            //           join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+            //           where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
+            //                 && letter.SecretLevel == EnumSecretLevel.机密
+            //           select letter;
 
-            var sec2 = from barcodeLog in _barcodeLogRepository.GetQueryable()
-                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
-                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
-                             && letter.SecretLevel == EnumSecretLevel.机密
-                       select letter;
+            //dic.Add("机密", await sec2.CountAsync());
 
-            dic.Add("机密", await sec2.CountAsync());
+            //var sec3 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+            //           join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+            //           where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
+            //                 && letter.SecretLevel == EnumSecretLevel.绝密
+            //           select letter;
 
-            var sec3 = from barcodeLog in _barcodeLogRepository.GetQueryable()
-                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
-                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
-                             && letter.SecretLevel == EnumSecretLevel.绝密
-                       select letter;
+            //dic.Add("绝密", await sec3.CountAsync());
 
-            dic.Add("绝密", await sec3.CountAsync());
+            //var urg0 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+            //           join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+            //           where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
+            //                 && letter.UrgencyLevel == EnumUrgentLevel.普通
+            //           select letter;
 
-            var urg0 = from barcodeLog in _barcodeLogRepository.GetQueryable()
-                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
-                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
-                             && letter.UrgencyLevel == EnumUrgentLevel.普通
-                       select letter;
+            //dic.Add("非急", await urg0.CountAsync());
 
-            dic.Add("非急", await urg0.CountAsync());
+            //var urg1 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+            //           join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+            //           where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
+            //                 && letter.UrgencyLevel == EnumUrgentLevel.加急
+            //           select letter;
 
-            var urg1 = from barcodeLog in _barcodeLogRepository.GetQueryable()
-                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
-                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
-                             && letter.UrgencyLevel == EnumUrgentLevel.加急
-                       select letter;
+            //dic.Add("加急", await urg1.CountAsync());
 
-            dic.Add("加急", await urg1.CountAsync());
+            //var urg2 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+            //           join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+            //           where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
+            //                 && letter.UrgencyLevel == EnumUrgentLevel.特急
+            //           select letter;
 
-            var urg2 = from barcodeLog in _barcodeLogRepository.GetQueryable()
-                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
-                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
-                             && letter.UrgencyLevel == EnumUrgentLevel.特急
-                       select letter;
+            //dic.Add("特急", await urg2.CountAsync());
 
-            dic.Add("特急", await urg2.CountAsync());
+            //var urg3 = from barcodeLog in _barcodeLogRepository.GetQueryable()
+            //           join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
+            //           where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
+            //                 && letter.UrgencyLevel == EnumUrgentLevel.限时
+            //           select letter;
 
-            var urg3 = from barcodeLog in _barcodeLogRepository.GetQueryable()
-                       join letter in _letterRepository.GetQueryable() on barcodeLog.BarcodeNumber equals letter.BarcodeNo
-                       where barcodeLog.OperationTime.Date >= beginDate.Date && barcodeLog.OperationTime <= endDate.Date
-                             && letter.UrgencyLevel == EnumUrgentLevel.限时
-                       select letter;
-
-            dic.Add("限时", await urg3.CountAsync());
+            //dic.Add("限时", await urg3.CountAsync());
 
             return dic;
         }
